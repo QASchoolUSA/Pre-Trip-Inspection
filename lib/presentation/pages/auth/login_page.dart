@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/themes/app_theme.dart';
@@ -104,186 +105,204 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
+      resizeToAvoidBottomInset: false, // Prevent screen resizing when keyboard appears
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppConstants.largePadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // App Logo
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryBlue,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primaryBlue.withValues(alpha: 0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.local_shipping,
-                    size: 48,
-                    color: AppColors.white,
-                  ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-                
-                const SizedBox(height: 32),
-                
-                // Welcome Text
-                Text(
-                  'Welcome to',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: AppColors.grey600,
-                  ),
-                ),
-                
-                const SizedBox(height: 8),
-                
-                Text(
-                  AppConstants.appName,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: AppColors.primaryBlue,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                
-                const SizedBox(height: 8),
-                
-                Text(
-                  'Pre-Trip Inspection System',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: AppColors.grey600,
-                  ),
-                ),
-                
-                const SizedBox(height: 48),
-                
-                // PIN Input Card
-                Card(
-                  elevation: 4,
+                child: IntrinsicHeight(
                   child: Padding(
-                    padding: const EdgeInsets.all(AppConstants.largePadding),
+                    padding: EdgeInsets.fromLTRB(
+                      AppConstants.largePadding,
+                      AppConstants.largePadding,
+                      AppConstants.largePadding,
+                      MediaQuery.of(context).viewInsets.bottom + AppConstants.largePadding,
+                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Enter Your PIN',
-                          style: Theme.of(context).textTheme.titleLarge,
-                          textAlign: TextAlign.center,
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // PIN Input Field
-                        TextField(
-                          controller: _pinController,
-                          focusNode: _focusNode,
-                          keyboardType: TextInputType.number,
-                          obscureText: true,
-                          maxLength: 4,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineMedium,
-                          decoration: InputDecoration(
-                            hintText: '••••',
-                            counterText: '',
-                            errorText: _errorMessage,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadius,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadius,
-                              ),
-                              borderSide: const BorderSide(
-                                color: AppColors.grey300,
-                                width: 2,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                AppConstants.borderRadius,
-                              ),
-                              borderSide: const BorderSide(
-                                color: AppColors.primaryBlue,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                          onSubmitted: (_) => _handleLogin(),
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Login Button
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : _handleLogin,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 16,
-                            ),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation(
-                                      AppColors.white,
-                                    ),
-                                  ),
-                                )
-                              : const Text(
-                                  'Login',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                        ),
-                        
-                        const SizedBox(height: 16),
-                        
-                        // Demo Info
+                        // App Logo
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          width: 100,
+                          height: 100,
                           decoration: BoxDecoration(
-                            color: AppColors.infoBlue.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: AppColors.infoBlue.withValues(alpha: 0.3),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              const Icon(
-                                Icons.info_outline,
-                                color: AppColors.infoBlue,
-                                size: 20,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Demo Mode\nUse PIN: 1234',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: AppColors.infoBlue,
-                                ),
+                            color: AppColors.primaryBlue,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primaryBlue.withValues(alpha: 0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
                               ),
                             ],
+                          ),
+                          child: const Icon(
+                            Icons.local_shipping,
+                            size: 48,
+                            color: AppColors.white,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 32),
+                        
+                        // Welcome Text
+                        Text(
+                          'Welcome to',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            color: AppColors.grey600,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 8),
+                        
+                        Text(
+                          AppConstants.appName,
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            color: AppColors.primaryBlue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 8),
+                        
+                        Text(
+                          'Pre-Trip Inspection System',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppColors.grey600,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 48),
+                        
+                        // PIN Input Card
+                        Card(
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppConstants.largePadding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Enter Your PIN',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                  textAlign: TextAlign.center,
+                                ),
+                                
+                                const SizedBox(height: 24),
+                                
+                                // PIN Input Field
+                                TextField(
+                                  controller: _pinController,
+                                  focusNode: _focusNode,
+                                  keyboardType: TextInputType.number,
+                                  obscureText: true,
+                                  maxLength: 4,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  decoration: InputDecoration(
+                                    hintText: '••••',
+                                    counterText: '',
+                                    errorText: _errorMessage,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppConstants.borderRadius,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppConstants.borderRadius,
+                                      ),
+                                      borderSide: const BorderSide(
+                                        color: AppColors.grey300,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        AppConstants.borderRadius,
+                                      ),
+                                      borderSide: const BorderSide(
+                                        color: AppColors.primaryBlue,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  onSubmitted: (_) => _handleLogin(),
+                                ),
+                                
+                                const SizedBox(height: 24),
+                                
+                                // Login Button
+                                ElevatedButton(
+                                  onPressed: _isLoading ? null : _handleLogin,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              AppColors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : const Text(
+                                          'Login',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                ),
+                                
+                                const SizedBox(height: 16),
+                                
+                                // Demo Info
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.infoBlue.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: AppColors.infoBlue.withValues(alpha: 0.3),
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const Icon(
+                                        Icons.info_outline,
+                                        color: AppColors.infoBlue,
+                                        size: 20,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Demo Mode\nUse PIN: 1234',
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: AppColors.infoBlue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

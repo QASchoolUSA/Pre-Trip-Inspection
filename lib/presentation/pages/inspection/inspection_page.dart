@@ -306,20 +306,39 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
           child: Row(
             children: [
               Expanded(
-                child: OutlinedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Save & Exit'),
+                  icon: const Icon(Icons.save),
+                  label: const Text('Save & Exit'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.grey600,
+                    foregroundColor: AppColors.white,
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: _currentInspection!.isComplete
                       ? _completeInspection
-                      : null,
-                  child: const Text('Complete Inspection'),
+                      : _canAdvanceToNext() ? _advanceToNextSection : null,
+                  icon: Icon(_getNavigationIcon()),
+                  label: Text(_getNavigationText()),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _currentInspection!.isComplete 
+                        ? AppColors.successGreen 
+                        : AppColors.primaryBlue,
+                    foregroundColor: AppColors.white,
+                    elevation: 4,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shadowColor: _currentInspection!.isComplete 
+                        ? AppColors.successGreen.withValues(alpha: 0.3)
+                        : AppColors.primaryBlue.withValues(alpha: 0.3),
+                  ),
                 ),
               ),
             ],
@@ -933,5 +952,72 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
         builder: (_) => SignaturePage(inspectionId: _currentInspection!.id),
       ),
     );
+  }
+
+  bool _canAdvanceToNext() {
+    final currentIndex = _tabController?.index ?? 0;
+    final categories = _categorizedItems.keys.toList();
+    
+    if (currentIndex >= categories.length - 1) {
+      return false; // Already on last tab
+    }
+    
+    // Check if current section is 100% complete
+    final currentCategory = categories[currentIndex];
+    final categoryItems = _categorizedItems[currentCategory] ?? [];
+    final completedItems = categoryItems.where((item) => 
+        item.status != InspectionItemStatus.notChecked).toList();
+    
+    return categoryItems.isNotEmpty && completedItems.length == categoryItems.length;
+  }
+
+  void _advanceToNextSection() {
+    final currentIndex = _tabController?.index ?? 0;
+    final categories = _categorizedItems.keys.toList();
+    
+    if (currentIndex < categories.length - 1) {
+      _tabController?.animateTo(currentIndex + 1);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: AppColors.white),
+              const SizedBox(width: 8),
+              Text('Section "${categories[currentIndex]}" completed! Moving to next section.'),
+            ],
+          ),
+          backgroundColor: AppColors.successGreen,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  String _getNavigationText() {
+    final currentIndex = _tabController?.index ?? 0;
+    final categories = _categorizedItems.keys.toList();
+    
+    if (_currentInspection!.isComplete) {
+      return 'Complete';
+    }
+    
+    if (currentIndex >= categories.length - 1) {
+      return 'Complete';
+    }
+    
+    return 'Next';
+  }
+
+  IconData _getNavigationIcon() {
+    final currentIndex = _tabController?.index ?? 0;
+    final categories = _categorizedItems.keys.toList();
+    
+    if (_currentInspection!.isComplete || currentIndex >= categories.length - 1) {
+      return Icons.check_circle;
+    }
+    
+    return Icons.arrow_forward;
   }
 }
