@@ -1,0 +1,27 @@
+{
+  "name": "pti-mobile-app",
+  "version": "1.0.0",
+  "description": "PTI Mobile App - Flutter web application for vehicle inspection workflows",
+  "main": "build/web/index.html",
+  "scripts": {
+    "build": "flutter build web --release",
+    "dev": "flutter run -d web-server --web-port 3000",
+    "start": "flutter run -d web-server --web-port 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "flutter",
+    "web",
+    "pti",
+    "inspection",
+    "mobile-app"
+  ],
+  "author": "PTI Mobile App Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

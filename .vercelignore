@@ -1,0 +1,51 @@
+# Flutter build artifacts
+.dart_tool/
+.packages
+.metadata
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Test files
+test/
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# macOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Editor files
+*~
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Dependencies (will be rebuilt)
+.dart_tool/
+.packages
+build/
+
+# Keep only essential files for deployment
+!/pubspec.yaml
+!/pubspec.lock
+!/lib/
+!/web/
+!/assets/

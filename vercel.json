@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "buildCommand": "flutter build web --release",
+  "outputDirectory": "build/web",
+  "installCommand": "if [ ! -d \"$HOME/flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter; fi && export PATH=\"$PATH:$HOME/flutter/bin\" && flutter doctor && flutter pub get",
+  "devCommand": "flutter run -d web-server --web-port 3000",
+  "framework": null,
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        }
+      ]
+    }
+  ]
+}
