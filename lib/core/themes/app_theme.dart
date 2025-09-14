@@ -47,6 +47,7 @@ class AppColors {
   // Transparent overlays
   static const Color blackOverlay = Color(0x80000000);
   static const Color whiteOverlay = Color(0x80FFFFFF);
+  static const Color transparent = Colors.transparent;
 }
 
 /// Material Design 3 theme for PTI Mobile App
