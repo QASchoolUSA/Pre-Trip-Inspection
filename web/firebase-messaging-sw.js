@@ -2,18 +2,19 @@
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCFcsZigl7WKabZtLY162XeYcNXf6STu7c",
-  authDomain: "pretripinspection-71ea7.firebaseapp.com",
-  projectId: "pretripinspection-71ea7",
-  storageBucket: "pretripinspection-71ea7.firebasestorage.app",
-  messagingSenderId: "66778285150",
-  appId: "1:66778285150:web:55d334513f65347b8260cf",
-};
+// Import Firebase configuration
+importScripts('./firebase-config.js');
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase with the configuration
+firebase.initializeApp(window.FIREBASE_CONFIG || {
+  apiKey: "YOUR_API_KEY_PLACEHOLDER",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+  measurementId: "YOUR_MEASUREMENT_ID"
+});
 
 // Retrieve Firebase Messaging object
 const messaging = firebase.messaging();

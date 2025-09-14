@@ -4,6 +4,7 @@
   "description": "PTI Mobile App - Flutter web application for vehicle inspection workflows",
   "main": "build/web/index.html",
   "scripts": {
+    "prebuild": "node scripts/replace-firebase-config.js",
     "build": "flutter build web --release",
     "dev": "flutter run -d web-server --web-port 3000",
     "start": "flutter run -d web-server --web-port 3000"
