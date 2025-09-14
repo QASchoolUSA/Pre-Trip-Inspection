@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "flutter build web --release",
+  "buildCommand": "$HOME/flutter/bin/flutter build web --release",
   "outputDirectory": "build/web",
-  "installCommand": "if [ ! -d \"$HOME/flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter; fi && export PATH=\"$PATH:$HOME/flutter/bin\" && flutter doctor && flutter pub get",
-  "devCommand": "flutter run -d web-server --web-port 3000",
+  "installCommand": "if [ ! -d \"$HOME/flutter\" ]; then git clone https://github.com/flutter/flutter.git -b stable $HOME/flutter; fi && $HOME/flutter/bin/flutter doctor && $HOME/flutter/bin/flutter pub get",
+  "devCommand": "$HOME/flutter/bin/flutter run -d web-server --web-port 3000",
   "framework": null,
   "rewrites": [
     {
