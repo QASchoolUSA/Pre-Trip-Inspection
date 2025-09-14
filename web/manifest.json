@@ -28,7 +28,7 @@
             "type": "image/png"
         },
         {
-            "src": "icons/favicon.png",
+            "src": "icons/favicon.ico",
             "sizes": "32x32",
             "type": "image/png"
         }
