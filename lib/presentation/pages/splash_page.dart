@@ -279,57 +279,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
                                       ),
                                     ),
                                   ),
-                                  // Main truck icon
-                                  Icon(
-                                    Icons.local_shipping_rounded,
-                                    size: 72,
-                                    color: AppColors.primaryBlue,
+                                  // Main custom app icon
+                                  Image.asset(
+                                    'assets/icons/icon-192.png',
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.contain,
                                   ),
-                                  // Moving wheels effect (simulated)
-                                  Positioned(
-                                    bottom: 28,
-                                    left: 35,
-                                    child: RotationTransition(
-                                      turns: _pulseController,
-                                      child: Container(
-                                        width: 12,
-                                        height: 12,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.secondaryOrange,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppColors.secondaryOrange.withValues(alpha: 0.3),
-                                              blurRadius: 4,
-                                              spreadRadius: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 28,
-                                    right: 35,
-                                    child: RotationTransition(
-                                      turns: _pulseController,
-                                      child: Container(
-                                        width: 12,
-                                        height: 12,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.secondaryOrange,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppColors.secondaryOrange.withValues(alpha: 0.3),
-                                              blurRadius: 4,
-                                              spreadRadius: 1,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+
                                 ],
                               ),
                             );

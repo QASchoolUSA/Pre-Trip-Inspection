@@ -127,25 +127,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // App Logo
-                        Container(
+                        Image.asset(
+                          'assets/icons/icon-192.png',
                           width: 100,
                           height: 100,
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryBlue,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primaryBlue.withValues(alpha: 0.3),
-                                blurRadius: 20,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.local_shipping,
-                            size: 48,
-                            color: AppColors.white,
-                          ),
+                          fit: BoxFit.contain,
                         ),
                         
                         const SizedBox(height: 32),
