@@ -138,6 +138,19 @@ class _SplashPageState extends ConsumerState<SplashPage>
       // Initialize the app
       await ref.read(appInitializationProvider.future);
       
+      // Show a notification preview
+      final notificationService = ref.read(notificationServiceProvider);
+      if (notificationService.isSupported) {
+        // Show a preview notification after app initialization
+        Future.delayed(const Duration(seconds: 1), () {
+          notificationService.showNotification(
+            title: 'PTI Mobile App',
+            body: 'App initialized successfully!',
+            icon: 'assets/icons/icon-192.png',
+          );
+        });
+      }
+      
       // Wait for at least 2 seconds to show splash screen
       await Future.delayed(const Duration(seconds: 2));
       

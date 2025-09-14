@@ -47,6 +47,28 @@
 
   <title>PTI Mobile - Pre-Trip Inspection App</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            
+            // Register for periodic background sync
+            if ('periodicSync' in registration) {
+              registration.periodicSync.register('pti-daily-reminder', {
+                minInterval: 24 * 60 * 60 * 1000, // 24 hours
+              });
+            }
+          })
+          .catch(function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

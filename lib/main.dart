@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/services/simple_notification_service.dart';
 import 'core/themes/app_theme.dart';
 import 'core/constants/app_constants.dart';
 import 'presentation/providers/app_providers.dart';
@@ -12,6 +13,9 @@ void main() async {
   
   // Initialize Hive for web
   await Hive.initFlutter();
+  
+  // Initialize notification service
+  await SimpleNotificationService().requestPermission();
   
   runApp(
     const ProviderScope(

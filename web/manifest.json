@@ -11,6 +11,11 @@
     "categories": ["business", "productivity", "transportation"],
     "lang": "en-US",
     "scope": "/",
+    "serviceworker": {
+        "src": "service-worker.js",
+        "scope": "/",
+        "update_via_cache": "none"
+    },
     "icons": [
         {
             "src": "icons/icon-192.png",

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/services/simple_notification_service.dart';
 import '../../data/datasources/database_service.dart';
 import '../../data/repositories/inspection_repository.dart';
 import '../../data/repositories/vehicle_repository.dart';
@@ -279,3 +280,8 @@ final errorProvider = StateProvider<String?>((ref) => null);
 
 /// Success message provider
 final successMessageProvider = StateProvider<String?>((ref) => null);
+
+/// Notification service provider
+final notificationServiceProvider = Provider<SimpleNotificationService>((ref) {
+  return SimpleNotificationService();
+});
