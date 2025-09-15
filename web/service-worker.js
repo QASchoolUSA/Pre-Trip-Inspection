@@ -1,4 +1,4 @@
-// Service Worker for Local Notifications
+// Service Worker for Local Notifications with iOS PWA support
 const CACHE_NAME = 'pti-mobile-app-v1';
 const urlsToCache = [
   '/',
@@ -29,7 +29,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Handle push notifications
+// Handle push notifications with iOS-specific options
 self.addEventListener('push', event => {
   console.log('Push event received:', event);
   
@@ -62,7 +62,12 @@ self.addEventListener('push', event => {
         action: 'dismiss',
         title: 'Dismiss'
       }
-    ]
+    ],
+    // iOS-specific options
+    requireInteraction: notificationData.requireInteraction || false,
+    // On iOS, notifications should be more persistent
+    renotify: true,
+    tag: 'pti-notification'
   };
   
   event.waitUntil(
@@ -89,9 +94,71 @@ self.addEventListener('notificationclick', event => {
   }
 });
 
+// Store scheduled notifications in IndexedDB
+function storeScheduledNotification(notification) {
+  if (self.indexedDB) {
+    const request = indexedDB.open('PTINotifications', 1);
+    
+    request.onupgradeneeded = function(event) {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('scheduled')) {
+        db.createObjectStore('scheduled', { keyPath: 'id' });
+      }
+    };
+    
+    request.onsuccess = function(event) {
+      const db = event.target.result;
+      const transaction = db.transaction(['scheduled'], 'readwrite');
+      const store = transaction.objectStore('scheduled');
+      store.put(notification);
+    };
+  }
+}
+
+// Get scheduled notifications from IndexedDB
+function getScheduledNotifications() {
+  return new Promise((resolve, reject) => {
+    if (self.indexedDB) {
+      const request = indexedDB.open('PTINotifications', 1);
+      
+      request.onsuccess = function(event) {
+        const db = event.target.result;
+        const transaction = db.transaction(['scheduled'], 'readonly');
+        const store = transaction.objectStore('scheduled');
+        const getAllRequest = store.getAll();
+        
+        getAllRequest.onsuccess = function(event) {
+          resolve(event.target.result || []);
+        };
+        
+        getAllRequest.onerror = function() {
+          resolve([]);
+        };
+      };
+      
+      request.onerror = function() {
+        resolve([]);
+      };
+    } else {
+      resolve([]);
+    }
+  });
+}
+
 // Handle messages from the app
 self.addEventListener('message', event => {
   console.log('Message received:', event.data);
+  
+  // Common notification options with iOS support
+  const baseOptions = {
+    icon: event.data.icon || '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    vibrate: [100, 50, 100],
+    // iOS-specific options
+    requireInteraction: event.data.requireInteraction || false,
+    renotify: true,
+    tag: 'pti-notification'
+  };
   
   switch (event.data.type) {
     case 'SHOW_NOTIFICATION':
@@ -99,25 +166,43 @@ self.addEventListener('message', event => {
         event.data.title,
         {
           body: event.data.body,
-          icon: event.data.icon || '/icons/icon-192.png',
-          badge: '/icons/icon-192.png',
-          vibrate: [100, 50, 100]
+          ...baseOptions
         }
       );
       break;
       
     case 'SCHEDULE_DAILY_REMINDER':
-      // In a real implementation, you would schedule periodic notifications
+      // Store the scheduled notification
+      const scheduledNotification = {
+        id: 'daily-reminder',
+        title: event.data.title,
+        body: event.data.body,
+        hour: event.data.hour,
+        minute: event.data.minute,
+        requireInteraction: event.data.requireInteraction || false,
+        createdAt: Date.now()
+      };
+      
+      storeScheduledNotification(scheduledNotification);
+      
       // For this demo, we'll just show a notification immediately
+      // In a real implementation, you would set up periodic notifications
       self.registration.showNotification(
         event.data.title,
         {
           body: event.data.body,
-          icon: '/icons/icon-192.png',
-          badge: '/icons/icon-192.png',
-          vibrate: [100, 50, 100]
+          ...baseOptions
         }
       );
+      
+      // Set up periodic notifications using background sync if available
+      if ('periodicSync' in self.registration) {
+        self.registration.periodicSync.register('pti-daily-reminder', {
+          minInterval: 24 * 60 * 60 * 1000, // 24 hours
+        }).catch(err => {
+          console.log('Periodic sync registration failed:', err);
+        });
+      }
       break;
       
     case 'CANCEL_NOTIFICATIONS':
@@ -126,3 +211,34 @@ self.addEventListener('message', event => {
       break;
   }
 });
+
+// Handle periodic background sync for daily reminders
+self.addEventListener('periodicsync', event => {
+  if (event.tag === 'pti-daily-reminder') {
+    event.waitUntil(handleDailyReminder());
+  }
+});
+
+// Handle daily reminder logic
+async function handleDailyReminder() {
+  try {
+    // Get scheduled notifications
+    const scheduledNotifications = await getScheduledNotifications();
+    const dailyReminder = scheduledNotifications.find(n => n.id === 'daily-reminder');
+    
+    if (dailyReminder) {
+      // Show the notification
+      await self.registration.showNotification(dailyReminder.title, {
+        body: dailyReminder.body,
+        icon: '/icons/icon-192.png',
+        badge: '/icons/icon-192.png',
+        vibrate: [100, 50, 100],
+        requireInteraction: dailyReminder.requireInteraction || false,
+        renotify: true,
+        tag: 'pti-notification'
+      });
+    }
+  } catch (error) {
+    console.error('Error handling daily reminder:', error);
+  }
+}

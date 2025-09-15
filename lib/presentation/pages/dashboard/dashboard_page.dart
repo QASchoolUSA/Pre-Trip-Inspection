@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../providers/app_providers.dart';
 import '../auth/login_page.dart';
 import '../vehicle/vehicle_selection_page.dart';
@@ -21,6 +22,13 @@ class DashboardPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('PTI Dashboard'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              context.goToSettings();
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',

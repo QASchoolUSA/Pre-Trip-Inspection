@@ -66,6 +66,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     }
   }
 
+  Future<void> _testNotification() async {
+    final notificationService = ref.read(notificationServiceProvider);
+    await notificationService.showNotification(
+      title: 'Test Notification',
+      body: 'This is a test notification from PTI Mobile App',
+    );
+    
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Test notification sent!'),
+          backgroundColor: AppColors.successGreen,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -105,7 +122,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               secondary: const Icon(Icons.notifications),
             ),
             
-            const SizedBox(height: AppConstants.mediumPadding),
+            const SizedBox(height: AppConstants.defaultPadding),
             
             // Reminder Time
             ListTile(
@@ -121,12 +138,24 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             
             const SizedBox(height: AppConstants.largePadding),
             
+            // Test Notification Button
+            ElevatedButton.icon(
+              onPressed: _testNotification,
+              icon: const Icon(Icons.notifications_active),
+              label: const Text('Send Test Notification'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            
+            const SizedBox(height: AppConstants.largePadding),
+            
             // Notification Preview
             if (_notificationsEnabled)
               Card(
                 elevation: 2,
                 child: Padding(
-                  padding: const EdgeInsets.all(AppConstants.mediumPadding),
+                  padding: const EdgeInsets.all(AppConstants.defaultPadding),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -156,6 +185,60 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                 ),
               ),
+            
+            const SizedBox(height: AppConstants.largePadding),
+            
+            // Instructions for PWA
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'PWA Notification Instructions',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: AppConstants.smallPadding),
+                    const Text(
+                      'For iOS PWA notifications to work properly:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: AppConstants.smallPadding),
+                    const Text(
+                      '1. Add this app to your home screen',
+                    ),
+                    const Text(
+                      '2. Open the app from the home screen icon',
+                    ),
+                    const Text(
+                      '3. Allow notifications when prompted',
+                    ),
+                    const Text(
+                      '4. Notifications will appear daily until you complete an inspection',
+                    ),
+                    const SizedBox(height: AppConstants.smallPadding),
+                    const Text(
+                      'For Android PWA:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: AppConstants.smallPadding),
+                    const Text(
+                      '1. Add to home screen from browser menu',
+                    ),
+                    const Text(
+                      '2. Open app from home screen',
+                    ),
+                    const Text(
+                      '3. Grant notification permissions',
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

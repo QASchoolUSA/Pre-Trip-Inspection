@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PTI Notification Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1565C0;
+            text-align: center;
+        }
+        button {
+            background-color: #1565C0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0d47a1;
+        }
+        .result {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PTI Notification Test</h1>
+        
+        <button id="register-sw">Register Service Worker</button>
+        <button id="request-permission">Request Notification Permission</button>
+        <button id="send-test">Send Test Notification</button>
+        <button id="schedule-daily">Schedule Daily Reminder</button>
+        <button id="cancel-notifications">Cancel All Notifications</button>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="info">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Click "Register Service Worker" first</li>
+                <li>Click "Request Notification Permission" to enable notifications</li>
+                <li>Use "Send Test Notification" to test immediate notifications</li>
+                <li>Use "Schedule Daily Reminder" to set up recurring notifications</li>
+                <li>Use "Cancel All Notifications" to stop notifications</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let registration = null;
+        
+        // Register Service Worker
+        document.getElementById('register-sw').addEventListener('click', async () => {
+            try {
+                if ('serviceWorker' in navigator) {
+                    registration = await navigator.serviceWorker.register('/service-worker.js');
+                    showResult('Service Worker registered successfully!', 'success');
+                    console.log('Service Worker registered with scope:', registration.scope);
+                } else {
+                    showResult('Service Workers not supported in this browser', 'error');
+                }
+            } catch (error) {
+                showResult('Service Worker registration failed: ' + error.message, 'error');
+                console.error('Service Worker registration failed:', error);
+            }
+        });
+        
+        // Request Notification Permission
+        document.getElementById('request-permission').addEventListener('click', async () => {
+            try {
+                if (!registration) {
+                    showResult('Please register Service Worker first', 'error');
+                    return;
+                }
+                
+                if ('Notification' in window) {
+                    const permission = await Notification.requestPermission();
+                    showResult('Notification permission: ' + permission, 'info');
+                    console.log('Notification permission status:', permission);
+                } else {
+                    showResult('Notifications not supported in this browser', 'error');
+                }
+            } catch (error) {
+                showResult('Error requesting permission: ' + error.message, 'error');
+                console.error('Error requesting permission:', error);
+            }
+        });
+        
+        // Send Test Notification
+        document.getElementById('send-test').addEventListener('click', () => {
+            if (!registration) {
+                showResult('Please register Service Worker first', 'error');
+                return;
+            }
+            
+            if (registration.active) {
+                registration.active.postMessage({
+                    type: 'SHOW_NOTIFICATION',
+                    title: 'PTI Test Notification',
+                    body: 'This is a test notification from PTI Mobile App',
+                    icon: '/icons/icon-192.png'
+                });
+                showResult('Test notification sent!', 'success');
+            } else {
+                showResult('Service Worker not active yet. Please try again.', 'error');
+            }
+        });
+        
+        // Schedule Daily Reminder
+        document.getElementById('schedule-daily').addEventListener('click', () => {
+            if (!registration) {
+                showResult('Please register Service Worker first', 'error');
+                return;
+            }
+            
+            const now = new Date();
+            const hour = now.getHours();
+            const minute = now.getMinutes();
+            
+            if (registration.active) {
+                registration.active.postMessage({
+                    type: 'SCHEDULE_DAILY_REMINDER',
+                    title: 'Daily PTI Reminder',
+                    body: 'Time to perform your Pre-Trip Inspection',
+                    hour: hour,
+                    minute: minute
+                });
+                showResult(`Daily reminder scheduled for ${hour}:${minute.toString().padStart(2, '0')}`, 'success');
+            } else {
+                showResult('Service Worker not active yet. Please try again.', 'error');
+            }
+        });
+        
+        // Cancel All Notifications
+        document.getElementById('cancel-notifications').addEventListener('click', () => {
+            if (!registration) {
+                showResult('Please register Service Worker first', 'error');
+                return;
+            }
+            
+            if (registration.active) {
+                registration.active.postMessage({
+                    type: 'CANCEL_NOTIFICATIONS'
+                });
+                showResult('All notifications cancelled', 'success');
+            } else {
+                showResult('Service Worker not active yet. Please try again.', 'error');
+            }
+        });
+        
+        // Show result message
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = 'result ' + type;
+            resultDiv.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Auto-register service worker on page load
+        window.addEventListener('load', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => {
+                        registration = reg;
+                        console.log('Service Worker registered with scope:', reg.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:html' as html;
 
-/// Simple notification service for web-based PTI Mobile App
+/// Enhanced notification service for web-based PTI Mobile App with iOS PWA support
 /// Uses browser Notification API for web push notifications
 class SimpleNotificationService {
   static final SimpleNotificationService _instance = 
@@ -15,7 +15,12 @@ class SimpleNotificationService {
   /// Check if notifications are supported in the current environment
   bool get isSupported => kIsWeb && html.window.navigator.serviceWorker != null;
 
-  /// Request permission to show notifications
+  /// Check if we're running on iOS/Safari
+  bool get isIOS => html.window.navigator.userAgent.contains('iPhone') || 
+                   html.window.navigator.userAgent.contains('iPad') ||
+                   html.window.navigator.userAgent.contains('Safari');
+
+  /// Request permission to show notifications with iOS-specific handling
   Future<bool> requestPermission() async {
     if (!isSupported) return false;
     
@@ -29,7 +34,7 @@ class SimpleNotificationService {
     }
   }
 
-  /// Show a notification immediately
+  /// Show a notification immediately with iOS-specific options
   Future<void> showNotification({
     required String title,
     String? body,
@@ -39,26 +44,27 @@ class SimpleNotificationService {
     
     try {
       // Create a notification using the browser Notification API
-      // This is a simplified version - in a real app you would use more robust handling
       html.window.console.log('Showing notification: $title');
       
       // For web, we would typically communicate with the service worker
       // to show the notification
       if (html.window.navigator.serviceWorker?.controller != null) {
-        html.window.navigator.serviceWorker!.controller!.postMessage({
+        final message = {
           'type': 'SHOW_NOTIFICATION',
           'title': title,
           'body': body,
           'icon': icon ?? '/icons/icon-192.png',
-        });
+          'requireInteraction': isIOS, // iOS notifications should require interaction
+        };
+        
+        html.window.navigator.serviceWorker!.controller!.postMessage(message);
       }
     } catch (e) {
       debugPrint('Error showing notification: $e');
     }
   }
 
-  /// Schedule a daily reminder notification
-  /// For web, this would typically be handled by the service worker
+  /// Schedule a daily reminder notification until inspection is completed
   Future<void> scheduleDailyReminder({
     required TimeOfDay time,
     String? title,
@@ -79,6 +85,7 @@ class SimpleNotificationService {
           'body': notificationBody,
           'hour': time.hour,
           'minute': time.minute,
+          'requireInteraction': isIOS, // iOS notifications should require interaction
         });
       }
     } catch (e) {
