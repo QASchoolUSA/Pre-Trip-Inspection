@@ -461,32 +461,27 @@ class InspectionItemStatusAdapter extends TypeAdapter<InspectionItemStatus> {
   InspectionItemStatus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return InspectionItemStatus.notChecked;
-      case 1:
         return InspectionItemStatus.passed;
-      case 2:
+      case 1:
         return InspectionItemStatus.failed;
-      case 3:
+      case 2:
         return InspectionItemStatus.notApplicable;
       default:
-        return InspectionItemStatus.notChecked;
+        return InspectionItemStatus.passed;
     }
   }
 
   @override
   void write(BinaryWriter writer, InspectionItemStatus obj) {
     switch (obj) {
-      case InspectionItemStatus.notChecked:
+      case InspectionItemStatus.passed:
         writer.writeByte(0);
         break;
-      case InspectionItemStatus.passed:
+      case InspectionItemStatus.failed:
         writer.writeByte(1);
         break;
-      case InspectionItemStatus.failed:
-        writer.writeByte(2);
-        break;
       case InspectionItemStatus.notApplicable:
-        writer.writeByte(3);
+        writer.writeByte(2);
         break;
     }
   }
@@ -515,7 +510,7 @@ InspectionItem _$InspectionItemFromJson(Map<String, dynamic> json) =>
       isRequired: json['isRequired'] as bool,
       status:
           $enumDecodeNullable(_$InspectionItemStatusEnumMap, json['status']) ??
-              InspectionItemStatus.notChecked,
+              InspectionItemStatus.notApplicable,
       notes: json['notes'] as String?,
       photoUrls: (json['photoUrls'] as List<dynamic>?)
           ?.map((e) => e as String)
@@ -544,7 +539,6 @@ Map<String, dynamic> _$InspectionItemToJson(InspectionItem instance) =>
     };
 
 const _$InspectionItemStatusEnumMap = {
-  InspectionItemStatus.notChecked: 'not_checked',
   InspectionItemStatus.passed: 'passed',
   InspectionItemStatus.failed: 'failed',
   InspectionItemStatus.notApplicable: 'not_applicable',

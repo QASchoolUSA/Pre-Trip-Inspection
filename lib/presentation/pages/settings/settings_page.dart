@@ -6,6 +6,8 @@ import '../../../core/services/simple_notification_service.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../providers/app_providers.dart';
+import '../../widgets/language_switcher.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -67,16 +69,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   }
 
   Future<void> _testNotification() async {
+    final l10n = AppLocalizations.of(context)!;
     final notificationService = ref.read(notificationServiceProvider);
     await notificationService.showNotification(
-      title: 'Test Notification',
-      body: 'This is a test notification from PTI Mobile App',
+      title: l10n.testNotification,
+      body: l10n.testNotificationBody,
     );
     
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Test notification sent!'),
+        SnackBar(
+          content: Text(l10n.testNotificationSent),
           backgroundColor: AppColors.successGreen,
         ),
       );
@@ -85,23 +88,70 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (_isLoading) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settings),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppConstants.largePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Language Settings Section
             Text(
-              'Notification Settings',
+              l10n.language,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppConstants.defaultPadding),
+            
+            // Language Switcher
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                child: Row(
+                  children: [
+                    const Icon(Icons.language, size: 24),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.language,
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            l10n.selectPreferredLanguage,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const LanguageSwitcher(),
+                  ],
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: AppConstants.largePadding),
+            
+            Text(
+              l10n.notificationSettings,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -110,8 +160,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             
             // Daily Reminder Toggle
             SwitchListTile(
-              title: const Text('Daily PTI Reminder'),
-              subtitle: const Text('Receive a daily reminder to perform your Pre-Trip Inspection'),
+              title: Text(l10n.dailyPTIReminder),
+              subtitle: Text(l10n.dailyReminderDescription),
               value: _notificationsEnabled,
               onChanged: (bool value) {
                 setState(() {
@@ -126,7 +176,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             
             // Reminder Time
             ListTile(
-              title: const Text('Reminder Time'),
+              title: Text(l10n.reminderTime),
               subtitle: Text(
                 '${_reminderTime.format(context)}',
                 style: const TextStyle(fontWeight: FontWeight.w500),
@@ -142,7 +192,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ElevatedButton.icon(
               onPressed: _testNotification,
               icon: const Icon(Icons.notifications_active),
-              label: const Text('Send Test Notification'),
+              label: Text(l10n.sendTestNotification),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
               ),
@@ -160,22 +210,22 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Preview',
+                        l10n.preview,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: AppConstants.smallPadding),
-                      const Text(
-                        'Daily PTI Reminder',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Text(
+                        l10n.dailyPTIReminder,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      const Text(
-                        'Time to perform your Pre-Trip Inspection',
+                      Text(
+                        l10n.timeToPerformInspection,
                       ),
                       const SizedBox(height: AppConstants.smallPadding),
                       Text(
-                        'Scheduled for ${_reminderTime.format(context)}',
+                        l10n.scheduledFor(_reminderTime.format(context)),
                         style: TextStyle(
                           color: AppColors.grey600,
                           fontSize: 12,
@@ -197,43 +247,43 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'PWA Notification Instructions',
+                      l10n.pwaNotificationInstructions,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: AppConstants.smallPadding),
-                    const Text(
-                      'For iOS PWA notifications to work properly:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(
+                      l10n.forIOSPWA,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: AppConstants.smallPadding),
-                    const Text(
-                      '1. Add this app to your home screen',
+                    Text(
+                      l10n.addAppToHomeScreen,
                     ),
-                    const Text(
-                      '2. Open the app from the home screen icon',
+                    Text(
+                      l10n.openFromHomeScreen,
                     ),
-                    const Text(
-                      '3. Allow notifications when prompted',
+                    Text(
+                      l10n.allowNotificationsWhenPrompted,
                     ),
-                    const Text(
-                      '4. Notifications will appear daily until you complete an inspection',
-                    ),
-                    const SizedBox(height: AppConstants.smallPadding),
-                    const Text(
-                      'For Android PWA:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(
+                      l10n.notificationsAppearDaily,
                     ),
                     const SizedBox(height: AppConstants.smallPadding),
-                    const Text(
-                      '1. Add to home screen from browser menu',
+                    Text(
+                      l10n.forAndroidPWA,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const Text(
-                      '2. Open app from home screen',
+                    const SizedBox(height: AppConstants.smallPadding),
+                    Text(
+                      l10n.addToHomeScreenFromBrowser,
                     ),
-                    const Text(
-                      '3. Grant notification permissions',
+                    Text(
+                      l10n.openAppFromHomeScreen,
+                    ),
+                    Text(
+                      l10n.grantNotificationPermissions,
                     ),
                   ],
                 ),

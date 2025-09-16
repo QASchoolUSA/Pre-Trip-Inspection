@@ -4,7 +4,9 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../../data/models/inspection_models.dart';
+import '../../../generated/l10n/app_localizations.dart';
 import '../../providers/app_providers.dart';
 import '../inspection/inspection_page.dart';
 
@@ -84,7 +86,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Vehicle ${vehicle.unitNumber} selected'),
+        content: Text(AppLocalizations.of(context)!.vehicleSelected(vehicle.unitNumber)),
         backgroundColor: AppColors.successGreen,
       ),
     );
@@ -93,8 +95,8 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
   Future<void> _startInspection() async {
     if (_selectedVehicle == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a vehicle first'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseSelectVehicle),
           backgroundColor: AppColors.errorRed,
         ),
       );
@@ -104,8 +106,8 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
     final currentUser = ref.read(currentUserProvider);
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User not found. Please login again.'),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.userNotFound),
           backgroundColor: AppColors.errorRed,
         ),
       );
@@ -115,6 +117,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
     try {
       // Create new inspection
       final inspection = await ref.read(inspectionsProvider.notifier).createInspection(
+        context: context,
         driverId: currentUser.id,
         driverName: currentUser.name,
         vehicle: _selectedVehicle!,
@@ -126,17 +129,13 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
       // Navigate to inspection page
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => InspectionPage(inspectionId: inspection.id),
-          ),
-        );
+        context.goToInspection(inspection.id);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to start inspection: $e'),
+            content: Text(AppLocalizations.of(context)!.failedToStartInspection(e.toString())),
             backgroundColor: AppColors.errorRed,
           ),
         );
@@ -165,7 +164,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Vehicle'),
+        title: Text(AppLocalizations.of(context)!.selectVehicle),
         elevation: 0,
       ),
       body: Column(
@@ -189,7 +188,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search by unit number, make, model...',
+                    hintText: AppLocalizations.of(context)!.searchVehicles,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
@@ -212,7 +211,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                   child: OutlinedButton.icon(
                     onPressed: _startScanning,
                     icon: const Icon(Icons.qr_code_scanner),
-                    label: const Text('Scan QR Code'),
+                    label: Text(AppLocalizations.of(context)!.scanQRCode),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
@@ -229,7 +228,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Inspection Type',
+                  AppLocalizations.of(context)!.inspectionType,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -240,7 +239,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                     Expanded(
                       child: _buildInspectionTypeChip(
                         InspectionType.preTrip,
-                        'Pre-Trip',
+                        AppLocalizations.of(context)!.preTrip,
                         Icons.departure_board,
                       ),
                     ),
@@ -248,7 +247,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                     Expanded(
                       child: _buildInspectionTypeChip(
                         InspectionType.postTrip,
-                        'Post-Trip',
+                        AppLocalizations.of(context)!.postTrip,
                         Icons.assignment_return,
                       ),
                     ),
@@ -256,7 +255,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                     Expanded(
                       child: _buildInspectionTypeChip(
                         InspectionType.annual,
-                        'Annual',
+                        AppLocalizations.of(context)!.annual,
                         Icons.event_note,
                       ),
                     ),
@@ -324,7 +323,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                                   ),
                                 ),
                                 Text(
-                                  'Unit: ${_selectedVehicle!.unitNumber}',
+                                  AppLocalizations.of(context)!.unitNumber(_selectedVehicle!.unitNumber),
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ],
@@ -339,7 +338,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                       child: ElevatedButton.icon(
                         onPressed: _startInspection,
                         icon: const Icon(Icons.assignment_add),
-                        label: Text('Start ${_getInspectionTypeText()} Inspection'),
+                        label: Text(AppLocalizations.of(context)!.startInspection(_getInspectionTypeText())),
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
@@ -356,7 +355,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
   Widget _buildScannerView() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scan Vehicle QR Code'),
+        title: Text(AppLocalizations.of(context)!.scanVehicleQRCode),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: _stopScanning,
@@ -393,9 +392,9 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
                 color: Colors.black.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text(
-                'Position the QR code within the frame to scan',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.of(context)!.scanInstructions,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                 ),
@@ -571,7 +570,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No vehicles found',
+            AppLocalizations.of(context)!.noVehiclesFound,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               color: AppColors.grey600,
             ),
@@ -579,8 +578,8 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
           const SizedBox(height: 8),
           Text(
             _searchController.text.isEmpty
-                ? 'Add vehicles to get started'
-                : 'Try adjusting your search',
+                ? AppLocalizations.of(context)!.addVehiclesToStart
+                : AppLocalizations.of(context)!.tryAdjustingSearch,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: AppColors.grey600,
             ),
@@ -592,7 +591,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
               setState(() {});
             },
             icon: const Icon(Icons.refresh),
-            label: const Text('Refresh'),
+            label: Text(AppLocalizations.of(context)!.refresh),
           ),
         ],
       ),
@@ -602,11 +601,11 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
   String _getInspectionTypeText() {
     switch (_selectedInspectionType) {
       case InspectionType.preTrip:
-        return 'Pre-Trip';
+        return AppLocalizations.of(context)!.preTrip;
       case InspectionType.postTrip:
-        return 'Post-Trip';
+        return AppLocalizations.of(context)!.postTrip;
       case InspectionType.annual:
-        return 'Annual';
+        return AppLocalizations.of(context)!.annual;
     }
   }
 }

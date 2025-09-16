@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import '../../core/services/simple_notification_service.dart';
 import '../../data/datasources/database_service.dart';
 import '../../data/repositories/inspection_repository.dart';
@@ -51,6 +52,7 @@ class InspectionsNotifier extends StateNotifier<List<Inspection>> {
   }
 
   Future<Inspection> createInspection({
+    required BuildContext context,
     required String driverId,
     required String driverName,
     required Vehicle vehicle,
@@ -58,6 +60,7 @@ class InspectionsNotifier extends StateNotifier<List<Inspection>> {
     LocationInfo? location,
   }) async {
     final inspection = await _repository.createInspection(
+      context: context,
       driverId: driverId,
       driverName: driverName,
       vehicle: vehicle,

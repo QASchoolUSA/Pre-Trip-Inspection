@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/themes/app_theme.dart';
 import '../../core/constants/app_constants.dart';
@@ -159,9 +160,10 @@ class _SplashPageState extends ConsumerState<SplashPage>
         _navigateToNextPage();
       }
     } catch (e) {
-      // Show error and retry option
+      // Log error and navigate to login as fallback
+      print('Splash initialization error: $e');
       if (mounted) {
-        _showErrorDialog(e.toString());
+        context.go('/login');
       }
     }
   }
@@ -171,47 +173,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
     
     if (currentUser != null) {
       // User is already logged in, go to dashboard
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const DashboardPage()),
-      );
+      context.go('/dashboard');
     } else {
       // No user logged in, go to login
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      context.go('/login');
     }
   }
 
-  void _showErrorDialog(String error) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: const Text('Initialization Error'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 48,
-              color: AppColors.errorRed,
-            ),
-            const SizedBox(height: 16),
-            Text('Failed to initialize the app:\n$error'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _initializeApp(); // Retry
-            },
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {

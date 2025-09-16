@@ -1,7 +1,8 @@
 import '../models/inspection_models.dart';
 import '../datasources/database_service.dart';
-import '../../core/constants/inspection_data.dart';
+import '../../core/constants/localized_inspection_data.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
 
 /// Repository for managing inspection data
 class InspectionRepository {
@@ -45,6 +46,7 @@ class InspectionRepository {
 
   /// Create new inspection
   Future<Inspection> createInspection({
+    required BuildContext context,
     required String driverId,
     required String driverName,
     required Vehicle vehicle,
@@ -59,7 +61,7 @@ class InspectionRepository {
       type: type,
       createdAt: DateTime.now(),
       location: location,
-      items: InspectionData.getAllInspectionItems(),
+      items: LocalizedInspectionData.getAllInspectionItems(context),
     );
 
     await _db.inspectionsBox.put(inspection.id, inspection);

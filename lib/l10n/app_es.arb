@@ -1,0 +1,407 @@
+{
+  "@@locale": "es",
+  "@@last_modified": "2024-01-15T12:00:00.000Z",
+  
+  "appTitle": "Aplicación Móvil PTI",
+  "welcome": "Bienvenido",
+  "login": "Iniciar sesión",
+  "logout": "Cerrar sesión",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "forgotPassword": "¿Olvidaste tu contraseña?",
+  "inspections": "Inspecciones",
+  "newInspection": "Nueva inspección",
+  "preTrip": "Pre-viaje",
+  "postTrip": "Post-viaje",
+  "annual": "Anual",
+  "vehicleSelection": "Selección de vehículo",
+  "selectVehicle": "Seleccionar vehículo",
+  "scanQrCode": "Escanear código QR",
+  "manualEntry": "Entrada manual",
+  "vehicleNumber": "Número de vehículo",
+  "licensePlate": "Placa de matrícula",
+  "vin": "VIN",
+  "status": "Estado",
+  "pass": "Aprobado",
+  "fail": "Reprobado",
+  "notApplicable": "N/A",
+  "pending": "Pendiente",
+  "completed": "Completado",
+  "inProgress": "En progreso",
+  "cabAndSafetyEquipment": "Cabina y equipo de seguridad",
+  "exteriorAndCouplingSystem": "Exterior y sistema de acoplamiento",
+  "engineCompartment": "Compartimento del motor",
+  "underVehicle": "Debajo del vehículo",
+  "save": "Guardar",
+  "saveAndExit": "Guardar y salir",
+  "cancel": "Cancelar",
+  "continue_": "Continuar",
+  "next": "Siguiente",
+  "previous": "Anterior",
+  "complete": "Completar",
+  "notes": "Notas",
+  "addNotes": "Agregar notas",
+  "notesAdded": "Notas agregadas",
+  "photos": "Fotos",
+  "addPhoto": "Agregar foto",
+  "takePhoto": "Tomar foto",
+  "selectFromGallery": "Seleccionar de galería",
+  "signature": "Firma",
+  "addSignature": "Agregar firma",
+  "clear": "Limpiar",
+  "defectSeverity": "Severidad del defecto",
+  "minor": "Menor",
+  "major": "Mayor",
+  "critical": "Crítico",
+  "required": "REQUERIDO",
+  "optional": "Opcional",
+  "language": "Idioma",
+  "english": "Inglés",
+  "russian": "Ruso",
+  "ukrainian": "Ucraniano",
+  "spanish": "Español",
+  "settings": "Configuración",
+  "@settings": {
+    "description": "Título de la página de configuración"
+  },
+  
+  "appPreferences": "Preferencias de la aplicación",
+  "@appPreferences": {
+    "description": "Texto del subtítulo de preferencias de la aplicación"
+  },
+  
+  "driver": "Conductor",
+  "@driver": {
+    "description": "Driver label"
+  },
+  
+  "quickActions": "Acciones Rápidas",
+  "@quickActions": {
+    "description": "Quick actions section title"
+  },
+  
+  "startPreTripInspection": "Iniciar inspección previa al viaje",
+  "@startPreTripInspection": {
+    "description": "Start pre-trip inspection subtitle"
+  },
+  
+  "viewReports": "Ver Reportes",
+  "@viewReports": {
+    "description": "View reports action title"
+  },
+  
+  "previousInspections": "Inspecciones anteriores",
+  "@previousInspections": {
+    "description": "Previous inspections subtitle"
+  },
+  
+  "manageVehicles": "Gestionar Vehículos",
+  "@manageVehicles": {
+    "description": "Manage vehicles action title"
+  },
+  
+  "addEditVehicles": "Agregar o editar vehículos",
+  "@addEditVehicles": {
+    "description": "Add or edit vehicles subtitle"
+  },
+  
+  "statistics": "Estadísticas",
+  "@statistics": {
+    "description": "Statistics section title"
+  },
+  
+  "totalInspections": "Inspecciones Totales",
+  "@totalInspections": {
+    "description": "Total inspections stat title"
+  },
+  
+  "thisMonth": "Este Mes",
+  "@thisMonth": {
+    "description": "This month stat title"
+  },
+  
+  "activeVehicles": "Vehículos Activos",
+  "@activeVehicles": {
+    "description": "Active vehicles stat title"
+  },
+  
+  "totalVehicles": "Vehículos Totales",
+  "@totalVehicles": {
+    "description": "Total vehicles stat title"
+  },
+  
+  "recentActivity": "Actividad Reciente",
+  "@recentActivity": {
+    "description": "Recent activity section title"
+  },
+  
+  "noRecentActivity": "No hay actividad reciente",
+  "@noRecentActivity": {
+    "description": "No recent activity message"
+  },
+  
+  "language": "Idioma",
+  "@language": {
+    "description": "Language selection label"
+  },
+  "fluidLevels": "Niveles de fluidos",
+  "@fluidLevels": {
+    "description": "Fluid levels inspection item"
+  },
+  "photoCapturedSuccessfully": "Foto capturada exitosamente",
+  "@photoCapturedSuccessfully": {
+    "description": "Success message when photo is captured"
+  },
+  "photoAddedSuccessfully": "Foto agregada exitosamente",
+  "@photoAddedSuccessfully": {
+    "description": "Success message when photo is added"
+  },
+  "failedToTakePhoto": "Error al tomar la foto",
+  "@failedToTakePhoto": {
+    "description": "Error message when photo capture fails"
+  },
+  "pdfReportGenerated": "¡Reporte PDF generado exitosamente!",
+  "@pdfReportGenerated": {
+    "description": "Success message when PDF report is generated"
+  },
+  "failedToGeneratePdf": "Error al generar PDF",
+  "@failedToGeneratePdf": {
+    "description": "Error message when PDF generation fails"
+  },
+  "preTripInspectionReport": "Reporte de Inspección Pre-Viaje",
+  "@preTripInspectionReport": {
+    "description": "Title for pre-trip inspection report"
+  },
+  "addVehiclesToStart": "Agregar vehículos para comenzar",
+  "@addVehiclesToStart": {
+    "description": "Message when no vehicles are available"
+  },
+  "tryAdjustingSearch": "Intenta ajustar tu búsqueda o agregar vehículos para comenzar.",
+  "@tryAdjustingSearch": {
+    "description": "Mensaje mostrado cuando ningún vehículo coincide con los criterios de búsqueda"
+  },
+  "startInspection": "Iniciar {inspectionType}",
+  "@startInspection": {
+    "description": "Texto del botón para iniciar una inspección con el tipo",
+    "placeholders": {
+      "inspectionType": {
+        "type": "String",
+        "description": "El tipo de inspección (Pre-Viaje, Post-Viaje, etc.)"
+      }
+    }
+  },
+  "scanVehicleQRCode": "Escanear Código QR del Vehículo",
+  "@scanVehicleQRCode": {
+    "description": "Título para el diálogo de escaneo de código QR"
+  },
+  "scanInstructions": "Posiciona el código QR dentro del marco para escanear",
+  "@scanInstructions": {
+    "description": "Instrucciones para escanear códigos QR"
+  },
+  "noVehiclesFound": "No se encontraron vehículos",
+  "@noVehiclesFound": {
+    "description": "Mensaje mostrado cuando no hay vehículos disponibles"
+  },
+  "searchVehicles": "Buscar vehículos...",
+  "@searchVehicles": {
+    "description": "Texto de marcador de posición para la entrada de búsqueda de vehículos"
+  },
+  "scanQRCode": "Escanear Código QR",
+  "@scanQRCode": {
+    "description": "Texto del botón para escanear códigos QR"
+  },
+  "inspectionType": "Tipo de Inspección",
+  "@inspectionType": {
+    "description": "Etiqueta para la selección del tipo de inspección"
+  },
+  "unitNumber": "Unidad #{unitNumber}",
+  "@unitNumber": {
+    "description": "Formato de visualización para el número de unidad del vehículo",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "El número de unidad del vehículo"
+      }
+    }
+  },
+  "vehicleSelected": "Vehículo {unitNumber} seleccionado",
+  "@vehicleSelected": {
+    "description": "Mensaje mostrado cuando se selecciona un vehículo",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "El número de unidad del vehículo seleccionado"
+      }
+    }
+  },
+  "pleaseSelectVehicle": "Por favor selecciona un vehículo para continuar",
+  "@pleaseSelectVehicle": {
+    "description": "Mensaje mostrado cuando no se selecciona ningún vehículo"
+  },
+  "userNotFound": "Usuario no encontrado. Por favor verifica tus credenciales.",
+  "@userNotFound": {
+    "description": "Mensaje de error cuando no se encuentra el usuario"
+  },
+  "failedToStartInspection": "Error al iniciar la inspección: {error}",
+  "@failedToStartInspection": {
+    "description": "Mensaje de error cuando falla el inicio de la inspección",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "El mensaje de error"
+      }
+    }
+  },
+  "vehicleManagementComingSoon": "¡La función de Gestión de Vehículos estará disponible pronto!",
+  "@vehicleManagementComingSoon": {
+    "description": "Mensaje para el marcador de posición de la función de gestión de vehículos"
+  },
+  "fluidLevelsDescription": "Verificar niveles de aceite del motor, refrigerante, líquido de frenos, líquido de dirección asistida y líquido limpiaparabrisas",
+  "@fluidLevelsDescription": {
+    "description": "Description for fluid levels inspection"
+  },
+  "beltsAndHoses": "Correas y Mangueras",
+  "@beltsAndHoses": {
+    "description": "Belts and hoses inspection item"
+  },
+  "beltsAndHosesDescription": "Inspeccionar correas y mangueras en busca de grietas, desgaste o daños",
+  "@beltsAndHosesDescription": {
+    "description": "Description for belts and hoses inspection"
+  },
+  "componentsCondition": "Condición de Componentes",
+  "@componentsCondition": {
+    "description": "Components condition inspection item"
+  },
+  "componentsConditionDescription": "Verificar la condición general de los componentes del motor",
+  "@componentsConditionDescription": {
+    "description": "Description for components condition inspection"
+  },
+  "engineCompartment": "Compartimento del Motor",
+  "@engineCompartment": {
+    "description": "Engine compartment category"
+  },
+  "safetyEquipment": "Equipo de Seguridad",
+  "@safetyEquipment": {
+    "description": "Safety equipment inspection item"
+  },
+  "safetyEquipmentDescription": "Verificar extintor, triángulos de emergencia, kit de primeros auxilios",
+  "@safetyEquipmentDescription": {
+    "description": "Description for safety equipment inspection"
+  },
+  "gaugesAndControls": "Medidores y Controles",
+  "@gaugesAndControls": {
+    "description": "Gauges and controls inspection item"
+  },
+  "gaugesAndControlsDescription": "Verificar el funcionamiento de todos los medidores y controles",
+  "@gaugesAndControlsDescription": {
+    "description": "Description for gauges and controls inspection"
+  },
+  "brakes": "Frenos",
+  "@brakes": {
+    "description": "Brakes inspection item"
+  },
+  "brakesDescription": "Probar el sistema de frenos y verificar su funcionamiento",
+  "@brakesDescription": {
+    "description": "Description for brakes inspection"
+  },
+  "mirrorsAndWindshield": "Espejos y Parabrisas",
+  "@mirrorsAndWindshield": {
+    "description": "Mirrors and windshield inspection item"
+  },
+  "mirrorsAndWindshieldDescription": "Verificar espejos, parabrisas y limpiaparabrisas",
+  "@mirrorsAndWindshieldDescription": {
+    "description": "Description for mirrors and windshield inspection"
+  },
+  "paperwork": "Documentación",
+  "@paperwork": {
+    "description": "Paperwork inspection item"
+  },
+  "paperworkDescription": "Verificar registro del vehículo, seguro y documentos requeridos",
+  "@paperworkDescription": {
+    "description": "Description for paperwork inspection"
+  },
+  "cabAndSafetyEquipment": "Cabina y Equipo de Seguridad",
+  "@cabAndSafetyEquipment": {
+    "description": "Cab and safety equipment category"
+  },
+  "lightsAndReflectors": "Luces y Reflectores",
+  "@lightsAndReflectors": {
+    "description": "Lights and reflectors inspection item"
+  },
+  "lightsAndReflectorsDescription": "Verificar todas las luces y reflectores del vehículo",
+  "@lightsAndReflectorsDescription": {
+    "description": "Description for lights and reflectors inspection"
+  },
+  "tires": "Neumáticos",
+  "@tires": {
+    "description": "Tires inspection item"
+  },
+  "tiresDescription": "Inspeccionar neumáticos en busca de desgaste, daños y presión adecuada",
+  "@tiresDescription": {
+    "description": "Description for tires inspection"
+  },
+  "wheelsAndRims": "Ruedas y Llantas",
+  "@wheelsAndRims": {
+    "description": "Wheels and rims inspection item"
+  },
+  "wheelsAndRimsDescription": "Verificar ruedas y llantas en busca de grietas o daños",
+  "@wheelsAndRimsDescription": {
+    "description": "Description for wheels and rims inspection"
+  },
+  "suspension": "Suspensión",
+  "@suspension": {
+    "description": "Suspension inspection item"
+  },
+  "suspensionDescription": "Inspeccionar componentes de la suspensión",
+  "@suspensionDescription": {
+    "description": "Description for suspension inspection"
+  },
+  "brakeComponents": "Componentes de Frenos",
+  "@brakeComponents": {
+    "description": "Brake components inspection item"
+  },
+  "brakeComponentsDescription": "Verificar líneas de freno, tambores y componentes relacionados",
+  "@brakeComponentsDescription": {
+    "description": "Description for brake components inspection"
+  },
+  "couplingSystem": "Sistema de Acoplamiento",
+  "@couplingSystem": {
+    "description": "Coupling system inspection item"
+  },
+  "couplingSystemDescription": "Inspeccionar quinta rueda, perno rey y conexiones",
+  "@couplingSystemDescription": {
+    "description": "Description for coupling system inspection"
+  },
+  "trailer": "Remolque",
+  "@trailer": {
+    "description": "Trailer inspection item"
+  },
+  "trailerDescription": "Verificar condición general del remolque si está presente",
+  "@trailerDescription": {
+    "description": "Description for trailer inspection"
+  },
+  "exteriorAndCouplingSystem": "Exterior y Sistema de Acoplamiento",
+  "@exteriorAndCouplingSystem": {
+    "description": "Exterior and coupling system category"
+  },
+  "cdlLicense": "Licencia CDL",
+  "@cdlLicense": {
+    "description": "CDL license inspection item"
+  },
+  "cdlLicenseDescription": "Verificar licencia de conducir comercial válida",
+  "@cdlLicenseDescription": {
+    "description": "Description for CDL license inspection"
+  },
+  "dotMedicalCard": "Tarjeta Médica DOT",
+  "@dotMedicalCard": {
+    "description": "DOT medical card inspection item"
+  },
+  "dotMedicalCardDescription": "Verificar certificado médico DOT válido",
+  "@dotMedicalCardDescription": {
+    "description": "Description for DOT medical card inspection"
+  },
+  "personalDriverDocs": "Documentos Personales/Conductor",
+  "@personalDriverDocs": {
+    "description": "Personal/driver documentation category"
+  }
+}

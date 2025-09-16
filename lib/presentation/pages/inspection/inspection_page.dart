@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
-import '../../../core/constants/inspection_data.dart';
+import '../../../core/constants/localized_inspection_data.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../../data/models/inspection_models.dart';
 import '../../providers/app_providers.dart';
 import 'photo_capture_page.dart';
@@ -21,7 +23,7 @@ class InspectionPage extends ConsumerStatefulWidget {
 
 class _InspectionPageState extends ConsumerState<InspectionPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  TabController? _tabController;
   Inspection? _currentInspection;
   Map<String, List<InspectionItem>> _categorizedItems = {};
   Set<String> _expandedItems = {}; // Track expanded items
@@ -31,13 +33,20 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   void initState() {
     super.initState();
     _loadInspection();
-    _setupCategories();
-    _tabController = TabController(length: _categorizedItems.keys.length, vsync: this);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_categorizedItems.isEmpty) {
+      _setupCategories();
+      _tabController = TabController(length: _categorizedItems.keys.length, vsync: this);
+    }
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController?.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -55,7 +64,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   }
 
   void _setupCategories() {
-    final categories = InspectionData.getAllCategories();
+    final categories = LocalizedInspectionData.getAllCategories(context);
     _categorizedItems = {};
     
     for (final category in categories) {
@@ -64,7 +73,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
             .where((item) => item.category == category)
             .toList();
       } else {
-        _categorizedItems[category] = InspectionData.getItemsByCategory(category);
+        _categorizedItems[category] = LocalizedInspectionData.getItemsByCategory(context, category);
       }
     }
     
@@ -113,10 +122,10 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
       
       print('Auto-advance check: Category=$currentCategory, Items=${categoryItems.length}');
       
-      // Check if ALL items in current category are completed (have any status other than notChecked)
+      // Check if ALL items in current category are completed (have been explicitly checked)
       final allItems = categoryItems;
       final completedAllItems = allItems.where(
-        (item) => item.status != InspectionItemStatus.notChecked
+        (item) => item.checkedAt != null
       );
       
       print('All items: ${allItems.length}, Completed all: ${completedAllItems.length}');
@@ -160,7 +169,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
 
   @override
   Widget build(BuildContext context) {
-    if (_currentInspection == null) {
+    if (_currentInspection == null || _tabController == null) {
       return Scaffold(
         appBar: AppBar(
           title: const Text('Inspection'),
@@ -259,7 +268,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                 tabs: categories.map((category) {
                   final categoryItems = _categorizedItems[category] ?? [];
                   final completedItems = categoryItems.where((item) => 
-                      item.status != InspectionItemStatus.notChecked).length;
+                      item.checkedAt != null).length;
                   
                   return Tab(
                     child: Column(
@@ -371,7 +380,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: item.status != InspectionItemStatus.notChecked 
+          color: item.checkedAt != null 
               ? _getStatusColor(item.status)
               : hasPhotos 
                   ? AppColors.primaryBlue.withValues(alpha: 0.3)
@@ -395,7 +404,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
             }
           });
         },
-        backgroundColor: item.status != InspectionItemStatus.notChecked 
+        backgroundColor: item.checkedAt != null 
             ? _getStatusColor(item.status).withValues(alpha: 0.05)
             : hasPhotos 
                 ? AppColors.primaryBlue.withValues(alpha: 0.05)
@@ -427,9 +436,9 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                             color: AppColors.errorRed,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Text(
-                            'REQUIRED',
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.required,
+                            style: const TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.bold,
                               color: AppColors.white,
@@ -458,7 +467,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                               const Icon(Icons.photo_camera, size: 12, color: AppColors.white),
                               const SizedBox(width: 4),
                               Text(
-                                '${item.photoUrls.length} photo${item.photoUrls.length > 1 ? 's' : ''}',
+                                AppLocalizations.of(context)!.photoAttached(item.photoUrls.length),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -477,14 +486,14 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                             color: AppColors.secondaryOrange,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.note, size: 10, color: AppColors.white),
-                              SizedBox(width: 2),
+                              const Icon(Icons.note, size: 10, color: AppColors.white),
+                              const SizedBox(width: 2),
                               Text(
-                                'Notes',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.notes,
+                                style: const TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.white,
@@ -499,7 +508,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                 ],
               ),
             ),
-            if (item.status != InspectionItemStatus.notChecked)
+            if (item.checkedAt != null)
               Icon(
                 Icons.check_circle,
                 color: _getStatusColor(item.status),
@@ -525,9 +534,9 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
               children: [
                 // Status selection
                 const Text(
-                  'Status:',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
+                    'Status:',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 12,
@@ -612,9 +621,9 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                 // Defect severity (if failed)
                 if (item.status == InspectionItemStatus.failed) ...[
                   const SizedBox(height: 16),
-                  const Text(
-                    'Defect Severity:',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                  Text(
+                    AppLocalizations.of(context)!.defectSeverityLabel,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
@@ -689,7 +698,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                                 ),
                               ),
                               Text(
-                                '${item.photoUrls.length} photo${item.photoUrls.length > 1 ? 's' : ''} attached to this item',
+                                AppLocalizations.of(context)!.photosAttachedToItem(item.photoUrls.length),
                                 style: TextStyle(
                                   color: AppColors.primaryBlue.withValues(alpha: 0.8),
                                   fontSize: 13,
@@ -742,7 +751,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                                   children: [
                                     const Icon(Icons.photo_camera, color: AppColors.white, size: 20),
                                     const SizedBox(width: 8),
-                                    Text('Photos updated! ${updatedItem.photoUrls.length} photo${updatedItem.photoUrls.length > 1 ? 's' : ''} attached'),
+                                    Text('${AppLocalizations.of(context)!.photosUpdated} ${AppLocalizations.of(context)!.photoAttached(updatedItem.photoUrls.length)}'),
                                   ],
                                 ),
                                 backgroundColor: AppColors.primaryBlue,
@@ -759,7 +768,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                           shadowColor: hasPhotos ? AppColors.successGreen.withValues(alpha: 0.3) : null,
                         ),
                         icon: Icon(hasPhotos ? Icons.photo_library : Icons.add_a_photo),
-                        label: Text(hasPhotos ? 'Photos' : 'Add Photo'),
+                        label: Text(hasPhotos ? 'Photos' : AppLocalizations.of(context)!.addPhoto),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -774,7 +783,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                           elevation: hasNotes ? 4 : 2,
                         ),
                         icon: Icon(hasNotes ? Icons.note : Icons.note_add),
-                        label: Text(hasNotes ? 'Notes Added' : 'Add Notes'),
+                        label: Text(hasNotes ? 'Notes Added' : AppLocalizations.of(context)!.addNotes),
                       ),
                     ),
                   ],
@@ -807,25 +816,18 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
           backgroundColor: AppColors.grey400,
           child: Icon(Icons.remove, size: 16, color: AppColors.white),
         );
-      case InspectionItemStatus.notChecked:
-        return const CircleAvatar(
-          radius: 12,
-          backgroundColor: AppColors.grey300,
-          child: Icon(Icons.radio_button_unchecked, size: 16, color: AppColors.grey600),
-        );
     }
   }
 
   String _getStatusText(InspectionItemStatus status) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case InspectionItemStatus.passed:
-        return 'Pass';
+        return l10n.pass;
       case InspectionItemStatus.failed:
-        return 'Fail';
+        return l10n.fail;
       case InspectionItemStatus.notApplicable:
-        return 'N/A';
-      case InspectionItemStatus.notChecked:
-        return 'Unchecked';
+        return l10n.notApplicable;
     }
   }
 
@@ -837,21 +839,20 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
         return AppColors.errorRed;
       case InspectionItemStatus.notApplicable:
         return AppColors.grey500;
-      case InspectionItemStatus.notChecked:
-        return AppColors.grey400;
     }
   }
 
   String _getSeverityText(DefectSeverity severity) {
+    final l10n = AppLocalizations.of(context)!;
     switch (severity) {
       case DefectSeverity.minor:
-        return 'Minor';
+        return l10n.minor;
       case DefectSeverity.major:
-        return 'Major';
+        return l10n.major;
       case DefectSeverity.critical:
-        return 'Critical';
+        return l10n.critical;
       case DefectSeverity.outOfService:
-        return 'Out of Service';
+        return l10n.outOfService;
     }
   }
 
@@ -869,13 +870,14 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   }
 
   String _getInspectionTypeText() {
+    final l10n = AppLocalizations.of(context)!;
     switch (_currentInspection!.type) {
       case InspectionType.preTrip:
-        return 'Pre-Trip';
+        return l10n.preTrip;
       case InspectionType.postTrip:
-        return 'Post-Trip';
+        return l10n.postTrip;
       case InspectionType.annual:
-        return 'Annual';
+        return l10n.annual;
     }
   }
 
@@ -887,8 +889,6 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
         return Icons.cancel;
       case InspectionItemStatus.notApplicable:
         return Icons.not_interested;
-      case InspectionItemStatus.notChecked:
-        return Icons.radio_button_unchecked;
     }
   }
 
@@ -947,11 +947,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   }
 
   void _completeInspection() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => SignaturePage(inspectionId: _currentInspection!.id),
-      ),
-    );
+    context.pushSignature(_currentInspection!.id);
   }
 
   bool _canAdvanceToNext() {
@@ -966,7 +962,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
     final currentCategory = categories[currentIndex];
     final categoryItems = _categorizedItems[currentCategory] ?? [];
     final completedItems = categoryItems.where((item) => 
-        item.status != InspectionItemStatus.notChecked).toList();
+        item.checkedAt != null).toList();
     
     return categoryItems.isNotEmpty && completedItems.length == categoryItems.length;
   }

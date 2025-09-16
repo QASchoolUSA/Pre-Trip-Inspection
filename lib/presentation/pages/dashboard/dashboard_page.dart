@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/navigation/app_router.dart';
+import '../../../generated/l10n/app_localizations.dart';
 import '../../providers/app_providers.dart';
-import '../auth/login_page.dart';
 import '../vehicle/vehicle_selection_page.dart';
 
 /// Main dashboard page
@@ -20,18 +21,18 @@ class DashboardPage extends ConsumerWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PTI Dashboard'),
+        title: Text(AppLocalizations.of(context)!.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
+            tooltip: AppLocalizations.of(context)!.settings,
             onPressed: () {
               context.goToSettings();
             },
           ),
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: AppLocalizations.of(context)!.logout,
             onPressed: () {
               _showLogoutDialog(context, ref);
             },
@@ -68,7 +69,7 @@ class DashboardPage extends ConsumerWidget {
           _startNewInspection(context);
         },
         icon: const Icon(Icons.add_task),
-        label: const Text('New Inspection'),
+        label: Text(AppLocalizations.of(context)!.newInspection),
         backgroundColor: AppColors.secondaryOrange,
       ),
     );
@@ -98,21 +99,21 @@ class DashboardPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome back,',
+                    AppLocalizations.of(context)!.welcome,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.grey600,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    user?.name ?? 'Driver',
+                    user?.name ?? AppLocalizations.of(context)!.driver,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'CDL: ${user?.cdlNumber ?? 'N/A'}',
+                    'CDL: ${user?.cdlNumber ?? AppLocalizations.of(context)!.notApplicable}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.grey600,
                     ),
@@ -131,7 +132,7 @@ class DashboardPage extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Quick Actions',
+          AppLocalizations.of(context)!.quickActions,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -143,8 +144,8 @@ class DashboardPage extends ConsumerWidget {
               child: _buildActionCard(
                 context,
                 icon: Icons.assignment_add,
-                title: 'New Inspection',
-                subtitle: 'Start pre-trip inspection',
+                title: AppLocalizations.of(context)!.newInspection,
+                subtitle: AppLocalizations.of(context)!.startPreTripInspection,
                 color: AppColors.successGreen,
                 onTap: () => _startNewInspection(context),
               ),
@@ -154,8 +155,8 @@ class DashboardPage extends ConsumerWidget {
               child: _buildActionCard(
                 context,
                 icon: Icons.history,
-                title: 'View Reports',
-                subtitle: 'Previous inspections',
+                title: AppLocalizations.of(context)!.viewReports,
+                subtitle: AppLocalizations.of(context)!.previousInspections,
                 color: AppColors.infoBlue,
                 onTap: () => _viewReports(context),
               ),
@@ -169,9 +170,9 @@ class DashboardPage extends ConsumerWidget {
               child: _buildActionCard(
                 context,
                 icon: Icons.local_shipping,
-                title: 'Vehicle Info',
-                subtitle: 'Manage vehicles',
-                color: AppColors.primaryBlue,
+                title: AppLocalizations.of(context)!.manageVehicles,
+                subtitle: AppLocalizations.of(context)!.addEditVehicles,
+                color: AppColors.secondaryOrange,
                 onTap: () => _manageVehicles(context),
               ),
             ),
@@ -179,14 +180,123 @@ class DashboardPage extends ConsumerWidget {
             Expanded(
               child: _buildActionCard(
                 context,
-                icon: Icons.sync,
-                title: 'Sync Data',
-                subtitle: 'Upload reports',
-                color: AppColors.secondaryOrange,
-                onTap: () => _syncData(context),
+                icon: Icons.settings,
+                title: AppLocalizations.of(context)!.settings,
+                subtitle: AppLocalizations.of(context)!.appPreferences,
+                color: AppColors.primaryBlue,
+                onTap: () => context.goToSettings(),
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatsSection(
+    BuildContext context,
+    Map<String, dynamic> inspectionStats,
+    Map<String, dynamic> vehicleStats,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.statistics,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                context,
+                title: AppLocalizations.of(context)!.totalInspections,
+                value: '${inspectionStats['total'] ?? 0}',
+                icon: Icons.assignment,
+                color: AppColors.primaryBlue,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                title: AppLocalizations.of(context)!.thisMonth,
+                value: '${inspectionStats['recent'] ?? 0}',
+                icon: Icons.calendar_today,
+                color: AppColors.successGreen,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                context,
+                title: AppLocalizations.of(context)!.activeVehicles,
+                value: '${vehicleStats['active'] ?? 0}',
+                icon: Icons.local_shipping,
+                color: AppColors.secondaryOrange,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                context,
+                title: AppLocalizations.of(context)!.totalVehicles,
+                value: '${vehicleStats['total'] ?? 0}',
+                icon: Icons.garage,
+                color: AppColors.infoBlue,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRecentActivitySection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.recentActivity,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).cardColor,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).dividerColor,
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                Icons.inbox_outlined,
+                size: 48,
+                color: Theme.of(context).hintColor,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                AppLocalizations.of(context)!.noRecentActivity,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).hintColor,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -235,72 +345,6 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatsSection(
-    BuildContext context,
-    Map<String, dynamic> inspectionStats,
-    Map<String, dynamic> vehicleStats,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Statistics',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: 'Total Inspections',
-                value: '${inspectionStats['total'] ?? 0}',
-                icon: Icons.assignment,
-                color: AppColors.primaryBlue,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: 'This Month',
-                value: '${inspectionStats['recent'] ?? 0}',
-                icon: Icons.calendar_today,
-                color: AppColors.successGreen,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: 'Active Vehicles',
-                value: '${vehicleStats['active'] ?? 0}',
-                icon: Icons.local_shipping,
-                color: AppColors.secondaryOrange,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: 'Pending Sync',
-                value: '${inspectionStats['unsynced'] ?? 0}',
-                icon: Icons.sync_problem,
-                color: AppColors.warningYellow,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildStatCard(
     BuildContext context, {
     required String title,
@@ -340,103 +384,61 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecentActivitySection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Recent Activity',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const Icon(
-                  Icons.history,
-                  size: 48,
-                  color: AppColors.grey400,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No recent activity',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Start your first inspection to see activity here',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.grey600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   void _showLogoutDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              ref.read(currentUserProvider.notifier).state = null;
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-                (route) => false,
-              );
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.logoutConfirmTitle),
+          content: Text(AppLocalizations.of(context)!.logoutConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(currentUserProvider.notifier).state = null;
+                context.goToLogin();
+              },
+              child: Text(AppLocalizations.of(context)!.logout),
+            ),
+          ],
+        );
+      },
     );
   }
 
   void _startNewInspection(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const VehicleSelectionPage()),
-    );
+    context.goToVehicleSelection();
   }
 
   void _viewReports(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('View Reports feature coming soon!'),
-        backgroundColor: AppColors.infoBlue,
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.viewReportsComingSoon),
+        backgroundColor: Colors.blue,
       ),
     );
   }
 
   void _manageVehicles(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Vehicle Management feature coming soon!'),
-        backgroundColor: AppColors.infoBlue,
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.vehicleManagementComingSoon),
+        backgroundColor: Colors.blue,
       ),
     );
   }
 
   void _syncData(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Data Sync feature coming soon!'),
-        backgroundColor: AppColors.infoBlue,
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.dataSyncComingSoon),
+        backgroundColor: Colors.blue,
       ),
     );
   }

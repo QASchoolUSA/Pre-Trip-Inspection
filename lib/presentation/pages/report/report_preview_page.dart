@@ -6,10 +6,11 @@ import 'package:printing/printing.dart';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../../../generated/l10n/app_localizations.dart';
 import '../../../core/themes/app_theme.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../../data/models/inspection_models.dart';
 import '../../providers/app_providers.dart';
-import '../dashboard/dashboard_page.dart';
 
 /// Report preview and PDF generation page
 class ReportPreviewPage extends ConsumerStatefulWidget {
@@ -64,9 +65,9 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('PDF report generated successfully!'),
-            backgroundColor: AppColors.successGreen,
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.pdfReportGenerated),
+            backgroundColor: Colors.green,
           ),
         );
       }
@@ -74,8 +75,8 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to generate PDF: $e'),
-            backgroundColor: AppColors.errorRed,
+            content: Text('${AppLocalizations.of(context)!.failedToGeneratePdf}: $e'),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -88,16 +89,17 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
 
   Future<Uint8List> _generatePdf(Inspection inspection) async {
     final pdf = pw.Document();
+    final l10n = AppLocalizations.of(context)!;
     
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) {
+        build: (pw.Context pdfContext) {
           return [
             pw.Header(
               level: 0,
               child: pw.Text(
-                'Pre-Trip Inspection Report',
+                l10n.preTripInspectionReport,
                 style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
               ),
             ),
@@ -255,10 +257,7 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const DashboardPage()),
-                  (route) => false,
-                );
+                context.goToDashboard();
               },
               child: const Text('Back to Dashboard'),
             ),

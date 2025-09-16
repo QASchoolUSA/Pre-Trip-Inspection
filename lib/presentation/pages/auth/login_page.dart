@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
-import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/navigation/app_router.dart';
+import '../../../core/themes/app_theme.dart';
 import '../../providers/app_providers.dart';
 import '../dashboard/dashboard_page.dart';
 
@@ -79,9 +81,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         
         // Navigate to dashboard
         if (mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const DashboardPage()),
-          );
+          context.goToDashboard();
         }
       } else {
         setState(() {
@@ -174,7 +174,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Text(
-                                  'Enter Your PIN',
+                                  AppLocalizations.of(context)!.enterYourPin,
                                   style: Theme.of(context).textTheme.titleLarge,
                                   textAlign: TextAlign.center,
                                 ),
@@ -191,7 +191,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headlineMedium,
                                   decoration: InputDecoration(
-                                    hintText: '••••',
+                                    hintText: AppLocalizations.of(context)!.pinHint,
                                     counterText: '',
                                     errorText: _errorMessage,
                                     border: OutlineInputBorder(

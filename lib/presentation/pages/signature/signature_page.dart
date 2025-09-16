@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:signature/signature.dart';
 import 'dart:typed_data';
+import '../../../generated/l10n/app_localizations.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../data/models/inspection_models.dart';
 import '../../providers/app_providers.dart';
 import '../report/report_preview_page.dart';
+import '../../../core/navigation/app_router.dart';
 
 /// Digital signature page for inspection completion
 class SignaturePage extends ConsumerStatefulWidget {
@@ -57,68 +59,30 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
     }
   }
 
-  Future<void> _completeInspection() async {
+  void _completeInspection() {
     if (_signatureController.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please provide your signature'),
-          backgroundColor: AppColors.errorRed,
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.pleaseProvideSignature),
+          backgroundColor: Colors.red,
         ),
       );
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // Convert signature to base64 string
-      final Uint8List? signatureBytes = await _signatureController.toPngBytes();
-      if (signatureBytes == null) {
-        throw Exception('Failed to capture signature');
-      }
-
-      final String signatureBase64 = _bytesToBase64(signatureBytes);
-      
-      // Complete the inspection
-      await ref.read(inspectionsProvider.notifier).completeInspection(
-        widget.inspectionId,
-        'data:image/png;base64,$signatureBase64',
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-      );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Inspection completed successfully!'),
-            backgroundColor: AppColors.successGreen,
-          ),
-        );
-
-        // Navigate to report preview
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => ReportPreviewPage(inspectionId: widget.inspectionId),
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to complete inspection: $e'),
-            backgroundColor: AppColors.errorRed,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    // Save signature and complete inspection
+    final signatureBytes = _signatureController.toPngBytes();
+    
+    // Navigate back to dashboard with success message using GoRouter
+    context.goToDashboard();
+    
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.inspectionCompletedSuccessfully),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   String _bytesToBase64(Uint8List bytes) {
@@ -157,7 +121,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
     if (_inspection == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Digital Signature'),
+          title: Text(AppLocalizations.of(context)!.digitalSignature),
         ),
         body: const Center(
           child: CircularProgressIndicator(),
@@ -166,14 +130,14 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
     }
 
     final completedItems = _inspection!.items.where(
-      (item) => item.status != InspectionItemStatus.notChecked,
+      (item) => item.checkedAt != null,
     ).length;
     final failedItems = _inspection!.failedItemsCount;
     final hasCriticalDefects = _inspection!.hasCriticalDefects;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complete Inspection'),
+        title: Text(AppLocalizations.of(context)!.completeInspection),
         backgroundColor: hasCriticalDefects 
             ? AppColors.errorRed 
             : AppColors.primaryBlue,
@@ -205,7 +169,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${_getInspectionTypeText()} Inspection',
+                                '${_getInspectionTypeText()} ${AppLocalizations.of(context)!.inspection}',
                                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -229,22 +193,22 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                       children: [
                         Expanded(
                           child: _buildStatItem(
-                            'Completed',
+                            AppLocalizations.of(context)!.completed,
                             '$completedItems/${_inspection!.items.length}',
                             AppColors.infoBlue,
                           ),
                         ),
                         Expanded(
                           child: _buildStatItem(
-                            'Failed',
+                            AppLocalizations.of(context)!.failed,
                             failedItems.toString(),
                             failedItems > 0 ? AppColors.errorRed : AppColors.successGreen,
                           ),
                         ),
                         Expanded(
                           child: _buildStatItem(
-                            'Status',
-                            hasCriticalDefects ? 'Critical' : 'OK',
+                            AppLocalizations.of(context)!.status,
+                            hasCriticalDefects ? AppLocalizations.of(context)!.critical : AppLocalizations.of(context)!.ok,
                             hasCriticalDefects ? AppColors.errorRed : AppColors.successGreen,
                           ),
                         ),
@@ -275,16 +239,16 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Critical Defects Found',
-                                    style: TextStyle(
+                                  Text(
+                                    AppLocalizations.of(context)!.criticalDefectsFound,
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.errorRed,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'This vehicle has critical defects that may require immediate attention.',
+                                    AppLocalizations.of(context)!.criticalDefectsWarning,
                                     style: TextStyle(
                                       color: AppColors.errorRed.withValues(alpha: 0.8),
                                       fontSize: 13,
@@ -306,7 +270,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
             
             // Overall notes section
             Text(
-              'Overall Notes (Optional)',
+              AppLocalizations.of(context)!.overallNotes,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -315,9 +279,9 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
             TextField(
               controller: _notesController,
               maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'Add any overall notes about this inspection...',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.overallNotesHint,
+                border: const OutlineInputBorder(),
               ),
             ),
             
@@ -325,14 +289,14 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
             
             // Signature section
             Text(
-              'Driver Signature',
+              AppLocalizations.of(context)!.driverSignature,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Please sign below to certify that you have completed this inspection.',
+              AppLocalizations.of(context)!.signatureInstruction,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.grey600,
               ),
@@ -364,12 +328,12 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                   child: OutlinedButton.icon(
                     onPressed: _clearSignature,
                     icon: const Icon(Icons.clear),
-                    label: const Text('Clear'),
+                    label: Text(AppLocalizations.of(context)!.clear),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Driver: $_driverName',
+                  '${AppLocalizations.of(context)!.driver}: $_driverName',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontStyle: FontStyle.italic,
                     color: AppColors.grey600,
@@ -400,7 +364,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Certification',
+                        AppLocalizations.of(context)!.certification,
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryBlue,
@@ -410,7 +374,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'By signing below, I certify that I have completed this pre-trip inspection in accordance with DOT regulations and that all defects have been properly documented.',
+                    AppLocalizations.of(context)!.certificationText,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppColors.grey700,
                     ),
@@ -441,7 +405,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Back to Inspection'),
+                  child: Text(AppLocalizations.of(context)!.backToInspection),
                 ),
               ),
               const SizedBox(width: 12),
@@ -463,7 +427,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
                             valueColor: AlwaysStoppedAnimation(AppColors.white),
                           ),
                         )
-                      : const Text('Complete Inspection'),
+                      : Text(AppLocalizations.of(context)!.completeInspection),
                 ),
               ),
             ],
@@ -497,13 +461,14 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
   }
 
   String _getInspectionTypeText() {
+    final l10n = AppLocalizations.of(context)!;
     switch (_inspection!.type) {
       case InspectionType.preTrip:
-        return 'Pre-Trip';
+        return l10n.preTrip;
       case InspectionType.postTrip:
-        return 'Post-Trip';
+        return l10n.postTrip;
       case InspectionType.annual:
-        return 'Annual';
+        return l10n.annual;
     }
   }
 }

@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  shared_preferences: ^2.2.2
 
   # State Management
   flutter_riverpod: ^2.4.9
@@ -40,7 +43,6 @@ dependencies:
   # Local Storage & Offline
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  shared_preferences: ^2.2.2
   
   # Forms & Validation
   reactive_forms: ^18.1.1
@@ -105,6 +107,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # Assets
   assets:

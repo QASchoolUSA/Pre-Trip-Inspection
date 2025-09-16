@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
-class HelpPage extends StatelessWidget {
+class HelpPage extends ConsumerWidget {
   const HelpPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help'),
+        title: Text(l10n.help),
       ),
-      body: const Center(
-        child: Text('Help Page'),
+      body: Center(
+        child: Text(l10n.helpPageContent),
       ),
     );
   }

@@ -79,6 +79,10 @@ class AppTheme {
           color: AppColors.white,
           size: 24,
         ),
+        actionsIconTheme: IconThemeData(
+          color: AppColors.white,
+          size: 24,
+        ),
       ),
       
       // Card Theme
@@ -270,6 +274,10 @@ class AppTheme {
           color: AppColors.white,
         ),
         iconTheme: IconThemeData(
+          color: AppColors.white,
+          size: 24,
+        ),
+        actionsIconTheme: IconThemeData(
           color: AppColors.white,
           size: 24,
         ),

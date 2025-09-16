@@ -1,0 +1,13 @@
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+output-dir: lib/generated/l10n
+nullable-getter: false
+header: |
+  /// Generated file. Do not edit.
+  ///
+  /// This file contains the localization strings for the PTI Mobile App.
+  /// To add new strings, edit the ARB files in lib/l10n/ and run:
+  /// flutter gen-l10n
+untranslated-messages-file: lib/l10n/untranslated.json

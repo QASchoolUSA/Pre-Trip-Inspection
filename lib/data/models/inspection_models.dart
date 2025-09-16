@@ -63,18 +63,14 @@ enum DefectSeverity {
 @HiveType(typeId: 3)
 enum InspectionItemStatus {
   @HiveField(0)
-  @JsonValue('not_checked')
-  notChecked,
-  
-  @HiveField(1)
   @JsonValue('passed')
   passed,
   
-  @HiveField(2)
+  @HiveField(1)
   @JsonValue('failed')
   failed,
   
-  @HiveField(3)
+  @HiveField(2)
   @JsonValue('not_applicable')
   notApplicable,
 }
@@ -122,7 +118,7 @@ class InspectionItem {
     required this.description,
     required this.category,
     required this.isRequired,
-    this.status = InspectionItemStatus.notChecked,
+    this.status = InspectionItemStatus.notApplicable,
     this.notes,
     List<String>? photoUrls,
     this.defectSeverity,
@@ -354,8 +350,10 @@ class Inspection {
   double get progressPercentage {
     if (items.isEmpty) return 0.0;
     
+    // Since all items now have a status by default, progress is always 100%
+    // But we can calculate based on items that have been explicitly checked
     final checkedItems = items.where((item) => 
-        item.status != InspectionItemStatus.notChecked).length;
+        item.checkedAt != null).length;
     
     return (checkedItems / items.length) * 100;
   }
@@ -383,7 +381,7 @@ class Inspection {
   bool get isComplete {
     final requiredItems = items.where((item) => item.isRequired);
     return requiredItems.every((item) => 
-        item.status != InspectionItemStatus.notChecked);
+        item.checkedAt != null);
   }
 
   Inspection copyWith({

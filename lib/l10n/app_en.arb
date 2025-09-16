@@ -1,0 +1,1285 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2024-01-15T12:00:00.000Z",
+  
+  "appTitle": "PTI Mobile App",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  
+  "inspections": "Inspections",
+  "@inspections": {
+    "description": "Inspections page title"
+  },
+  
+  "newInspection": "New Inspection",
+  "@newInspection": {
+    "description": "New inspection button text"
+  },
+  
+  "preTrip": "Pre-Trip",
+  "@preTrip": {
+    "description": "Pre-trip inspection type"
+  },
+  
+  "postTrip": "Post-Trip",
+  "@postTrip": {
+    "description": "Post-trip inspection type"
+  },
+  
+  "annual": "Annual",
+  "@annual": {
+    "description": "Annual inspection type"
+  },
+  
+  "vehicleSelection": "Vehicle Selection",
+  "@vehicleSelection": {
+    "description": "Vehicle selection page title"
+  },
+  
+  "selectVehicle": "Select Vehicle",
+  "@selectVehicle": {
+    "description": "Select vehicle instruction"
+  },
+  
+  "scanQrCode": "Scan QR Code",
+  "@scanQrCode": {
+    "description": "Scan QR code button text"
+  },
+  
+  "manualEntry": "Manual Entry",
+  "@manualEntry": {
+    "description": "Manual entry button text"
+  },
+  
+  "vehicleNumber": "Vehicle Number",
+  "@vehicleNumber": {
+    "description": "Vehicle number field label"
+  },
+  
+  "licensePlate": "License Plate",
+  "@licensePlate": {
+    "description": "License plate field label"
+  },
+  
+  "vin": "VIN",
+  "@vin": {
+    "description": "Vehicle identification number"
+  },
+  
+  "status": "Status",
+  "@status": {
+    "description": "Status label"
+  },
+  
+  "pass": "Pass",
+  "@pass": {
+    "description": "Pass status"
+  },
+  
+  "fail": "Fail",
+  "@fail": {
+    "description": "Fail status"
+  },
+  
+  "notApplicable": "N/A",
+  "@notApplicable": {
+    "description": "Not applicable status"
+  },
+  
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending status"
+  },
+  
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completed status"
+  },
+  
+  "inProgress": "In Progress",
+  "@inProgress": {
+    "description": "In progress status"
+  },
+  
+  "cabAndSafetyEquipment": "Cab and Safety Equipment",
+  "@cabAndSafetyEquipment": {
+    "description": "Inspection category"
+  },
+  
+  "exteriorAndCouplingSystem": "Exterior and Coupling System",
+  "@exteriorAndCouplingSystem": {
+    "description": "Inspection category"
+  },
+  
+  "engineCompartment": "Engine Compartment",
+  "@engineCompartment": {
+    "description": "Inspection category"
+  },
+  
+  "underVehicle": "Under Vehicle",
+  "@underVehicle": {
+    "description": "Inspection category"
+  },
+  
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  
+  "saveAndExit": "Save & Exit",
+  "@saveAndExit": {
+    "description": "Save and exit button text"
+  },
+  
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  
+  "continue_": "Continue",
+  "@continue_": {
+    "description": "Continue button text"
+  },
+  
+  "next": "Next",
+  "@next": {
+    "description": "Next button text"
+  },
+  
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous button text"
+  },
+  
+  "complete": "Complete",
+  "@complete": {
+    "description": "Complete button text"
+  },
+  
+  "notes": "Notes",
+  "@notes": {
+    "description": "Notes field label"
+  },
+  
+  "addNotes": "Add Notes",
+  "@addNotes": {
+    "description": "Add notes button text"
+  },
+  
+  "notesAdded": "Notes Added",
+  "@notesAdded": {
+    "description": "Notes added status"
+  },
+  
+  "photos": "Photos",
+  "@photos": {
+    "description": "Photos label"
+  },
+  
+  "addPhoto": "Add Photo",
+  "@addPhoto": {
+    "description": "Add photo button text"
+  },
+  
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Take photo button text"
+  },
+  
+  "selectFromGallery": "Select from Gallery",
+  "@selectFromGallery": {
+    "description": "Select from gallery button text"
+  },
+  
+  "signature": "Signature",
+  "@signature": {
+    "description": "Signature label"
+  },
+  
+  "addSignature": "Add Signature",
+  "@addSignature": {
+    "description": "Add signature button text"
+  },
+  
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button text"
+  },
+  
+  "defectSeverity": "Defect Severity",
+  "@defectSeverity": {
+    "description": "Defect severity label"
+  },
+  
+  "minor": "Minor",
+  "@minor": {
+    "description": "Minor defect severity"
+  },
+  
+  "major": "Major",
+  "@major": {
+    "description": "Major defect severity"
+  },
+  
+  "critical": "Critical",
+  "@critical": {
+    "description": "Critical defect severity"
+  },
+  
+  "required": "REQUIRED",
+  "@required": {
+    "description": "Required field indicator"
+  },
+  
+  "optional": "Optional",
+  "@optional": {
+    "description": "Optional field indicator"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language selection label"
+  },
+  
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  
+  "russian": "Russian",
+  "@russian": {
+    "description": "Russian language option"
+  },
+  
+  "ukrainian": "Ukrainian",
+  "@ukrainian": {
+    "description": "Ukrainian language option"
+  },
+  
+  "spanish": "Spanish",
+  "@spanish": {
+    "description": "Spanish language option"
+  },
+  
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+  
+  "appPreferences": "App preferences",
+  "@appPreferences": {
+    "description": "App preferences subtitle text"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language selection label"
+  },
+  
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  
+  "russian": "Russian",
+  "@russian": {
+    "description": "Russian language option"
+  },
+  
+  "ukrainian": "Ukrainian",
+  "@ukrainian": {
+    "description": "Ukrainian language option"
+  },
+  
+  "spanish": "Spanish",
+  "@spanish": {
+    "description": "Spanish language option"
+  },
+  
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+  
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile page title"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Error message"
+  },
+  
+  "success": "Success",
+  "@success": {
+    "description": "Success message"
+  },
+  
+  "warning": "Warning",
+  "@warning": {
+    "description": "Warning message"
+  },
+  
+  "info": "Info",
+  "@info": {
+    "description": "Info message"
+  },
+  
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading message"
+  },
+  
+  "noData": "No data available",
+  "@noData": {
+    "description": "No data message"
+  },
+  
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button text"
+  },
+  
+  "search": "Search",
+  "@search": {
+    "description": "Search field placeholder"
+  },
+  
+  "filter": "Filter",
+  "@filter": {
+    "description": "Filter button text"
+  },
+  
+  "sort": "Sort",
+  "@sort": {
+    "description": "Sort button text"
+  },
+  
+  "date": "Date",
+  "@date": {
+    "description": "Date label"
+  },
+  
+  "time": "Time",
+  "@time": {
+    "description": "Time label"
+  },
+  
+  "location": "Location",
+  "@location": {
+    "description": "Location label"
+  },
+  
+  "driver": "Driver",
+  "@driver": {
+    "description": "Driver label"
+  },
+  
+  "vehicle": "Vehicle",
+  "@vehicle": {
+    "description": "Vehicle label"
+  },
+  
+  "report": "Report",
+  "@report": {
+    "description": "Report label"
+  },
+  
+  "generateReport": "Generate Report",
+  "@generateReport": {
+    "description": "Generate report button text"
+  },
+  
+  "downloadReport": "Download Report",
+  "@downloadReport": {
+    "description": "Download report button text"
+  },
+  
+  "shareReport": "Share Report",
+  "@shareReport": {
+    "description": "Share report button text"
+  },
+  
+  "enterYourPin": "Enter Your PIN",
+  "@enterYourPin": {
+    "description": "PIN entry instruction"
+  },
+  
+  "pinHint": "••••",
+  "@pinHint": {
+    "description": "PIN input field hint"
+  },
+  
+  "searchVehicleHint": "Search by unit number, make, model...",
+  "@searchVehicleHint": {
+    "description": "Vehicle search field hint"
+  },
+  
+  "defectSeverityLabel": "Defect Severity:",
+  "@defectSeverityLabel": {
+    "description": "Defect severity label with colon"
+  },
+  
+  "photosAttachedToItem": "{count} photo{count, plural, =1{} other{s}} attached to this item",
+  "@photosAttachedToItem": {
+    "description": "Number of photos attached to inspection item",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "criticalDefectsFound": "Critical Defects Found",
+  "@criticalDefectsFound": {
+    "description": "Critical defects warning title"
+  },
+  
+  "criticalDefectsWarning": "This vehicle has critical defects that may require immediate attention.",
+  "@criticalDefectsWarning": {
+    "description": "Critical defects warning message"
+  },
+  
+  "outOfService": "Out of Service",
+  "@outOfService": {
+    "description": "Out of service defect severity"
+  },
+  
+  "inspectionCompleted": "Inspection completed! All {count} items finished ✓",
+  "@inspectionCompleted": {
+    "description": "Inspection completion message",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "25"
+      }
+    }
+  },
+  
+  "itemsCompleted": "{completed}/{total} items completed",
+  "@itemsCompleted": {
+    "description": "Items completion progress",
+    "placeholders": {
+      "completed": {
+        "type": "int",
+        "example": "15"
+      },
+      "total": {
+        "type": "int",
+        "example": "25"
+      }
+    }
+  },
+  
+  "photosAttached": "{count, plural, =0{No photos} =1{1 photo attached} other{{count} photos attached}}",
+  "@photoAttached": {
+    "description": "Photo attachment count with pluralization",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "inspection": "Inspection",
+  "@inspection": {
+    "description": "Inspection label"
+  },
+  
+  "completed": "Completed",
+  "@completed": {
+    "description": "Completed status label"
+  },
+  
+  "failed": "Failed",
+  "@failed": {
+    "description": "Failed status label"
+  },
+  
+  "status": "Status",
+  "@status": {
+    "description": "Status label"
+  },
+  
+  "ok": "OK",
+  "@ok": {
+    "description": "OK status"
+  },
+  
+  "overallNotes": "Overall Notes (Optional)",
+  "@overallNotes": {
+    "description": "Overall notes section title"
+  },
+  
+  "overallNotesHint": "Add any overall notes about this inspection...",
+  "@overallNotesHint": {
+    "description": "Hint text for overall notes field"
+  },
+  
+  "driverSignature": "Driver Signature",
+  "@driverSignature": {
+    "description": "Driver signature section title"
+  },
+  
+  "signatureInstruction": "Please sign below to certify that you have completed this inspection.",
+  "@signatureInstruction": {
+    "description": "Instruction text for signature"
+  },
+  
+  "driver": "Driver",
+  "@driver": {
+    "description": "Driver label"
+  },
+  
+  "certification": "Certification",
+  "@certification": {
+    "description": "Certification section title"
+  },
+  
+  "certificationText": "By signing below, I certify that I have completed this pre-trip inspection in accordance with DOT regulations and that all defects have been properly documented.",
+  "@certificationText": {
+    "description": "Certification disclaimer text"
+  },
+  
+  "backToInspection": "Back to Inspection",
+  "@backToInspection": {
+    "description": "Back to inspection button text"
+  },
+  
+  "completeInspection": "Complete Inspection",
+  "@completeInspection": {
+    "description": "Button text to complete the inspection"
+  },
+  
+  "help": "Help",
+  "@help": {
+    "description": "Help page title"
+  },
+  
+  "helpPageContent": "Help Page",
+  "@helpPageContent": {
+    "description": "Content text displayed on the help page"
+  },
+  
+  "offlineSyncPageContent": "Offline Sync Page",
+  "@offlineSyncPageContent": {
+    "description": "Content text displayed on the offline sync page"
+  },
+  
+  "reportDefect": "Report Defect",
+  "@reportDefect": {
+    "description": "Report defect page title"
+  },
+  
+  "defectReportingForItem": "Defect Reporting for Item: {itemId}",
+  "@defectReportingForItem": {
+    "description": "Defect reporting page content with item ID",
+    "placeholders": {
+      "itemId": {
+        "type": "String",
+        "description": "The ID of the inspection item"
+      }
+    }
+  },
+  
+  "offlineSync": "Offline Sync",
+  "@offlineSync": {
+    "description": "Offline sync page title"
+  },
+  
+  "offlineSyncPageContent": "Offline Sync Page",
+  "@offlineSyncPageContent": {
+    "description": "Offline sync page content placeholder"
+  },
+  
+  "pageNotFound": "Page not found",
+  "@pageNotFound": {
+    "description": "Error message when page is not found"
+  },
+  
+  "pageNotFoundDescription": "The page you're looking for doesn't exist.",
+  "@pageNotFoundDescription": {
+    "description": "Description for page not found error"
+  },
+  
+  "goToDashboard": "Go to Dashboard",
+  "@goToDashboard": {
+    "description": "Button text to navigate to the dashboard"
+  },
+  
+  "selectPreferredLanguage": "Select your preferred language",
+  "@selectPreferredLanguage": {
+    "description": "Language selection subtitle"
+  },
+  
+  "notificationSettings": "Notification Settings",
+  "@notificationSettings": {
+    "description": "Notification settings section title"
+  },
+  
+  "dailyPTIReminder": "Daily PTI Reminder",
+  "@dailyPTIReminder": {
+    "description": "Daily PTI reminder toggle title"
+  },
+  
+  "dailyReminderDescription": "Receive a daily reminder to perform your Pre-Trip Inspection",
+  "@dailyReminderDescription": {
+    "description": "Daily reminder toggle description"
+  },
+  
+  "reminderTime": "Reminder Time",
+  "@reminderTime": {
+    "description": "Reminder time setting title"
+  },
+  
+  "sendTestNotification": "Send Test Notification",
+  "@sendTestNotification": {
+    "description": "Test notification button text"
+  },
+  
+  "testNotification": "Test Notification",
+  "@testNotification": {
+    "description": "Test notification title"
+  },
+  
+  "testNotificationBody": "This is a test notification from PTI Mobile App",
+  "@testNotificationBody": {
+    "description": "Test notification body text"
+  },
+  
+  "testNotificationSent": "Test notification sent!",
+  "@testNotificationSent": {
+    "description": "Test notification sent confirmation"
+  },
+  
+  "preview": "Preview",
+  "@preview": {
+    "description": "Preview section title"
+  },
+  
+  "timeToPerformInspection": "Time to perform your Pre-Trip Inspection",
+  "@timeToPerformInspection": {
+    "description": "Inspection reminder message"
+  },
+  
+  "scheduledFor": "Scheduled for {time}",
+  "@scheduledFor": {
+    "description": "Scheduled time message",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "9:00 AM"
+      }
+    }
+  },
+  
+  "pwaNotificationInstructions": "PWA Notification Instructions",
+  "@pwaNotificationInstructions": {
+    "description": "PWA notification instructions title"
+  },
+  
+  "forIOSPWA": "For iOS PWA notifications to work properly:",
+  "@forIOSPWA": {
+    "description": "iOS PWA instructions header"
+  },
+  
+  "addAppToHomeScreen": "1. Add this app to your home screen",
+  "@addAppToHomeScreen": {
+    "description": "iOS PWA instruction step 1"
+  },
+  
+  "openFromHomeScreen": "2. Open the app from the home screen icon",
+  "@openFromHomeScreen": {
+    "description": "iOS PWA instruction step 2"
+  },
+  
+  "allowNotificationsWhenPrompted": "3. Allow notifications when prompted",
+  "@allowNotificationsWhenPrompted": {
+    "description": "iOS PWA instruction step 3"
+  },
+  
+  "notificationsAppearDaily": "4. Notifications will appear daily until you complete an inspection",
+  "@notificationsAppearDaily": {
+    "description": "iOS PWA instruction step 4"
+  },
+  
+  "forAndroidPWA": "For Android PWA:",
+  "@forAndroidPWA": {
+    "description": "Android PWA instructions header"
+  },
+  
+  "addToHomeScreenFromBrowser": "1. Add to home screen from browser menu",
+  "@addToHomeScreenFromBrowser": {
+    "description": "Android PWA instruction step 1"
+  },
+  
+  "openAppFromHomeScreen": "2. Open app from home screen",
+  "@openAppFromHomeScreen": {
+    "description": "Android PWA instruction step 2"
+  },
+  
+  "grantNotificationPermissions": "3. Grant notification permissions",
+  "@grantNotificationPermissions": {
+    "description": "Android PWA instruction step 3"
+  },
+  
+  "quickActions": "Quick Actions",
+  "@quickActions": {
+    "description": "Dashboard quick actions section title"
+  },
+  
+  "startPreTripInspection": "Start pre-trip inspection",
+  "@startPreTripInspection": {
+    "description": "Quick action subtitle for new inspection"
+  },
+  
+  "viewReports": "View Reports",
+  "@viewReports": {
+    "description": "Quick action title for viewing reports"
+  },
+  
+  "previousInspections": "Previous inspections",
+  "@previousInspections": {
+    "description": "Quick action subtitle for viewing reports"
+  },
+  
+  "manageVehicles": "Manage Vehicles",
+  "@manageVehicles": {
+    "description": "Quick action title for managing vehicles"
+  },
+  
+  "addEditVehicles": "Add or edit vehicles",
+  "@addEditVehicles": {
+    "description": "Quick action subtitle for managing vehicles"
+  },
+  
+  "statistics": "Statistics",
+  "@statistics": {
+    "description": "Dashboard statistics section title"
+  },
+  
+  "totalInspections": "Total Inspections",
+  "@totalInspections": {
+    "description": "Statistics card title for total inspections"
+  },
+  
+  "thisMonth": "This Month",
+  "@thisMonth": {
+    "description": "Statistics card title for monthly inspections"
+  },
+  
+  "activeVehicles": "Active Vehicles",
+  "@activeVehicles": {
+    "description": "Statistics card title for active vehicles"
+  },
+  
+  "totalVehicles": "Total Vehicles",
+  "@totalVehicles": {
+    "description": "Statistics card title for total vehicles"
+  },
+  
+  "recentActivity": "Recent Activity",
+  "@recentActivity": {
+    "description": "Dashboard recent activity section title"
+  },
+  
+  "noRecentActivity": "No recent activity",
+  "@noRecentActivity": {
+    "description": "Message when there's no recent activity"
+  },
+  
+  "logoutConfirmTitle": "Confirm Logout",
+  "@logoutConfirmTitle": {
+    "description": "Logout confirmation dialog title"
+  },
+  
+  "logoutConfirmMessage": "Are you sure you want to logout?",
+  "@logoutConfirmMessage": {
+    "description": "Confirmation message for logout dialog"
+  },
+  "required": "REQUIRED",
+  "@required": {
+    "description": "Label for required inspection items"
+  },
+  "notes": "Notes",
+  "@notes": {
+    "description": "Label for notes indicator"
+  },
+  "pass": "Pass",
+  "@pass": {
+    "description": "Pass status for inspection items"
+  },
+  "fail": "Fail",
+  "@fail": {
+    "description": "Fail status for inspection items"
+  },
+  "notApplicable": "N/A",
+  "@notApplicable": {
+    "description": "Not applicable status for inspection items"
+  },
+  "preTrip": "Pre-Trip",
+  "@preTrip": {
+    "description": "Pre-trip inspection type"
+  },
+  "postTrip": "Post-Trip",
+  "@postTrip": {
+    "description": "Post-trip inspection type"
+  },
+  "annual": "Annual",
+  "@annual": {
+    "description": "Annual inspection type"
+  },
+  "addPhoto": "Add Photo",
+  "@addPhoto": {
+    "description": "Button text to add photos to inspection item"
+  },
+  "addNotes": "Add Notes",
+  "@addNotes": {
+    "description": "Button text to add notes to inspection item"
+  },
+  "photosUpdated": "Photos updated!",
+  "@photosUpdated": {
+    "description": "Success message when photos are updated"
+  },
+  "photoAttached": "{count} photo{count, plural, =1{} other{s}} attached",
+  "@photoAttached": {
+    "description": "Message showing number of photos attached",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pleaseProvideSignature": "Please provide your signature",
+  "@pleaseProvideSignature": {
+    "description": "Error message when signature is required"
+  },
+  "inspectionCompletedSuccessfully": "Inspection completed successfully!",
+  "@inspectionCompletedSuccessfully": {
+    "description": "Success message when inspection is completed"
+  },
+  "digitalSignature": "Digital Signature",
+  "@digitalSignature": {
+    "description": "Title for digital signature section"
+  },
+  "completeInspection": "Complete Inspection",
+  "@completeInspection": {
+    "description": "Button text to complete inspection"
+  },
+  "viewReportsComingSoon": "View Reports feature coming soon!",
+  "@viewReportsComingSoon": {
+    "description": "Message for view reports feature placeholder"
+  },
+  "vehicleManagementComingSoon": "Vehicle Management feature coming soon!",
+  "@vehicleManagementComingSoon": {
+    "description": "Message for vehicle management feature placeholder"
+  },
+  "dataSyncComingSoon": "Data Sync feature coming soon!",
+  "@dataSyncComingSoon": {
+    "description": "Message for data sync feature placeholder"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Button text to retry an action"
+  },
+  "inspectionDetails": "Inspection Details",
+  "@inspectionDetails": {
+    "description": "Title for inspection details page"
+  },
+  "pdfReportGenerated": "PDF report generated successfully!",
+  "@pdfReportGenerated": {
+    "description": "Success message when PDF report is generated"
+  },
+  "failedToGeneratePdf": "Failed to generate PDF",
+  "@failedToGeneratePdf": {
+    "description": "Error message when PDF generation fails"
+  },
+  "reportPreview": "Report Preview",
+  "@reportPreview": {
+    "description": "Title for report preview page"
+  },
+  "inspectionReport": "Inspection Report",
+  "@inspectionReport": {
+    "description": "Title for inspection report"
+  },
+  "generatePdfReport": "Generate PDF Report",
+  "@generatePdfReport": {
+    "description": "Button text to generate PDF report"
+  },
+  "backToDashboard": "Back to Dashboard",
+  "@backToDashboard": {
+    "description": "Button text to go back to dashboard"
+  },
+  "photoCapturedSuccessfully": "Photo captured successfully",
+  "@photoCapturedSuccessfully": {
+    "description": "Success message when photo is captured"
+  },
+  "photoAddedSuccessfully": "Photo added successfully",
+  "@photoAddedSuccessfully": {
+    "description": "Success message when photo is added from gallery"
+  },
+  "failedToTakePhoto": "Failed to take photo",
+  "@failedToTakePhoto": {
+    "description": "Error message when photo capture fails"
+  },
+  "deletePhoto": "Delete Photo",
+  "@deletePhoto": {
+    "description": "Title for delete photo dialog"
+  },
+  "deletePhotoConfirmation": "Are you sure you want to delete this photo?",
+  "@deletePhotoConfirmation": {
+    "description": "Confirmation message for deleting photo"
+  },
+  "photoDeleted": "Photo deleted",
+  "@photoDeleted": {
+    "description": "Success message when photo is deleted"
+  },
+  "photoDocumentation": "Photo Documentation",
+  "@photoDocumentation": {
+    "description": "Title for photo documentation page"
+  },
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Button text to take a photo"
+  },
+  "fromGallery": "From Gallery",
+  "@fromGallery": {
+    "description": "Button text to select photo from gallery"
+  },
+  "takeFirstPhoto": "Take First Photo",
+  "@takeFirstPhoto": {
+    "description": "Button text to take the first photo"
+  },
+  "saveAndExit": "Save & Exit",
+  "@saveAndExit": {
+    "description": "Button text to save and exit"
+  },
+  "inspection": "Inspection",
+  "@inspection": {
+    "description": "Title for inspection page"
+  },
+  "noDefectsFound": "No defects found.",
+  "@noDefectsFound": {
+    "description": "Message when no defects are found in report"
+  },
+  "preTripInspectionReport": "Pre-Trip Inspection Report",
+  "@preTripInspectionReport": {
+    "description": "Title for pre-trip inspection report"
+  },
+  
+  "addVehiclesToStart": "Add vehicles to get started",
+  "@addVehiclesToStart": {
+    "description": "Message when no vehicles are available"
+  },
+  
+  "tryAdjustingSearch": "Try adjusting your search terms",
+  "@tryAdjustingSearch": {
+    "description": "Message when search returns no results"
+  },
+  
+  "startInspection": "Start {inspectionType}",
+  "@startInspection": {
+    "description": "Button text to start an inspection with the type",
+    "placeholders": {
+      "inspectionType": {
+        "type": "String",
+        "description": "The type of inspection (Pre-Trip, Post-Trip, etc.)"
+      }
+    }
+  },
+  
+  "scanVehicleQRCode": "Scan Vehicle QR Code",
+  "@scanVehicleQRCode": {
+    "description": "Title for QR code scanning dialog"
+  },
+  
+  "scanInstructions": "Position the QR code within the frame to scan",
+  "@scanInstructions": {
+    "description": "Instructions for scanning QR codes"
+  },
+  
+  "noVehiclesFound": "No vehicles found",
+  "@noVehiclesFound": {
+    "description": "Message shown when no vehicles are available"
+  },
+  "searchVehicles": "Search vehicles...",
+  "@searchVehicles": {
+    "description": "Placeholder text for vehicle search input"
+  },
+  "scanQRCode": "Scan QR Code",
+  "@scanQRCode": {
+    "description": "Button text for scanning QR codes"
+  },
+  "inspectionType": "Inspection Type",
+  "@inspectionType": {
+    "description": "Label for inspection type selection"
+  },
+  "unitNumber": "Unit #{unitNumber}",
+  "@unitNumber": {
+    "description": "Display format for vehicle unit number",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "The vehicle unit number"
+      }
+    }
+  },
+  "vehicleSelected": "Vehicle {unitNumber} selected",
+  "@vehicleSelected": {
+    "description": "Message shown when a vehicle is selected",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "The selected vehicle unit number"
+      }
+    }
+  },
+  "pleaseSelectVehicle": "Please select a vehicle to continue",
+  "@pleaseSelectVehicle": {
+    "description": "Message shown when no vehicle is selected"
+  },
+  "userNotFound": "User not found. Please check your credentials.",
+  "@userNotFound": {
+    "description": "Error message when user is not found"
+  },
+  "failedToStartInspection": "Failed to start inspection: {error}",
+  "@failedToStartInspection": {
+    "description": "Error message when inspection fails to start",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+  "vehicleManagementComingSoon": "Vehicle Management feature coming soon!",
+  "@vehicleManagementComingSoon": {
+    "description": "Message for vehicle management feature placeholder"
+  },
+  "fluidLevels": "Fluid Levels",
+  "@fluidLevels": {
+    "description": "Inspection item name for fluid levels"
+  },
+  
+  "fluidLevelsDescription": "Check engine oil, coolant, brake fluid, power steering fluid, and windshield washer fluid levels",
+  "@fluidLevelsDescription": {
+    "description": "Description for fluid levels inspection"
+  },
+  
+  "beltsAndHoses": "Belts and Hoses",
+  "@beltsAndHoses": {
+    "description": "Inspection item name for belts and hoses"
+  },
+  
+  "beltsAndHosesDescription": "Inspect belts for cracks, fraying, proper tension. Check hoses for leaks, cracks, or soft spots",
+  "@beltsAndHosesDescription": {
+    "description": "Description for belts and hoses inspection"
+  },
+  
+  "componentsCondition": "Components and General Condition",
+  "@componentsCondition": {
+    "description": "Inspection item name for components condition"
+  },
+  
+  "componentsConditionDescription": "Check battery, air filter, wiring, and overall engine compartment condition",
+  "@componentsConditionDescription": {
+    "description": "Description for components condition inspection"
+  },
+  
+  "safetyEquipment": "Safety Equipment",
+  "@safetyEquipment": {
+    "description": "Inspection item name for safety equipment"
+  },
+  
+  "safetyEquipmentDescription": "Fire extinguisher, emergency triangles, first aid kit, safety vest, seat belts",
+  "@safetyEquipmentDescription": {
+    "description": "Description for safety equipment inspection"
+  },
+  
+  "gaugesAndControls": "Gauges and Controls",
+  "@gaugesAndControls": {
+    "description": "Inspection item name for gauges and controls"
+  },
+  
+  "gaugesAndControlsDescription": "Dashboard gauges, warning lights, switches, and control functionality",
+  "@gaugesAndControlsDescription": {
+    "description": "Description for gauges and controls inspection"
+  },
+  
+  "brakes": "Brakes",
+  "@brakes": {
+    "description": "Inspection item name for brakes"
+  },
+  
+  "brakesDescription": "Brake pedal feel, air pressure, parking brake, and brake system operation",
+  "@brakesDescription": {
+    "description": "Description for brakes inspection"
+  },
+  
+  "mirrorsAndWindshield": "Mirrors and Windshield",
+  "@mirrorsAndWindshield": {
+    "description": "Inspection item name for mirrors and windshield"
+  },
+  
+  "mirrorsAndWindshieldDescription": "Mirror adjustment and condition, windshield condition, wipers, and washer operation",
+  "@mirrorsAndWindshieldDescription": {
+    "description": "Description for mirrors and windshield inspection"
+  },
+  
+  "paperwork": "Paperwork",
+  "@paperwork": {
+    "description": "Inspection item name for paperwork"
+  },
+  
+  "paperworkDescription": "Vehicle registration, insurance documentation, previous inspection reports",
+  "@paperworkDescription": {
+    "description": "Description for paperwork inspection"
+  },
+  
+  "lightsAndReflectors": "Lights and Reflectors",
+  "@lightsAndReflectors": {
+    "description": "Inspection item name for lights and reflectors"
+  },
+  
+  "lightsAndReflectorsDescription": "Headlights, taillights, turn signals, brake lights, hazard lights, and reflectors",
+  "@lightsAndReflectorsDescription": {
+    "description": "Description for lights and reflectors inspection"
+  },
+  
+  "tires": "Tires",
+  "@tires": {
+    "description": "Inspection item name for tires"
+  },
+  
+  "tiresDescription": "Tread depth, tire pressure, sidewall condition, and overall tire condition",
+  "@tiresDescription": {
+    "description": "Description for tires inspection"
+  },
+  
+  "wheelsAndRims": "Wheels and Rims",
+  "@wheelsAndRims": {
+    "description": "Inspection item name for wheels and rims"
+  },
+  
+  "wheelsAndRimsDescription": "Wheel condition, lug nuts/bolts, and rim integrity",
+  "@wheelsAndRimsDescription": {
+    "description": "Description for wheels and rims inspection"
+  },
+  
+  "suspension": "Suspension",
+  "@suspension": {
+    "description": "Inspection item name for suspension"
+  },
+  
+  "suspensionDescription": "Leaf springs, shock absorbers, air suspension, and mounting hardware",
+  "@suspensionDescription": {
+    "description": "Description for suspension inspection"
+  },
+  
+  "brakeComponents": "Brake Components",
+  "@brakeComponents": {
+    "description": "Inspection item name for brake components"
+  },
+  
+  "brakeComponentsDescription": "Brake chambers, lines, drums/rotors, and slack adjusters",
+  "@brakeComponentsDescription": {
+    "description": "Description for brake components inspection"
+  },
+  
+  "couplingSystem": "Coupling System",
+  "@couplingSystem": {
+    "description": "Inspection item name for coupling system"
+  },
+  
+  "couplingSystemDescription": "Fifth wheel, kingpin, safety chains, electrical connections, and air lines",
+  "@couplingSystemDescription": {
+    "description": "Description for coupling system inspection"
+  },
+  
+  "trailer": "Trailer",
+  "@trailer": {
+    "description": "Inspection item name for trailer"
+  },
+  
+  "trailerDescription": "Trailer condition, doors, cargo securement, and landing gear",
+  "@trailerDescription": {
+    "description": "Description for trailer inspection"
+  },
+  
+  "cdlLicense": "CDL",
+  "@cdlLicense": {
+    "description": "Inspection item name for CDL license"
+  },
+  
+  "cdlLicenseDescription": "Commercial Driver's License validity, proper endorsements, and expiration date",
+  "@cdlLicenseDescription": {
+    "description": "Description for CDL license inspection"
+  },
+  
+  "dotMedicalCard": "DOT Medical Card",
+  "@dotMedicalCard": {
+    "description": "Inspection item name for DOT medical card"
+  },
+  
+  "dotMedicalCardDescription": "Medical certificate validity and expiration date",
+  "@dotMedicalCardDescription": {
+    "description": "Description for DOT medical card inspection"
+  },
+  
+  "engineCompartment": "Engine Compartment",
+  "@engineCompartment": {
+    "description": "Category name for engine compartment"
+  },
+  
+  "cabAndSafetyEquipment": "Cab and Safety Equipment",
+  "@cabAndSafetyEquipment": {
+    "description": "Category name for cab and safety equipment"
+  },
+  
+  "exteriorAndCouplingSystem": "Exterior and Coupling System",
+  "@exteriorAndCouplingSystem": {
+    "description": "Category name for exterior and coupling system"
+  },
+  
+  "personalDriverDocs": "Personal/Driver Docs",
+  "@personalDriverDocs": {
+    "description": "Category name for personal/driver documentation"
+  }
+}

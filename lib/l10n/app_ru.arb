@@ -1,0 +1,407 @@
+{
+  "@@locale": "ru",
+  "@@last_modified": "2024-01-15T12:00:00.000Z",
+  
+  "appTitle": "PTI Мобильное Приложение",
+  "welcome": "Добро пожаловать",
+  "login": "Войти",
+  "logout": "Выйти",
+  "email": "Электронная почта",
+  "password": "Пароль",
+  "forgotPassword": "Забыли пароль?",
+  "inspections": "Инспекции",
+  "newInspection": "Новая инспекция",
+  "preTrip": "Предрейсовая",
+  "postTrip": "Послерейсовая",
+  "annual": "Годовая",
+  "vehicleSelection": "Выбор транспортного средства",
+  "selectVehicle": "Выберите транспортное средство",
+  "scanQrCode": "Сканировать QR-код",
+  "manualEntry": "Ручной ввод",
+  "vehicleNumber": "Номер транспортного средства",
+  "licensePlate": "Номерной знак",
+  "vin": "VIN",
+  "status": "Статус",
+  "pass": "Пройдено",
+  "fail": "Не пройдено",
+  "notApplicable": "Н/П",
+  "pending": "Ожидание",
+  "completed": "Завершено",
+  "inProgress": "В процессе",
+  "cabAndSafetyEquipment": "Кабина и оборудование безопасности",
+  "exteriorAndCouplingSystem": "Внешний вид и система сцепления",
+  "engineCompartment": "Моторный отсек",
+  "underVehicle": "Под транспортным средством",
+  "save": "Сохранить",
+  "saveAndExit": "Сохранить и выйти",
+  "cancel": "Отмена",
+  "continue_": "Продолжить",
+  "next": "Далее",
+  "previous": "Назад",
+  "complete": "Завершить",
+  "notes": "Заметки",
+  "addNotes": "Добавить заметки",
+  "notesAdded": "Заметки добавлены",
+  "photos": "Фотографии",
+  "addPhoto": "Добавить фото",
+  "takePhoto": "Сделать фото",
+  "selectFromGallery": "Выбрать из галереи",
+  "signature": "Подпись",
+  "addSignature": "Добавить подпись",
+  "clear": "Очистить",
+  "defectSeverity": "Серьезность дефекта",
+  "minor": "Незначительный",
+  "major": "Значительный",
+  "critical": "Критический",
+  "required": "ОБЯЗАТЕЛЬНО",
+  "optional": "Необязательно",
+  "language": "Язык",
+  "english": "Английский",
+  "russian": "Русский",
+  "ukrainian": "Украинский",
+  "spanish": "Испанский",
+  "settings": "Настройки",
+  "@settings": {
+    "description": "Заголовок страницы настроек"
+  },
+  
+  "appPreferences": "Настройки приложения",
+  "@appPreferences": {
+    "description": "Текст подзаголовка настроек приложения"
+  },
+  
+  "driver": "Водитель",
+  "@driver": {
+    "description": "Driver label"
+  },
+  
+  "quickActions": "Быстрые Действия",
+  "@quickActions": {
+    "description": "Quick actions section title"
+  },
+  
+  "startPreTripInspection": "Начать предрейсовый осмотр",
+  "@startPreTripInspection": {
+    "description": "Start pre-trip inspection subtitle"
+  },
+  
+  "viewReports": "Просмотр Отчетов",
+  "@viewReports": {
+    "description": "View reports action title"
+  },
+  
+  "previousInspections": "Предыдущие осмотры",
+  "@previousInspections": {
+    "description": "Previous inspections subtitle"
+  },
+  
+  "manageVehicles": "Управление Транспортом",
+  "@manageVehicles": {
+    "description": "Manage vehicles action title"
+  },
+  
+  "addEditVehicles": "Добавить или редактировать транспорт",
+  "@addEditVehicles": {
+    "description": "Add or edit vehicles subtitle"
+  },
+  
+  "statistics": "Статистика",
+  "@statistics": {
+    "description": "Statistics section title"
+  },
+  
+  "totalInspections": "Всего Осмотров",
+  "@totalInspections": {
+    "description": "Total inspections stat title"
+  },
+  
+  "thisMonth": "В Этом Месяце",
+  "@thisMonth": {
+    "description": "This month stat title"
+  },
+  
+  "activeVehicles": "Активный Транспорт",
+  "@activeVehicles": {
+    "description": "Active vehicles stat title"
+  },
+  
+  "totalVehicles": "Всего Транспорта",
+  "@totalVehicles": {
+    "description": "Total vehicles stat title"
+  },
+  
+  "recentActivity": "Недавняя Активность",
+  "@recentActivity": {
+    "description": "Recent activity section title"
+  },
+  
+  "noRecentActivity": "Нет недавней активности",
+  "@noRecentActivity": {
+    "description": "No recent activity message"
+  },
+  
+  "language": "Язык",
+  "@language": {
+    "description": "Language selection label"
+  },
+  "fluidLevels": "Уровни жидкостей",
+  "@fluidLevels": {
+    "description": "Fluid levels inspection item"
+  },
+  "photoCapturedSuccessfully": "Фото успешно сделано",
+  "@photoCapturedSuccessfully": {
+    "description": "Success message when photo is captured"
+  },
+  "photoAddedSuccessfully": "Фото успешно добавлено",
+  "@photoAddedSuccessfully": {
+    "description": "Success message when photo is added"
+  },
+  "failedToTakePhoto": "Не удалось сделать фото",
+  "@failedToTakePhoto": {
+    "description": "Error message when photo capture fails"
+  },
+  "pdfReportGenerated": "PDF отчет успешно создан!",
+  "@pdfReportGenerated": {
+    "description": "Success message when PDF report is generated"
+  },
+  "failedToGeneratePdf": "Не удалось создать PDF",
+  "@failedToGeneratePdf": {
+    "description": "Error message when PDF generation fails"
+  },
+  "preTripInspectionReport": "Отчет предрейсового осмотра",
+  "@preTripInspectionReport": {
+    "description": "Title for pre-trip inspection report"
+  },
+  "addVehiclesToStart": "Добавьте транспортные средства для начала",
+  "@addVehiclesToStart": {
+    "description": "Message when no vehicles are available"
+  },
+  "tryAdjustingSearch": "Попробуйте изменить поиск или добавить транспортные средства для начала.",
+  "@tryAdjustingSearch": {
+    "description": "Сообщение, отображаемое когда ни одно транспортное средство не соответствует критериям поиска"
+  },
+  "startInspection": "Начать {inspectionType}",
+  "@startInspection": {
+    "description": "Текст кнопки для начала осмотра с типом",
+    "placeholders": {
+      "inspectionType": {
+        "type": "String",
+        "description": "Тип осмотра (Предрейсовый, Послерейсовый и т.д.)"
+      }
+    }
+  },
+  "scanVehicleQRCode": "Сканировать QR-код Транспорта",
+  "@scanVehicleQRCode": {
+    "description": "Заголовок для диалога сканирования QR-кода"
+  },
+  "scanInstructions": "Расположите QR-код в рамке для сканирования",
+  "@scanInstructions": {
+    "description": "Инструкции для сканирования QR-кодов"
+  },
+  "noVehiclesFound": "Транспортные средства не найдены",
+  "@noVehiclesFound": {
+    "description": "Сообщение, отображаемое когда нет доступных транспортных средств"
+  },
+  "searchVehicles": "Поиск транспортных средств...",
+  "@searchVehicles": {
+    "description": "Текст-заполнитель для поля поиска транспортных средств"
+  },
+  "scanQRCode": "Сканировать QR-код",
+  "@scanQRCode": {
+    "description": "Текст кнопки для сканирования QR-кодов"
+  },
+  "inspectionType": "Тип Осмотра",
+  "@inspectionType": {
+    "description": "Метка для выбора типа осмотра"
+  },
+  "unitNumber": "Единица #{unitNumber}",
+  "@unitNumber": {
+    "description": "Формат отображения номера единицы транспортного средства",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "Номер единицы транспортного средства"
+      }
+    }
+  },
+  "vehicleSelected": "Транспортное средство {unitNumber} выбрано",
+  "@vehicleSelected": {
+    "description": "Сообщение, отображаемое при выборе транспортного средства",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "Номер единицы выбранного транспортного средства"
+      }
+    }
+  },
+  "pleaseSelectVehicle": "Пожалуйста, выберите транспортное средство для продолжения",
+  "@pleaseSelectVehicle": {
+    "description": "Сообщение, отображаемое когда транспортное средство не выбрано"
+  },
+  "userNotFound": "Пользователь не найден. Пожалуйста, проверьте ваши учетные данные.",
+  "@userNotFound": {
+    "description": "Сообщение об ошибке когда пользователь не найден"
+  },
+  "failedToStartInspection": "Не удалось начать инспекцию: {error}",
+  "@failedToStartInspection": {
+    "description": "Сообщение об ошибке когда не удается начать инспекцию",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Сообщение об ошибке"
+      }
+    }
+  },
+  "vehicleManagementComingSoon": "Функция управления транспортными средствами скоро будет доступна!",
+  "@vehicleManagementComingSoon": {
+    "description": "Сообщение для заполнителя функции управления транспортными средствами"
+  },
+  "fluidLevelsDescription": "Проверить уровни моторного масла, охлаждающей жидкости, тормозной жидкости, жидкости гидроусилителя руля и жидкости омывателя ветрового стекла",
+  "@fluidLevelsDescription": {
+    "description": "Description for fluid levels inspection"
+  },
+  "beltsAndHoses": "Ремни и Шланги",
+  "@beltsAndHoses": {
+    "description": "Belts and hoses inspection item"
+  },
+  "beltsAndHosesDescription": "Осмотреть ремни и шланги на предмет трещин, износа или повреждений",
+  "@beltsAndHosesDescription": {
+    "description": "Description for belts and hoses inspection"
+  },
+  "componentsCondition": "Состояние Компонентов",
+  "@componentsCondition": {
+    "description": "Components condition inspection item"
+  },
+  "componentsConditionDescription": "Проверить общее состояние компонентов двигателя",
+  "@componentsConditionDescription": {
+    "description": "Description for components condition inspection"
+  },
+  "engineCompartment": "Моторный Отсек",
+  "@engineCompartment": {
+    "description": "Engine compartment category"
+  },
+  "safetyEquipment": "Оборудование Безопасности",
+  "@safetyEquipment": {
+    "description": "Safety equipment inspection item"
+  },
+  "safetyEquipmentDescription": "Проверить огнетушитель, аварийные треугольники, аптечку первой помощи",
+  "@safetyEquipmentDescription": {
+    "description": "Description for safety equipment inspection"
+  },
+  "gaugesAndControls": "Приборы и Управление",
+  "@gaugesAndControls": {
+    "description": "Gauges and controls inspection item"
+  },
+  "gaugesAndControlsDescription": "Проверить работу всех приборов и органов управления",
+  "@gaugesAndControlsDescription": {
+    "description": "Description for gauges and controls inspection"
+  },
+  "brakes": "Тормоза",
+  "@brakes": {
+    "description": "Brakes inspection item"
+  },
+  "brakesDescription": "Проверить тормозную систему и её работу",
+  "@brakesDescription": {
+    "description": "Description for brakes inspection"
+  },
+  "mirrorsAndWindshield": "Зеркала и Лобовое Стекло",
+  "@mirrorsAndWindshield": {
+    "description": "Mirrors and windshield inspection item"
+  },
+  "mirrorsAndWindshieldDescription": "Проверить зеркала, лобовое стекло и стеклоочистители",
+  "@mirrorsAndWindshieldDescription": {
+    "description": "Description for mirrors and windshield inspection"
+  },
+  "paperwork": "Документация",
+  "@paperwork": {
+    "description": "Paperwork inspection item"
+  },
+  "paperworkDescription": "Проверить регистрацию транспортного средства, страховку и необходимые документы",
+  "@paperworkDescription": {
+    "description": "Description for paperwork inspection"
+  },
+  "cabAndSafetyEquipment": "Кабина и Оборудование Безопасности",
+  "@cabAndSafetyEquipment": {
+    "description": "Cab and safety equipment category"
+  },
+  "lightsAndReflectors": "Фары и Отражатели",
+  "@lightsAndReflectors": {
+    "description": "Lights and reflectors inspection item"
+  },
+  "lightsAndReflectorsDescription": "Проверить все фары и отражатели транспортного средства",
+  "@lightsAndReflectorsDescription": {
+    "description": "Description for lights and reflectors inspection"
+  },
+  "tires": "Шины",
+  "@tires": {
+    "description": "Tires inspection item"
+  },
+  "tiresDescription": "Осмотреть шины на предмет износа, повреждений и правильного давления",
+  "@tiresDescription": {
+    "description": "Description for tires inspection"
+  },
+  "wheelsAndRims": "Колёса и Диски",
+  "@wheelsAndRims": {
+    "description": "Wheels and rims inspection item"
+  },
+  "wheelsAndRimsDescription": "Проверить колёса и диски на предмет трещин или повреждений",
+  "@wheelsAndRimsDescription": {
+    "description": "Description for wheels and rims inspection"
+  },
+  "suspension": "Подвеска",
+  "@suspension": {
+    "description": "Suspension inspection item"
+  },
+  "suspensionDescription": "Осмотреть компоненты подвески",
+  "@suspensionDescription": {
+    "description": "Description for suspension inspection"
+  },
+  "brakeComponents": "Компоненты Тормозов",
+  "@brakeComponents": {
+    "description": "Brake components inspection item"
+  },
+  "brakeComponentsDescription": "Проверить тормозные магистрали, барабаны и связанные компоненты",
+  "@brakeComponentsDescription": {
+    "description": "Description for brake components inspection"
+  },
+  "couplingSystem": "Система Сцепки",
+  "@couplingSystem": {
+    "description": "Coupling system inspection item"
+  },
+  "couplingSystemDescription": "Осмотреть седельно-сцепное устройство, шкворень и соединения",
+  "@couplingSystemDescription": {
+    "description": "Description for coupling system inspection"
+  },
+  "trailer": "Прицеп",
+  "@trailer": {
+    "description": "Trailer inspection item"
+  },
+  "trailerDescription": "Проверить общее состояние прицепа, если он присутствует",
+  "@trailerDescription": {
+    "description": "Description for trailer inspection"
+  },
+  "exteriorAndCouplingSystem": "Внешний Вид и Система Сцепки",
+  "@exteriorAndCouplingSystem": {
+    "description": "Exterior and coupling system category"
+  },
+  "cdlLicense": "Лицензия CDL",
+  "@cdlLicense": {
+    "description": "CDL license inspection item"
+  },
+  "cdlLicenseDescription": "Проверить действительную коммерческую водительскую лицензию",
+  "@cdlLicenseDescription": {
+    "description": "Description for CDL license inspection"
+  },
+  "dotMedicalCard": "Медицинская Карта DOT",
+  "@dotMedicalCard": {
+    "description": "DOT medical card inspection item"
+  },
+  "dotMedicalCardDescription": "Проверить действительный медицинский сертификат DOT",
+  "@dotMedicalCardDescription": {
+    "description": "Description for DOT medical card inspection"
+  },
+  "personalDriverDocs": "Личные/Водительские Документы",
+  "@personalDriverDocs": {
+    "description": "Personal/driver documentation category"
+  }
+}

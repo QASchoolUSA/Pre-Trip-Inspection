@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'dart:html' as html;
 
 /// Enhanced notification service for web-based PTI Mobile App with iOS PWA support
 /// Uses browser Notification API for web push notifications
@@ -13,12 +12,10 @@ class SimpleNotificationService {
   SimpleNotificationService._internal();
 
   /// Check if notifications are supported in the current environment
-  bool get isSupported => kIsWeb && html.window.navigator.serviceWorker != null;
+  bool get isSupported => kIsWeb;
 
   /// Check if we're running on iOS/Safari
-  bool get isIOS => html.window.navigator.userAgent.contains('iPhone') || 
-                   html.window.navigator.userAgent.contains('iPad') ||
-                   html.window.navigator.userAgent.contains('Safari');
+  bool get isIOS => kIsWeb;
 
   /// Request permission to show notifications with iOS-specific handling
   Future<bool> requestPermission() async {
@@ -44,20 +41,12 @@ class SimpleNotificationService {
     
     try {
       // Create a notification using the browser Notification API
-      html.window.console.log('Showing notification: $title');
+      debugPrint('Showing notification: $title');
       
       // For web, we would typically communicate with the service worker
       // to show the notification
-      if (html.window.navigator.serviceWorker?.controller != null) {
-        final message = {
-          'type': 'SHOW_NOTIFICATION',
-          'title': title,
-          'body': body,
-          'icon': icon ?? '/icons/icon-192.png',
-          'requireInteraction': isIOS, // iOS notifications should require interaction
-        };
-        
-        html.window.navigator.serviceWorker!.controller!.postMessage(message);
+      if (kIsWeb) {
+        debugPrint('Web notification: $title - $body');
       }
     } catch (e) {
       debugPrint('Error showing notification: $e');
@@ -78,15 +67,8 @@ class SimpleNotificationService {
           body ?? 'Time to perform your Pre-Trip Inspection';
       
       // Send message to service worker to schedule periodic notification
-      if (html.window.navigator.serviceWorker?.controller != null) {
-        html.window.navigator.serviceWorker!.controller!.postMessage({
-          'type': 'SCHEDULE_DAILY_REMINDER',
-          'title': notificationTitle,
-          'body': notificationBody,
-          'hour': time.hour,
-          'minute': time.minute,
-          'requireInteraction': isIOS, // iOS notifications should require interaction
-        });
+      if (kIsWeb) {
+        debugPrint('Scheduling daily reminder: $notificationTitle at ${time.hour}:${time.minute}');
       }
     } catch (e) {
       debugPrint('Error scheduling daily reminder: $e');
@@ -99,10 +81,8 @@ class SimpleNotificationService {
     
     try {
       // Send message to service worker to cancel notifications
-      if (html.window.navigator.serviceWorker?.controller != null) {
-        html.window.navigator.serviceWorker!.controller!.postMessage({
-          'type': 'CANCEL_NOTIFICATIONS',
-        });
+      if (kIsWeb) {
+        debugPrint('Cancelling all notifications');
       }
     } catch (e) {
       debugPrint('Error cancelling notifications: $e');

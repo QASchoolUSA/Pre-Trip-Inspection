@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../generated/l10n/app_localizations.dart';
 
-class DefectReportingPage extends StatelessWidget {
+class DefectReportingPage extends ConsumerWidget {
   final String inspectionId;
   final String itemId;
   
@@ -11,13 +13,15 @@ class DefectReportingPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Report Defect'),
+        title: Text(l10n.reportDefect),
       ),
       body: Center(
-        child: Text('Defect Reporting for Item: $itemId'),
+        child: Text(l10n.defectReportingForItem(itemId)),
       ),
     );
   }

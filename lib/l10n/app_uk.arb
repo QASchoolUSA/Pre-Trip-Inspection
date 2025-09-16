@@ -1,0 +1,336 @@
+{
+  "@@locale": "uk",
+  "@@last_modified": "2024-01-15T12:00:00.000Z",
+  
+  "appTitle": "PTI Мобільний Додаток",
+  "welcome": "Ласкаво просимо",
+  "login": "Увійти",
+  "logout": "Вийти",
+  "email": "Електронна пошта",
+  "password": "Пароль",
+  "forgotPassword": "Забули пароль?",
+  "inspections": "Інспекції",
+  "newInspection": "Нова інспекція",
+  "preTrip": "Передрейсова",
+  "postTrip": "Післярейсова",
+  "annual": "Річна",
+  "vehicleSelection": "Вибір транспортного засобу",
+  "selectVehicle": "Оберіть транспортний засіб",
+  "scanQrCode": "Сканувати QR-код",
+  "manualEntry": "Ручне введення",
+  "vehicleNumber": "Номер транспортного засобу",
+  "licensePlate": "Номерний знак",
+  "vin": "VIN",
+  "status": "Статус",
+  "pass": "Пройдено",
+  "fail": "Не пройдено",
+  "notApplicable": "Н/З",
+  "pending": "Очікування",
+  "completed": "Завершено",
+  "inProgress": "В процесі",
+  "cabAndSafetyEquipment": "Кабіна та обладнання безпеки",
+  "exteriorAndCouplingSystem": "Зовнішній вигляд та система зчеплення",
+  "engineCompartment": "Моторний відсік",
+  "underVehicle": "Під транспортним засобом",
+  "save": "Зберегти",
+  "saveAndExit": "Зберегти та вийти",
+  "cancel": "Скасувати",
+  "continue_": "Продовжити",
+  "next": "Далі",
+  "previous": "Назад",
+  "complete": "Завершити",
+  "notes": "Нотатки",
+  "addNotes": "Додати нотатки",
+  "notesAdded": "Нотатки додано",
+  "photos": "Фотографії",
+  "addPhoto": "Додати фото",
+  "takePhoto": "Зробити фото",
+  "selectFromGallery": "Вибрати з галереї",
+  "signature": "Підпис",
+  "addSignature": "Додати підпис",
+  "clear": "Очистити",
+  "defectSeverity": "Серйозність дефекту",
+  "minor": "Незначний",
+  "major": "Значний",
+  "critical": "Критичний",
+  "required": "ОБОВ'ЯЗКОВО",
+  "optional": "Необов'язково",
+  "driver": "Водій",
+  "quickActions": "Швидкі Дії",
+  "startPreTripInspection": "Почати передрейсовий огляд",
+  "viewReports": "Переглянути Звіти",
+  "previousInspections": "Попередні огляди",
+  "manageVehicles": "Керування Транспортом",
+  "addEditVehicles": "Додати або редагувати транспорт",
+  "statistics": "Статистика",
+  "totalInspections": "Всього Оглядів",
+  "thisMonth": "Цього Місяця",
+  "activeVehicles": "Активний Транспорт",
+  "totalVehicles": "Всього Транспорту",
+  "recentActivity": "Недавня Активність",
+  "noRecentActivity": "Немає недавньої активності",
+  "language": "Мова",
+  "@language": {
+    "description": "Language selection label"
+  },
+  "fluidLevels": "Рівні рідин",
+  "@fluidLevels": {
+    "description": "Fluid levels inspection item"
+  },
+  "photoCapturedSuccessfully": "Фото успішно зроблено",
+  "@photoCapturedSuccessfully": {
+    "description": "Success message when photo is captured"
+  },
+  "photoAddedSuccessfully": "Фото успішно додано",
+  "@photoAddedSuccessfully": {
+    "description": "Success message when photo is added"
+  },
+  "failedToTakePhoto": "Не вдалося зробити фото",
+  "@failedToTakePhoto": {
+    "description": "Error message when photo capture fails"
+  },
+  "pdfReportGenerated": "PDF звіт успішно створено!",
+  "@pdfReportGenerated": {
+    "description": "Success message when PDF report is generated"
+  },
+  "failedToGeneratePdf": "Не вдалося створити PDF",
+  "@failedToGeneratePdf": {
+    "description": "Error message when PDF generation fails"
+  },
+  "preTripInspectionReport": "Звіт передрейсового огляду",
+  "@preTripInspectionReport": {
+    "description": "Title for pre-trip inspection report"
+  },
+  "addVehiclesToStart": "Додайте транспортні засоби для початку",
+  "@addVehiclesToStart": {
+    "description": "Message when no vehicles are available"
+  },
+  "tryAdjustingSearch": "Спробуйте змінити пошук або додати транспортні засоби для початку.",
+  "@tryAdjustingSearch": {
+    "description": "Повідомлення, що відображається коли жоден транспортний засіб не відповідає критеріям пошуку"
+  },
+  "startInspection": "Почати {inspectionType}",
+  "@startInspection": {
+    "description": "Текст кнопки для початку огляду з типом",
+    "placeholders": {
+      "inspectionType": {
+        "type": "String",
+        "description": "Тип огляду (Передрейсовий, Післярейсовий тощо)"
+      }
+    }
+  },
+  "scanVehicleQRCode": "Сканувати QR-код Транспорту",
+  "@scanVehicleQRCode": {
+    "description": "Заголовок для діалогу сканування QR-коду"
+  },
+  "scanInstructions": "Розташуйте QR-код у рамці для сканування",
+  "@scanInstructions": {
+    "description": "Інструкції для сканування QR-кодів"
+  },
+  "noVehiclesFound": "Транспортні засоби не знайдені",
+  "@noVehiclesFound": {
+    "description": "Повідомлення, що відображається коли немає доступних транспортних засобів"
+  },
+  "searchVehicles": "Пошук транспортних засобів...",
+  "@searchVehicles": {
+    "description": "Текст-заповнювач для поля пошуку транспортних засобів"
+  },
+  "scanQRCode": "Сканувати QR-код",
+  "@scanQRCode": {
+    "description": "Текст кнопки для сканування QR-кодів"
+  },
+  "inspectionType": "Тип Огляду",
+  "@inspectionType": {
+    "description": "Мітка для вибору типу огляду"
+  },
+  "unitNumber": "Одиниця #{unitNumber}",
+  "@unitNumber": {
+    "description": "Формат відображення номера одиниці транспортного засобу",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "Номер одиниці транспортного засобу"
+      }
+    }
+  },
+  "vehicleSelected": "Транспортний засіб {unitNumber} вибрано",
+  "@vehicleSelected": {
+    "description": "Повідомлення, що відображається при виборі транспортного засобу",
+    "placeholders": {
+      "unitNumber": {
+        "type": "String",
+        "description": "Номер одиниці вибраного транспортного засобу"
+      }
+    }
+  },
+  "pleaseSelectVehicle": "Будь ласка, виберіть транспортний засіб для продовження",
+  "@pleaseSelectVehicle": {
+    "description": "Повідомлення, що відображається коли транспортний засіб не вибрано"
+  },
+  "userNotFound": "Користувача не знайдено. Будь ласка, перевірте ваші облікові дані.",
+  "@userNotFound": {
+    "description": "Повідомлення про помилку коли користувача не знайдено"
+  },
+  "failedToStartInspection": "Не вдалося розпочати інспекцію: {error}",
+  "@failedToStartInspection": {
+    "description": "Повідомлення про помилку коли не вдається розпочати інспекцію",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "Повідомлення про помилку"
+      }
+    }
+  },
+  "vehicleManagementComingSoon": "Функція управління транспортними засобами незабаром буде доступна!",
+  "@vehicleManagementComingSoon": {
+    "description": "Повідомлення для заповнювача функції управління транспортними засобами"
+  },
+  "fluidLevelsDescription": "Перевірити рівні моторного масла, охолоджуючої рідини, гальмівної рідини, рідини гідропідсилювача керма та рідини склоомивача",
+  "@fluidLevelsDescription": {
+    "description": "Description for fluid levels inspection"
+  },
+  "beltsAndHoses": "Ремені та Шланги",
+  "@beltsAndHoses": {
+    "description": "Belts and hoses inspection item"
+  },
+  "beltsAndHosesDescription": "Оглянути ремені та шланги на предмет тріщин, зносу або пошкоджень",
+  "@beltsAndHosesDescription": {
+    "description": "Description for belts and hoses inspection"
+  },
+  "componentsCondition": "Стан Компонентів",
+  "@componentsCondition": {
+    "description": "Components condition inspection item"
+  },
+  "componentsConditionDescription": "Перевірити загальний стан компонентів двигуна",
+  "@componentsConditionDescription": {
+    "description": "Description for components condition inspection"
+  },
+  "engineCompartment": "Моторний Відсік",
+  "@engineCompartment": {
+    "description": "Engine compartment category"
+  },
+  "safetyEquipment": "Обладнання Безпеки",
+  "@safetyEquipment": {
+    "description": "Safety equipment inspection item"
+  },
+  "safetyEquipmentDescription": "Перевірити вогнегасник, аварійні трикутники, аптечку першої допомоги",
+  "@safetyEquipmentDescription": {
+    "description": "Description for safety equipment inspection"
+  },
+  "gaugesAndControls": "Прилади та Управління",
+  "@gaugesAndControls": {
+    "description": "Gauges and controls inspection item"
+  },
+  "gaugesAndControlsDescription": "Перевірити роботу всіх приладів та органів управління",
+  "@gaugesAndControlsDescription": {
+    "description": "Description for gauges and controls inspection"
+  },
+  "brakes": "Гальма",
+  "@brakes": {
+    "description": "Brakes inspection item"
+  },
+  "brakesDescription": "Перевірити гальмівну систему та її роботу",
+  "@brakesDescription": {
+    "description": "Description for brakes inspection"
+  },
+  "mirrorsAndWindshield": "Дзеркала та Лобове Скло",
+  "@mirrorsAndWindshield": {
+    "description": "Mirrors and windshield inspection item"
+  },
+  "mirrorsAndWindshieldDescription": "Перевірити дзеркала, лобове скло та склоочисники",
+  "@mirrorsAndWindshieldDescription": {
+    "description": "Description for mirrors and windshield inspection"
+  },
+  "paperwork": "Документація",
+  "@paperwork": {
+    "description": "Paperwork inspection item"
+  },
+  "paperworkDescription": "Перевірити реєстрацію транспортного засобу, страховку та необхідні документи",
+  "@paperworkDescription": {
+    "description": "Description for paperwork inspection"
+  },
+  "cabAndSafetyEquipment": "Кабіна та Обладнання Безпеки",
+  "@cabAndSafetyEquipment": {
+    "description": "Cab and safety equipment category"
+  },
+  "lightsAndReflectors": "Фари та Відбивачі",
+  "@lightsAndReflectors": {
+    "description": "Lights and reflectors inspection item"
+  },
+  "lightsAndReflectorsDescription": "Перевірити всі фари та відбивачі транспортного засобу",
+  "@lightsAndReflectorsDescription": {
+    "description": "Description for lights and reflectors inspection"
+  },
+  "tires": "Шини",
+  "@tires": {
+    "description": "Tires inspection item"
+  },
+  "tiresDescription": "Оглянути шини на предмет зносу, пошкоджень та правильного тиску",
+  "@tiresDescription": {
+    "description": "Description for tires inspection"
+  },
+  "wheelsAndRims": "Колеса та Диски",
+  "@wheelsAndRims": {
+    "description": "Wheels and rims inspection item"
+  },
+  "wheelsAndRimsDescription": "Перевірити колеса та диски на предмет тріщин або пошкоджень",
+  "@wheelsAndRimsDescription": {
+    "description": "Description for wheels and rims inspection"
+  },
+  "suspension": "Підвіска",
+  "@suspension": {
+    "description": "Suspension inspection item"
+  },
+  "suspensionDescription": "Оглянути компоненти підвіски",
+  "@suspensionDescription": {
+    "description": "Description for suspension inspection"
+  },
+  "brakeComponents": "Компоненти Гальм",
+  "@brakeComponents": {
+    "description": "Brake components inspection item"
+  },
+  "brakeComponentsDescription": "Перевірити гальмівні магістралі, барабани та пов'язані компоненти",
+  "@brakeComponentsDescription": {
+    "description": "Description for brake components inspection"
+  },
+  "couplingSystem": "Система З'єднання",
+  "@couplingSystem": {
+    "description": "Coupling system inspection item"
+  },
+  "couplingSystemDescription": "Оглянути сідельно-зчіпний пристрій, шворень та з'єднання",
+  "@couplingSystemDescription": {
+    "description": "Description for coupling system inspection"
+  },
+  "trailer": "Причіп",
+  "@trailer": {
+    "description": "Trailer inspection item"
+  },
+  "trailerDescription": "Перевірити загальний стан причепа, якщо він присутній",
+  "@trailerDescription": {
+    "description": "Description for trailer inspection"
+  },
+  "exteriorAndCouplingSystem": "Зовнішній Вигляд та Система З'єднання",
+  "@exteriorAndCouplingSystem": {
+    "description": "Exterior and coupling system category"
+  },
+  "cdlLicense": "Ліцензія CDL",
+  "@cdlLicense": {
+    "description": "CDL license inspection item"
+  },
+  "cdlLicenseDescription": "Перевірити дійсну комерційну водійську ліцензію",
+  "@cdlLicenseDescription": {
+    "description": "Description for CDL license inspection"
+  },
+  "dotMedicalCard": "Медична Карта DOT",
+  "@dotMedicalCard": {
+    "description": "DOT medical card inspection item"
+  },
+  "dotMedicalCardDescription": "Перевірити дійсний медичний сертифікат DOT",
+  "@dotMedicalCardDescription": {
+    "description": "Description for DOT medical card inspection"
+  },
+  "personalDriverDocs": "Особисті/Водійські Документи",
+  "@personalDriverDocs": {
+    "description": "Personal/driver documentation category"
+  }
+}

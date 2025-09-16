@@ -17,12 +17,14 @@ import '../../presentation/pages/sync/offline_sync_page.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../presentation/providers/app_providers.dart';
+import '../../generated/l10n/app_localizations.dart';
 
 /// App router configuration
 final appRouterProvider = Provider<GoRouter>((ref) {
   final currentUser = ref.watch(currentUserProvider);
   
   return GoRouter(
+    debugLogDiagnostics: true,
     initialLocation: RouteNames.splash,
     redirect: (context, state) {
       // Check if user is authenticated
@@ -91,7 +93,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.defectReporting,
         name: 'defect-reporting',
         builder: (context, state) {
-          final params = state.extra as Map<String, dynamic>;
+          final params = state.extra as Map<String, dynamic>?;
+          if (params == null || 
+              params['inspectionId'] == null || 
+              params['itemId'] == null) {
+            // Handle missing parameters by redirecting to dashboard
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go(RouteNames.dashboard);
+            });
+            return const SizedBox.shrink();
+          }
           return DefectReportingPage(
             inspectionId: params['inspectionId'],
             itemId: params['itemId'],
@@ -103,7 +114,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.signature,
         name: 'signature',
         builder: (context, state) {
-          final inspectionId = state.extra as String;
+          final inspectionId = state.extra as String?;
+          if (inspectionId == null) {
+            // Handle missing inspection ID by redirecting to dashboard
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go(RouteNames.dashboard);
+            });
+            return const SizedBox.shrink();
+          }
           return SignaturePage(inspectionId: inspectionId);
         },
       ),
@@ -112,7 +130,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: RouteNames.reportPreview,
         name: 'report-preview',
         builder: (context, state) {
-          final inspectionId = state.extra as String;
+          final inspectionId = state.extra as String?;
+          if (inspectionId == null) {
+            // Handle missing inspection ID by redirecting to dashboard
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.go(RouteNames.dashboard);
+            });
+            return const SizedBox.shrink();
+          }
           return ReportPreviewPage(inspectionId: inspectionId);
         },
       ),
@@ -136,37 +161,43 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
     ],
     
-    errorBuilder: (context, state) => Scaffold(
-      appBar: AppBar(
-        title: const Text('Error'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
+    errorBuilder: (context, state) => Consumer(
+      builder: (context, ref, child) {
+        final l10n = AppLocalizations.of(context)!;
+        
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(l10n.error),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: Colors.red,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.pageNotFound,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.pageNotFoundDescription,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.go(RouteNames.dashboard),
+                  child: Text(l10n.goToDashboard),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Page not found',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'The page you\'re looking for doesn\'t exist.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => context.go(RouteNames.dashboard),
-              child: const Text('Go to Dashboard'),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     ),
   );
 });
@@ -195,7 +226,7 @@ extension AppNavigation on BuildContext {
   void goToReportPreview(String inspectionId) => 
       go(RouteNames.reportPreview, extra: inspectionId);
   
-  void goToSettings() => go(RouteNames.settings);
+  void goToSettings() => push(RouteNames.settings);
   void goToHelp() => go(RouteNames.help);
   void goToOfflineSync() => go(RouteNames.offlineSync);
   

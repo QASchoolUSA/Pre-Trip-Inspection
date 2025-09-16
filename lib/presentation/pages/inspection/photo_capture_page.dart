@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import '../../../generated/l10n/app_localizations.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../providers/app_providers.dart';
@@ -62,9 +63,9 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Photo captured successfully'),
-              backgroundColor: AppColors.successGreen,
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.photoCapturedSuccessfully),
+              backgroundColor: Colors.green,
             ),
           );
         }
@@ -81,8 +82,8 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to take photo: $e'),
-            backgroundColor: AppColors.errorRed,
+            content: Text('${AppLocalizations.of(context)!.failedToTakePhoto}: $e'),
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -113,9 +114,9 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Photo added successfully'),
-              backgroundColor: AppColors.successGreen,
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.photoAddedSuccessfully),
+              backgroundColor: Colors.green,
             ),
           );
         }
