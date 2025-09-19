@@ -43,9 +43,30 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
   Future<void> _loadSampleDataIfNeeded() async {
     final vehicles = ref.read(vehiclesProvider);
+    print('DEBUG: Current vehicles count: ${vehicles.length}');
+    
     if (vehicles.isEmpty) {
+      print('DEBUG: No vehicles found, adding sample vehicles...');
       await ref.read(vehicleRepositoryProvider).addSampleVehicles();
+      print('DEBUG: Sample vehicles added, reloading...');
       ref.read(vehiclesProvider.notifier).loadVehicles();
+      
+      // Check again after loading
+      final updatedVehicles = ref.read(vehiclesProvider);
+      print('DEBUG: Vehicles after reload: ${updatedVehicles.length}');
+      for (final vehicle in updatedVehicles) {
+        print('DEBUG: Vehicle - ${vehicle.unitNumber}: ${vehicle.make} ${vehicle.model}');
+      }
+      
+      // Force UI update
+      if (mounted) {
+        setState(() {});
+      }
+    } else {
+      print('DEBUG: Found ${vehicles.length} existing vehicles');
+      for (final vehicle in vehicles) {
+        print('DEBUG: Existing Vehicle - ${vehicle.unitNumber}: ${vehicle.make} ${vehicle.model}');
+      }
     }
   }
 

@@ -7,8 +7,16 @@ const urlsToCache = [
   '/icons/icon-512.png'
 ];
 
+// Development mode flag - set to true to disable caching during development
+const DEVELOPMENT_MODE = true;
+
 // Install event - cache assets
 self.addEventListener('install', event => {
+  if (DEVELOPMENT_MODE) {
+    console.log('Development mode: Skipping cache installation');
+    return;
+  }
+  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -20,6 +28,23 @@ self.addEventListener('install', event => {
 
 // Fetch event - serve cached content when offline
 self.addEventListener('fetch', event => {
+  if (DEVELOPMENT_MODE) {
+    // In development mode, always fetch from network
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          // Only fallback to cache for essential resources if network fails
+          if (event.request.url.includes('/icons/') || 
+              event.request.url.endsWith('/') || 
+              event.request.url.includes('index.html')) {
+            return caches.match(event.request);
+          }
+          throw new Error('Network unavailable and no cache fallback');
+        })
+    );
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then(response => {

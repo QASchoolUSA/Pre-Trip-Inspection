@@ -2,7 +2,7 @@
   "@@locale": "en",
   "@@last_modified": "2024-01-15T12:00:00.000Z",
   
-  "appTitle": "PTI Mobile App",
+  "appTitle": "PTI Plus",
   "@appTitle": {
     "description": "The title of the application"
   },
@@ -679,7 +679,7 @@
     "description": "Test notification title"
   },
   
-  "testNotificationBody": "This is a test notification from PTI Mobile App",
+  "testNotificationBody": "This is a test notification from PTI Plus",
   "@testNotificationBody": {
     "description": "Test notification body text"
   },
@@ -694,7 +694,7 @@
     "description": "Preview section title"
   },
   
-  "timeToPerformInspection": "Time to perform your Pre-Trip Inspection",
+  "timeToPerformInspection": "It's time for your PTI!",
   "@timeToPerformInspection": {
     "description": "Inspection reminder message"
   },

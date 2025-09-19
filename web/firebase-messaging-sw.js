@@ -8,9 +8,9 @@ importScripts('./firebase-config.js');
 // Initialize Firebase with the configuration
 firebase.initializeApp(window.FIREBASE_CONFIG || {
   apiKey: "YOUR_API_KEY_PLACEHOLDER",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  authDomain: "PTIPLUS_PROJECT_ID.firebaseapp.com",
+  projectId: "PTIPLUS_PROJECT_ID",
+  storageBucket: "PTIPLUS_PROJECT_ID.appspot.com",
   messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
   appId: "YOUR_APP_ID",
   measurementId: "YOUR_MEASUREMENT_ID"

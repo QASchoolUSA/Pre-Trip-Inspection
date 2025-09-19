@@ -74,7 +74,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           cdlExpiryDate: DateTime.now().add(const Duration(days: 365)),
           medicalCertExpiryDate: DateTime.now().add(const Duration(days: 180)),
           phoneNumber: '555-0123',
-          email: 'demo@trucking.com',
+          email: 'demo@ptiplus.com',
         );
         
         ref.read(currentUserProvider.notifier).state = demoUser;
@@ -126,12 +126,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // App Logo
-                        Image.asset(
-                          'assets/icons/icon-192.png',
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.contain,
+                        // App Logo with iOS-style rounded corners
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(150 * 0.2237), // iOS app icon radius formula
+                          child: Image.asset(
+                            'assets/icons/icon-192.png',
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         
                         const SizedBox(height: 32),

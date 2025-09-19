@@ -54,12 +54,12 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
       if (kIsWeb) {
         await Printing.layoutPdf(
           onLayout: (PdfPageFormat format) async => pdf,
-          name: 'PTI_Report_${_inspection!.vehicle.unitNumber}_${DateTime.now().millisecondsSinceEpoch}',
+          name: 'PTI_Plus_Report_${_inspection!.vehicle.unitNumber}_${DateTime.now().millisecondsSinceEpoch}',
         );
       } else {
         await Printing.sharePdf(
           bytes: pdf,
-          filename: 'PTI_Report_${_inspection!.vehicle.unitNumber}.pdf',
+          filename: 'PTI_Plus_Report_${_inspection!.vehicle.unitNumber}.pdf',
         );
       }
 

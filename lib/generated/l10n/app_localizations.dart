@@ -111,7 +111,7 @@ abstract class AppLocalizations {
   /// The title of the application
   ///
   /// In en, this message translates to:
-  /// **'PTI Mobile App'**
+  /// **'PTI Plus'**
   String get appTitle;
 
   /// Welcome message
@@ -825,7 +825,7 @@ abstract class AppLocalizations {
   /// Test notification body text
   ///
   /// In en, this message translates to:
-  /// **'This is a test notification from PTI Mobile App'**
+  /// **'This is a test notification from PTI Plus'**
   String get testNotificationBody;
 
   /// Test notification sent confirmation
@@ -843,7 +843,7 @@ abstract class AppLocalizations {
   /// Inspection reminder message
   ///
   /// In en, this message translates to:
-  /// **'Time to perform your Pre-Trip Inspection'**
+  /// **'It\'s time for your PTI!'**
   String get timeToPerformInspection;
 
   /// Scheduled time message

@@ -28,13 +28,24 @@ class InspectionItemAdapter extends TypeAdapter<InspectionItem> {
       defectSeverity: fields[8] as DefectSeverity?,
       checkedAt: fields[9] as DateTime?,
       checkedBy: fields[10] as String?,
+      createdAt: fields[11] as DateTime?,
+      updatedAt: fields[12] as DateTime?,
+      syncStatus: fields[13] as SyncStatus,
+      lastSyncAt: fields[14] as DateTime?,
+      serverVersion: fields[15] as String?,
+      isDeleted: fields[16] as bool,
+      conflictData: fields[17] as String?,
+      version: fields[18] as int,
+      serverUpdatedAt: fields[19] as DateTime?,
+      dataHash: fields[20] as String?,
+      pendingOperations: (fields[21] as List?)?.cast<SyncOperation>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, InspectionItem obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(22)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -56,7 +67,29 @@ class InspectionItemAdapter extends TypeAdapter<InspectionItem> {
       ..writeByte(9)
       ..write(obj.checkedAt)
       ..writeByte(10)
-      ..write(obj.checkedBy);
+      ..write(obj.checkedBy)
+      ..writeByte(11)
+      ..write(obj.createdAt)
+      ..writeByte(12)
+      ..write(obj.updatedAt)
+      ..writeByte(13)
+      ..write(obj.syncStatus)
+      ..writeByte(14)
+      ..write(obj.lastSyncAt)
+      ..writeByte(15)
+      ..write(obj.serverVersion)
+      ..writeByte(16)
+      ..write(obj.isDeleted)
+      ..writeByte(17)
+      ..write(obj.conflictData)
+      ..writeByte(18)
+      ..write(obj.version)
+      ..writeByte(19)
+      ..write(obj.serverUpdatedAt)
+      ..writeByte(20)
+      ..write(obj.dataHash)
+      ..writeByte(21)
+      ..write(obj.pendingOperations);
   }
 
   @override
@@ -92,13 +125,22 @@ class VehicleAdapter extends TypeAdapter<Vehicle> {
       mileage: fields[8] as double?,
       lastInspectionDate: fields[9] as DateTime?,
       isActive: fields[10] as bool,
+      createdAt: fields[11] as DateTime?,
+      updatedAt: fields[12] as DateTime?,
+      syncStatus: fields[13] as SyncStatus,
+      lastSyncAt: fields[14] as DateTime?,
+      serverUpdatedAt: fields[15] as DateTime?,
+      version: fields[16] as int,
+      dataHash: fields[17] as String?,
+      isDeleted: fields[18] as bool,
+      pendingOperations: (fields[19] as List).cast<SyncOperation>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Vehicle obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -120,7 +162,25 @@ class VehicleAdapter extends TypeAdapter<Vehicle> {
       ..writeByte(9)
       ..write(obj.lastInspectionDate)
       ..writeByte(10)
-      ..write(obj.isActive);
+      ..write(obj.isActive)
+      ..writeByte(11)
+      ..write(obj.createdAt)
+      ..writeByte(12)
+      ..write(obj.updatedAt)
+      ..writeByte(13)
+      ..write(obj.syncStatus)
+      ..writeByte(14)
+      ..write(obj.lastSyncAt)
+      ..writeByte(15)
+      ..write(obj.serverUpdatedAt)
+      ..writeByte(16)
+      ..write(obj.version)
+      ..writeByte(17)
+      ..write(obj.dataHash)
+      ..writeByte(18)
+      ..write(obj.isDeleted)
+      ..writeByte(19)
+      ..write(obj.pendingOperations);
   }
 
   @override
@@ -203,13 +263,22 @@ class InspectionAdapter extends TypeAdapter<Inspection> {
       isSynced: fields[12] as bool,
       lastSyncAt: fields[13] as DateTime?,
       reportPdfPath: fields[14] as String?,
+      updatedAt: fields[15] as DateTime?,
+      syncStatus: fields[16] as SyncStatus,
+      serverVersion: fields[17] as String?,
+      isDeleted: fields[18] as bool,
+      conflictData: fields[19] as String?,
+      version: fields[20] as int,
+      serverUpdatedAt: fields[21] as DateTime?,
+      dataHash: fields[22] as String?,
+      pendingOperations: (fields[23] as List?)?.cast<SyncOperation>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Inspection obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -239,7 +308,25 @@ class InspectionAdapter extends TypeAdapter<Inspection> {
       ..writeByte(13)
       ..write(obj.lastSyncAt)
       ..writeByte(14)
-      ..write(obj.reportPdfPath);
+      ..write(obj.reportPdfPath)
+      ..writeByte(15)
+      ..write(obj.updatedAt)
+      ..writeByte(16)
+      ..write(obj.syncStatus)
+      ..writeByte(17)
+      ..write(obj.serverVersion)
+      ..writeByte(18)
+      ..write(obj.isDeleted)
+      ..writeByte(19)
+      ..write(obj.conflictData)
+      ..writeByte(20)
+      ..write(obj.version)
+      ..writeByte(21)
+      ..write(obj.serverUpdatedAt)
+      ..writeByte(22)
+      ..write(obj.dataHash)
+      ..writeByte(23)
+      ..write(obj.pendingOperations);
   }
 
   @override
@@ -521,6 +608,29 @@ InspectionItem _$InspectionItemFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['checkedAt'] as String),
       checkedBy: json['checkedBy'] as String?,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      syncStatus:
+          $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
+              SyncStatus.pending,
+      lastSyncAt: json['lastSyncAt'] == null
+          ? null
+          : DateTime.parse(json['lastSyncAt'] as String),
+      serverVersion: json['serverVersion'] as String?,
+      isDeleted: json['isDeleted'] as bool? ?? false,
+      conflictData: json['conflictData'] as String?,
+      version: (json['version'] as num?)?.toInt() ?? 1,
+      serverUpdatedAt: json['serverUpdatedAt'] == null
+          ? null
+          : DateTime.parse(json['serverUpdatedAt'] as String),
+      dataHash: json['dataHash'] as String?,
+      pendingOperations: (json['pendingOperations'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$SyncOperationEnumMap, e))
+          .toList(),
     );
 
 Map<String, dynamic> _$InspectionItemToJson(InspectionItem instance) =>
@@ -536,6 +646,19 @@ Map<String, dynamic> _$InspectionItemToJson(InspectionItem instance) =>
       'defectSeverity': _$DefectSeverityEnumMap[instance.defectSeverity],
       'checkedAt': instance.checkedAt?.toIso8601String(),
       'checkedBy': instance.checkedBy,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,
+      'lastSyncAt': instance.lastSyncAt?.toIso8601String(),
+      'serverVersion': instance.serverVersion,
+      'isDeleted': instance.isDeleted,
+      'conflictData': instance.conflictData,
+      'version': instance.version,
+      'serverUpdatedAt': instance.serverUpdatedAt?.toIso8601String(),
+      'dataHash': instance.dataHash,
+      'pendingOperations': instance.pendingOperations
+          .map((e) => _$SyncOperationEnumMap[e]!)
+          .toList(),
     };
 
 const _$InspectionItemStatusEnumMap = {
@@ -549,6 +672,20 @@ const _$DefectSeverityEnumMap = {
   DefectSeverity.major: 'major',
   DefectSeverity.critical: 'critical',
   DefectSeverity.outOfService: 'out_of_service',
+};
+
+const _$SyncStatusEnumMap = {
+  SyncStatus.pending: 'pending',
+  SyncStatus.syncing: 'syncing',
+  SyncStatus.synced: 'synced',
+  SyncStatus.failed: 'failed',
+  SyncStatus.conflict: 'conflict',
+};
+
+const _$SyncOperationEnumMap = {
+  SyncOperation.create: 'create',
+  SyncOperation.update: 'update',
+  SyncOperation.delete: 'delete',
 };
 
 Vehicle _$VehicleFromJson(Map<String, dynamic> json) => Vehicle(
@@ -565,6 +702,28 @@ Vehicle _$VehicleFromJson(Map<String, dynamic> json) => Vehicle(
           ? null
           : DateTime.parse(json['lastInspectionDate'] as String),
       isActive: json['isActive'] as bool? ?? true,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      syncStatus:
+          $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
+              SyncStatus.pending,
+      lastSyncAt: json['lastSyncAt'] == null
+          ? null
+          : DateTime.parse(json['lastSyncAt'] as String),
+      serverUpdatedAt: json['serverUpdatedAt'] == null
+          ? null
+          : DateTime.parse(json['serverUpdatedAt'] as String),
+      version: (json['version'] as num?)?.toInt() ?? 1,
+      dataHash: json['dataHash'] as String?,
+      isDeleted: json['isDeleted'] as bool? ?? false,
+      pendingOperations: (json['pendingOperations'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$SyncOperationEnumMap, e))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$VehicleToJson(Vehicle instance) => <String, dynamic>{
@@ -579,6 +738,17 @@ Map<String, dynamic> _$VehicleToJson(Vehicle instance) => <String, dynamic>{
       'mileage': instance.mileage,
       'lastInspectionDate': instance.lastInspectionDate?.toIso8601String(),
       'isActive': instance.isActive,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,
+      'lastSyncAt': instance.lastSyncAt?.toIso8601String(),
+      'serverUpdatedAt': instance.serverUpdatedAt?.toIso8601String(),
+      'version': instance.version,
+      'dataHash': instance.dataHash,
+      'isDeleted': instance.isDeleted,
+      'pendingOperations': instance.pendingOperations
+          .map((e) => _$SyncOperationEnumMap[e]!)
+          .toList(),
     };
 
 LocationInfo _$LocationInfoFromJson(Map<String, dynamic> json) => LocationInfo(
@@ -621,6 +791,23 @@ Inspection _$InspectionFromJson(Map<String, dynamic> json) => Inspection(
           ? null
           : DateTime.parse(json['lastSyncAt'] as String),
       reportPdfPath: json['reportPdfPath'] as String?,
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      syncStatus:
+          $enumDecodeNullable(_$SyncStatusEnumMap, json['syncStatus']) ??
+              SyncStatus.pending,
+      serverVersion: json['serverVersion'] as String?,
+      isDeleted: json['isDeleted'] as bool? ?? false,
+      conflictData: json['conflictData'] as String?,
+      version: (json['version'] as num?)?.toInt() ?? 1,
+      serverUpdatedAt: json['serverUpdatedAt'] == null
+          ? null
+          : DateTime.parse(json['serverUpdatedAt'] as String),
+      dataHash: json['dataHash'] as String?,
+      pendingOperations: (json['pendingOperations'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$SyncOperationEnumMap, e))
+          .toList(),
     );
 
 Map<String, dynamic> _$InspectionToJson(Inspection instance) =>
@@ -640,6 +827,17 @@ Map<String, dynamic> _$InspectionToJson(Inspection instance) =>
       'isSynced': instance.isSynced,
       'lastSyncAt': instance.lastSyncAt?.toIso8601String(),
       'reportPdfPath': instance.reportPdfPath,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,
+      'serverVersion': instance.serverVersion,
+      'isDeleted': instance.isDeleted,
+      'conflictData': instance.conflictData,
+      'version': instance.version,
+      'serverUpdatedAt': instance.serverUpdatedAt?.toIso8601String(),
+      'dataHash': instance.dataHash,
+      'pendingOperations': instance.pendingOperations
+          .map((e) => _$SyncOperationEnumMap[e]!)
+          .toList(),
     };
 
 const _$InspectionTypeEnumMap = {

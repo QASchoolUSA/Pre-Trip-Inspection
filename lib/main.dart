@@ -11,12 +11,16 @@ import 'core/providers/locale_provider.dart';
 import 'core/navigation/app_router.dart';
 import 'presentation/providers/app_providers.dart';
 import 'generated/l10n/app_localizations.dart';
+import 'data/datasources/database_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Hive for web
   await Hive.initFlutter();
+  
+  // Initialize database service (registers adapters and opens boxes)
+  await DatabaseService.instance.initialize();
   
   // Initialize notification service
   await SimpleNotificationService().requestPermission();

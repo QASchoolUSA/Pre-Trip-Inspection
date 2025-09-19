@@ -1,6 +1,6 @@
-/// Application constants for PTI Mobile App
+/// Application constants for PTI Plus
 class AppConstants {
-  static const String appName = 'PTI Mobile';
+  static const String appName = 'PTI Plus';
   static const String appVersion = '1.0.0';
   static const String appDescription = 'Pre-Trip Inspection Progressive Web App';
   
@@ -18,7 +18,7 @@ class AppConstants {
   static const String lastSyncKey = 'last_sync_timestamp';
   
   // API endpoints (for future implementation)
-  static const String baseUrl = 'https://api.ptimobile.com/v1';
+  static const String baseUrl = 'https://api.ptiplus.com/v1';
   static const String syncEndpoint = '/sync';
   static const String uploadEndpoint = '/upload';
   

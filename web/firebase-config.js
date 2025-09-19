@@ -2,11 +2,11 @@
 // For security, these values should be injected via environment variables in your CI/CD pipeline
 
 window.FIREBASE_CONFIG = {
-  apiKey: "test-api-key",
-  authDomain: "test-project-id.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyCFcsZigl7WKabZtLY162XeYcNXf6STu7c",
+  authDomain: "ptiplus-71ea7.firebaseapp.com",
+  projectId: "ptiplus-71ea7",
+  storageBucket: "ptiplus-71ea7.appspot.com",
+  messagingSenderId: "66778285150",
+  appId: "1:66778285150:web:55d334513f65347b8260cf",
   measurementId: "YOUR_MEASUREMENT_ID"
 };

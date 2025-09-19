@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'PTI Mobile App';
+  String get appTitle => 'PTI Plus';
 
   @override
   String get welcome => 'Welcome';
@@ -402,7 +402,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get testNotificationBody =>
-      'This is a test notification from PTI Mobile App';
+      'This is a test notification from PTI Plus';
 
   @override
   String get testNotificationSent => 'Test notification sent!';
@@ -411,8 +411,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get preview => 'Preview';
 
   @override
-  String get timeToPerformInspection =>
-      'Time to perform your Pre-Trip Inspection';
+  String get timeToPerformInspection => 'It\'s time for your PTI!';
 
   @override
   String scheduledFor(String time) {

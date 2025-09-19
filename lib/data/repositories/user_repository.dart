@@ -169,7 +169,7 @@ class UserRepository {
         cdlExpiryDate: DateTime.now().add(const Duration(days: 180)),
         medicalCertExpiryDate: DateTime.now().add(const Duration(days: 90)),
         phoneNumber: '555-0101',
-        email: 'john.smith@trucking.com',
+        email: 'john.smith@ptiplus.com',
       ),
       User(
         id: _uuid.v4(),
@@ -178,7 +178,7 @@ class UserRepository {
         cdlExpiryDate: DateTime.now().add(const Duration(days: 365)),
         medicalCertExpiryDate: DateTime.now().add(const Duration(days: 120)),
         phoneNumber: '555-0102',
-        email: 'maria.garcia@trucking.com',
+        email: 'maria.garcia@ptiplus.com',
       ),
       User(
         id: _uuid.v4(),
@@ -187,7 +187,7 @@ class UserRepository {
         cdlExpiryDate: DateTime.now().add(const Duration(days: 20)), // Expiring soon
         medicalCertExpiryDate: DateTime.now().add(const Duration(days: 15)), // Expiring soon
         phoneNumber: '555-0103',
-        email: 'robert.johnson@trucking.com',
+        email: 'robert.johnson@ptiplus.com',
       ),
     ];
 

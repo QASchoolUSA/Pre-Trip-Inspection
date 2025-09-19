@@ -1,6 +1,6 @@
 {
-    "name": "PTI Mobile App - Pre-Trip Inspection",
-    "short_name": "PTI Mobile",
+    "name": "PTI Plus - Pre-Trip Inspection",
+    "short_name": "PTI Plus",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#1565C0",

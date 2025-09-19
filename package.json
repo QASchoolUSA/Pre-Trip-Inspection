@@ -1,7 +1,7 @@
 {
-  "name": "pti-mobile-app",
+  "name": "pti-plus",
   "version": "1.0.0",
-  "description": "PTI Mobile App - Flutter web application for vehicle inspection workflows",
+  "description": "PTI Plus - Flutter web application for vehicle inspection workflows",
   "main": "build/web/index.html",
   "scripts": {
     "prebuild": "node scripts/replace-firebase-config.js",
@@ -20,7 +20,7 @@
     "inspection",
     "mobile-app"
   ],
-  "author": "PTI Mobile App Team",
+  "author": "PTI Plus Team",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

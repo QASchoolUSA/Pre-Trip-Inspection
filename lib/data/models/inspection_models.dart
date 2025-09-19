@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'sync_models.dart';
 
 part 'inspection_models.g.dart';
 
@@ -78,7 +79,7 @@ enum InspectionItemStatus {
 /// Model for individual inspection item
 @HiveType(typeId: 4)
 @JsonSerializable()
-class InspectionItem {
+class InspectionItem with SyncableMixin {
   @HiveField(0)
   final String id;
   
@@ -112,6 +113,51 @@ class InspectionItem {
   @HiveField(10)
   String? checkedBy;
 
+  // Sync fields
+  @HiveField(11)
+  @override
+  final DateTime createdAt;
+  
+  @HiveField(12)
+  @override
+  final DateTime updatedAt;
+  
+  @HiveField(13)
+  @override
+  final SyncStatus syncStatus;
+  
+  @HiveField(14)
+  @override
+  final DateTime? lastSyncAt;
+  
+  @HiveField(15)
+  @override
+  final String? serverVersion;
+  
+  @HiveField(16)
+  @override
+  final bool isDeleted;
+  
+  @HiveField(17)
+  @override
+  final String? conflictData;
+  
+  @HiveField(18)
+  @override
+  final int version;
+  
+  @HiveField(19)
+  @override
+  final DateTime? serverUpdatedAt;
+  
+  @HiveField(20)
+  @override
+  final String? dataHash;
+  
+  @HiveField(21)
+  @override
+  final List<SyncOperation> pendingOperations;
+
   InspectionItem({
     required this.id,
     required this.name,
@@ -124,7 +170,21 @@ class InspectionItem {
     this.defectSeverity,
     this.checkedAt,
     this.checkedBy,
-  }) : photoUrls = photoUrls ?? [];
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    this.syncStatus = SyncStatus.pending,
+    this.lastSyncAt,
+    this.serverVersion,
+    this.isDeleted = false,
+    this.conflictData,
+    this.version = 1,
+    this.serverUpdatedAt,
+    this.dataHash,
+    List<SyncOperation>? pendingOperations,
+  }) : photoUrls = photoUrls ?? [],
+       createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now(),
+       pendingOperations = pendingOperations ?? [];
 
   factory InspectionItem.fromJson(Map<String, dynamic> json) =>
       _$InspectionItemFromJson(json);
@@ -143,6 +203,17 @@ class InspectionItem {
     DefectSeverity? defectSeverity,
     DateTime? checkedAt,
     String? checkedBy,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    SyncStatus? syncStatus,
+    DateTime? lastSyncAt,
+    String? serverVersion,
+    bool? isDeleted,
+    String? conflictData,
+    int? version,
+    DateTime? serverUpdatedAt,
+    String? dataHash,
+    List<SyncOperation>? pendingOperations,
   }) {
     return InspectionItem(
       id: id ?? this.id,
@@ -156,6 +227,17 @@ class InspectionItem {
       defectSeverity: defectSeverity ?? this.defectSeverity,
       checkedAt: checkedAt ?? this.checkedAt,
       checkedBy: checkedBy ?? this.checkedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+      serverVersion: serverVersion ?? this.serverVersion,
+      isDeleted: isDeleted ?? this.isDeleted,
+      conflictData: conflictData ?? this.conflictData,
+      version: version ?? this.version,
+      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
+      dataHash: dataHash ?? this.dataHash,
+      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }
@@ -163,7 +245,7 @@ class InspectionItem {
 /// Model for vehicle information
 @HiveType(typeId: 5)
 @JsonSerializable()
-class Vehicle {
+class Vehicle with SyncableMixin {
   @HiveField(0)
   final String id;
   
@@ -196,6 +278,34 @@ class Vehicle {
   
   @HiveField(10)
   final bool isActive;
+  
+  // Sync-related fields
+  @HiveField(11)
+  final DateTime createdAt;
+  
+  @HiveField(12)
+  final DateTime updatedAt;
+  
+  @HiveField(13)
+  final SyncStatus syncStatus;
+  
+  @HiveField(14)
+  final DateTime? lastSyncAt;
+  
+  @HiveField(15)
+  final DateTime? serverUpdatedAt;
+  
+  @HiveField(16)
+  final int version;
+  
+  @HiveField(17)
+  final String? dataHash;
+  
+  @HiveField(18)
+  final bool isDeleted;
+  
+  @HiveField(19)
+  final List<SyncOperation> pendingOperations;
 
   Vehicle({
     required this.id,
@@ -209,7 +319,17 @@ class Vehicle {
     this.mileage,
     this.lastInspectionDate,
     this.isActive = true,
-  });
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    this.syncStatus = SyncStatus.pending,
+    this.lastSyncAt,
+    this.serverUpdatedAt,
+    this.version = 1,
+    this.dataHash,
+    this.isDeleted = false,
+    this.pendingOperations = const [],
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Vehicle.fromJson(Map<String, dynamic> json) =>
       _$VehicleFromJson(json);
@@ -228,6 +348,15 @@ class Vehicle {
     double? mileage,
     DateTime? lastInspectionDate,
     bool? isActive,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    SyncStatus? syncStatus,
+    DateTime? lastSyncAt,
+    DateTime? serverUpdatedAt,
+    int? version,
+    String? dataHash,
+    bool? isDeleted,
+    List<SyncOperation>? pendingOperations,
   }) {
     return Vehicle(
       id: id ?? this.id,
@@ -241,6 +370,15 @@ class Vehicle {
       mileage: mileage ?? this.mileage,
       lastInspectionDate: lastInspectionDate ?? this.lastInspectionDate,
       isActive: isActive ?? this.isActive,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? DateTime.now(),
+      syncStatus: syncStatus ?? this.syncStatus,
+      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
+      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
+      version: version ?? this.version,
+      dataHash: dataHash ?? this.dataHash,
+      isDeleted: isDeleted ?? this.isDeleted,
+      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }
@@ -277,7 +415,7 @@ class LocationInfo {
 /// Main inspection model
 @HiveType(typeId: 7)
 @JsonSerializable()
-class Inspection {
+class Inspection with SyncableMixin {
   @HiveField(0)
   final String id;
   
@@ -323,6 +461,43 @@ class Inspection {
   @HiveField(14)
   String? reportPdfPath;
 
+  // Sync fields
+  @HiveField(15)
+  @override
+  final DateTime updatedAt;
+  
+  @HiveField(16)
+  @override
+  final SyncStatus syncStatus;
+  
+  @HiveField(17)
+  @override
+  final String? serverVersion;
+  
+  @HiveField(18)
+  @override
+  final bool isDeleted;
+  
+  @HiveField(19)
+  @override
+  final String? conflictData;
+  
+  @HiveField(20)
+  @override
+  final int version;
+  
+  @HiveField(21)
+  @override
+  final DateTime? serverUpdatedAt;
+  
+  @HiveField(22)
+  @override
+  final String? dataHash;
+  
+  @HiveField(23)
+  @override
+  final List<SyncOperation> pendingOperations;
+
   Inspection({
     required this.id,
     required this.driverId,
@@ -339,7 +514,18 @@ class Inspection {
     this.isSynced = false,
     this.lastSyncAt,
     this.reportPdfPath,
-  }) : items = items ?? [];
+    DateTime? updatedAt,
+    this.syncStatus = SyncStatus.pending,
+    this.serverVersion,
+    this.isDeleted = false,
+    this.conflictData,
+    this.version = 1,
+    this.serverUpdatedAt,
+    this.dataHash,
+    List<SyncOperation>? pendingOperations,
+  }) : items = items ?? [],
+       updatedAt = updatedAt ?? DateTime.now(),
+       pendingOperations = pendingOperations ?? [];
 
   factory Inspection.fromJson(Map<String, dynamic> json) =>
       _$InspectionFromJson(json);
@@ -400,6 +586,15 @@ class Inspection {
     bool? isSynced,
     DateTime? lastSyncAt,
     String? reportPdfPath,
+    DateTime? updatedAt,
+    SyncStatus? syncStatus,
+    String? serverVersion,
+    bool? isDeleted,
+    String? conflictData,
+    int? version,
+    DateTime? serverUpdatedAt,
+    String? dataHash,
+    List<SyncOperation>? pendingOperations,
   }) {
     return Inspection(
       id: id ?? this.id,
@@ -417,6 +612,15 @@ class Inspection {
       isSynced: isSynced ?? this.isSynced,
       lastSyncAt: lastSyncAt ?? this.lastSyncAt,
       reportPdfPath: reportPdfPath ?? this.reportPdfPath,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      serverVersion: serverVersion ?? this.serverVersion,
+      isDeleted: isDeleted ?? this.isDeleted,
+      conflictData: conflictData ?? this.conflictData,
+      version: version ?? this.version,
+      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
+      dataHash: dataHash ?? this.dataHash,
+      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }

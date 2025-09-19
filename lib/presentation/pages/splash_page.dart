@@ -139,19 +139,6 @@ class _SplashPageState extends ConsumerState<SplashPage>
       // Initialize the app
       await ref.read(appInitializationProvider.future);
       
-      // Show a notification preview
-      final notificationService = ref.read(notificationServiceProvider);
-      if (notificationService.isSupported) {
-        // Show a preview notification after app initialization
-        Future.delayed(const Duration(seconds: 1), () {
-          notificationService.showNotification(
-            title: 'PTI Mobile App',
-            body: 'App initialized successfully!',
-            icon: 'assets/icons/icon-192.png',
-          );
-        });
-      }
-      
       // Wait for at least 2 seconds to show splash screen
       await Future.delayed(const Duration(seconds: 2));
       
@@ -217,18 +204,10 @@ class _SplashPageState extends ConsumerState<SplashPage>
                           animation: _pulseController,
                           builder: (context, child) {
                             return Container(
-                              width: 140,
-                              height: 140,
+                              width: 200,
+                              height: 200,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColors.white,
-                                    AppColors.grey50,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(28),
+                                borderRadius: BorderRadius.circular(40),
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppColors.black.withValues(alpha: 0.3),
@@ -244,32 +223,14 @@ class _SplashPageState extends ConsumerState<SplashPage>
                                   ),
                                 ],
                               ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  // Background glow effect
-                                  Container(
-                                    width: 80,
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: RadialGradient(
-                                        colors: [
-                                          AppColors.primaryBlueLight.withValues(alpha: 0.1),
-                                          AppColors.transparent,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  // Main custom app icon
-                                  Image.asset(
-                                    'assets/icons/icon-192.png',
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.contain,
-                                  ),
-
-                                ],
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(40), // Match container border radius
+                                child: Image.asset(
+                                  'assets/icons/icon-192.png',
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             );
                           },
@@ -496,7 +457,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '© 2024 PTI Mobile Solutions',
+                  '© 2024 PTI Plus Solutions',
                   style: TextStyle(
                     fontSize: 10,
                     color: AppColors.white.withValues(alpha: 0.4),
