@@ -512,6 +512,29 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String documentAttached(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 's',
+      one: '',
+    );
+    return '$count document$_temp0 attached';
+  }
+
+  @override
+  String documentsAttachedToItem(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count documents attached',
+      one: '1 document attached',
+      zero: 'No documents',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get pleaseProvideSignature => 'Please provide your signature';
 
   @override

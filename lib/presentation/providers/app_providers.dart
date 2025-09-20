@@ -80,7 +80,7 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
     loadInspections();
   }
 
-  void loadInspections() async {
+  Future<void> loadInspections() async {
     try {
       final inspections = await _repository.getAllInspections();
       state = inspections;
@@ -129,9 +129,18 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
     loadInspections(); // Refresh the list
   }
 
-  Future<void> updateInspectionItem(String inspectionId, InspectionItem item) async {
-    await _repository.updateInspectionItem(inspectionId, item);
-    loadInspections(); // Refresh the list
+  Future<void> updateInspectionItem(String inspectionId, InspectionItem updatedItem) async {
+    try {
+      print('DEBUG: EnhancedInspectionsNotifier.updateInspectionItem called for inspection $inspectionId, item ${updatedItem.id}');
+      await _repository.updateInspectionItem(inspectionId, updatedItem);
+      print('DEBUG: Repository update completed, reloading inspections');
+      await loadInspections(); // Reload all inspections to refresh state
+      print('DEBUG: State refreshed with ${state.length} inspections');
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error updating inspection item: $e');
+      }
+    }
   }
 
   Future<void> completeInspection(String inspectionId, String signature, {String? notes}) async {

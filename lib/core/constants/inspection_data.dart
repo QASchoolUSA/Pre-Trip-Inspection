@@ -1,4 +1,5 @@
 import '../../data/models/inspection_models.dart';
+import '../../data/models/document_attachment.dart';
 
 /// Pre-defined inspection items for simplified PTI categories
 class InspectionData {
@@ -126,6 +127,17 @@ class InspectionData {
       description: 'Commercial Driver\'s License validity, proper endorsements, and expiration date',
       category: 'Personal/Driver Docs',
       isRequired: true,
+      documentAttachments: [
+        DocumentAttachment(
+          id: 'test-cdl-doc-1',
+          fileName: 'cdl_license.pdf',
+          filePath: '/test/documents/cdl_license.pdf',
+          type: DocumentType.cdlLicense,
+          fileSizeBytes: 1024000,
+          isUploaded: true,
+          createdAt: DateTime.now(),
+        ),
+      ],
     ),
     InspectionItem(
       id: 'dot_medical_card',
@@ -133,6 +145,17 @@ class InspectionData {
       description: 'Medical certificate validity and expiration date',
       category: 'Personal/Driver Docs',
       isRequired: true,
+      documentAttachments: [
+        DocumentAttachment(
+          id: 'test-dot-doc-1',
+          fileName: 'dot_medical_card.pdf',
+          filePath: '/test/documents/dot_medical_card.pdf',
+          type: DocumentType.dotMedicalCard,
+          fileSizeBytes: 512000,
+          isUploaded: true,
+          createdAt: DateTime.now(),
+        ),
+      ],
     ),
   ];
 

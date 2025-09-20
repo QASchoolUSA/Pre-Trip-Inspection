@@ -54,6 +54,29 @@
   
   <!-- Service Worker Registration -->
   <script>
+    // Request camera permission early
+    async function requestCameraPermission() {
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          console.log('Requesting camera permission...');
+          const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+              facingMode: 'environment',
+              width: { ideal: 1920 },
+              height: { ideal: 1080 }
+            } 
+          });
+          console.log('Camera permission granted');
+          // Stop the stream immediately, we just needed permission
+          stream.getTracks().forEach(track => track.stop());
+          return true;
+        }
+      } catch (error) {
+        console.error('Camera permission denied or error:', error);
+        return false;
+      }
+    }
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js')
@@ -69,18 +92,21 @@
               });
             }
             
-            // Request notification permission after service worker is registered
-            // This is especially important for iOS which requires user interaction
-            window.addEventListener('click', function requestNotificationPermission() {
+            // Request both notification and camera permissions after service worker is registered
+            window.addEventListener('click', function requestPermissions() {
+              // Request notification permission
               if (window.Notification && Notification.permission === 'default') {
-                // Show a user-friendly prompt explaining why notifications are needed
                 console.log('Requesting notification permission after user interaction');
                 Notification.requestPermission().then(function(permission) {
                   console.log('Notification permission status:', permission);
                 });
               }
+              
+              // Request camera permission
+              requestCameraPermission();
+              
               // Remove the event listener after first click
-              window.removeEventListener('click', requestNotificationPermission);
+              window.removeEventListener('click', requestPermissions);
             });
           })
           .catch(function(err) {

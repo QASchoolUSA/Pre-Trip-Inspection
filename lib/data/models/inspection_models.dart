@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'sync_models.dart';
+import 'document_attachment.dart';
 
 part 'inspection_models.g.dart';
 
@@ -113,6 +114,9 @@ class InspectionItem with SyncableMixin {
   @HiveField(10)
   String? checkedBy;
 
+  @HiveField(22)
+  List<DocumentAttachment> documentAttachments;
+
   // Sync fields
   @HiveField(11)
   @override
@@ -170,6 +174,7 @@ class InspectionItem with SyncableMixin {
     this.defectSeverity,
     this.checkedAt,
     this.checkedBy,
+    List<DocumentAttachment>? documentAttachments,
     DateTime? createdAt,
     DateTime? updatedAt,
     this.syncStatus = SyncStatus.pending,
@@ -182,6 +187,7 @@ class InspectionItem with SyncableMixin {
     this.dataHash,
     List<SyncOperation>? pendingOperations,
   }) : photoUrls = photoUrls ?? [],
+       documentAttachments = documentAttachments ?? [],
        createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now(),
        pendingOperations = pendingOperations ?? [];
@@ -203,6 +209,7 @@ class InspectionItem with SyncableMixin {
     DefectSeverity? defectSeverity,
     DateTime? checkedAt,
     String? checkedBy,
+    List<DocumentAttachment>? documentAttachments,
     DateTime? createdAt,
     DateTime? updatedAt,
     SyncStatus? syncStatus,
@@ -227,6 +234,7 @@ class InspectionItem with SyncableMixin {
       defectSeverity: defectSeverity ?? this.defectSeverity,
       checkedAt: checkedAt ?? this.checkedAt,
       checkedBy: checkedBy ?? this.checkedBy,
+      documentAttachments: documentAttachments ?? this.documentAttachments,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,

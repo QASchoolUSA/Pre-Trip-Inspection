@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/models/inspection_models.dart';
+import '../../data/models/document_attachment.dart';
 import '../../generated/l10n/app_localizations.dart';
 
 /// Localized inspection data that uses AppLocalizations for proper i18n support

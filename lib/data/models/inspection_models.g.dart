@@ -28,6 +28,7 @@ class InspectionItemAdapter extends TypeAdapter<InspectionItem> {
       defectSeverity: fields[8] as DefectSeverity?,
       checkedAt: fields[9] as DateTime?,
       checkedBy: fields[10] as String?,
+      documentAttachments: (fields[22] as List?)?.cast<DocumentAttachment>(),
       createdAt: fields[11] as DateTime?,
       updatedAt: fields[12] as DateTime?,
       syncStatus: fields[13] as SyncStatus,
@@ -45,7 +46,7 @@ class InspectionItemAdapter extends TypeAdapter<InspectionItem> {
   @override
   void write(BinaryWriter writer, InspectionItem obj) {
     writer
-      ..writeByte(22)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -68,6 +69,8 @@ class InspectionItemAdapter extends TypeAdapter<InspectionItem> {
       ..write(obj.checkedAt)
       ..writeByte(10)
       ..write(obj.checkedBy)
+      ..writeByte(22)
+      ..write(obj.documentAttachments)
       ..writeByte(11)
       ..write(obj.createdAt)
       ..writeByte(12)
@@ -608,6 +611,9 @@ InspectionItem _$InspectionItemFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['checkedAt'] as String),
       checkedBy: json['checkedBy'] as String?,
+      documentAttachments: (json['documentAttachments'] as List<dynamic>?)
+          ?.map((e) => DocumentAttachment.fromJson(e as Map<String, dynamic>))
+          .toList(),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
@@ -646,6 +652,7 @@ Map<String, dynamic> _$InspectionItemToJson(InspectionItem instance) =>
       'defectSeverity': _$DefectSeverityEnumMap[instance.defectSeverity],
       'checkedAt': instance.checkedAt?.toIso8601String(),
       'checkedBy': instance.checkedBy,
+      'documentAttachments': instance.documentAttachments,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'syncStatus': _$SyncStatusEnumMap[instance.syncStatus]!,

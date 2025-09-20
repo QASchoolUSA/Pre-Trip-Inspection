@@ -417,12 +417,7 @@ class DashboardPage extends ConsumerWidget {
   }
 
   void _viewReports(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.viewReportsComingSoon),
-        backgroundColor: Colors.blue,
-      ),
-    );
+    context.goToReports();
   }
 
   void _manageVehicles(BuildContext context) {

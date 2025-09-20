@@ -77,6 +77,7 @@ class RouteNames {
   static const String defectReporting = '/defect-reporting';
   static const String signature = '/signature';
   static const String reportPreview = '/report-preview';
+  static const String reports = '/reports';
   static const String settings = '/settings';
   static const String help = '/help';
   static const String offlineSync = '/offline-sync';

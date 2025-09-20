@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/inspection_models.dart';
 import '../models/sync_models.dart';
+import '../models/document_attachment.dart';
 import '../../core/constants/app_constants.dart';
 
 /// Service for managing local database operations using Hive
@@ -35,6 +36,9 @@ class DatabaseService {
     Hive.registerAdapter(DefectSeverityAdapter());
     Hive.registerAdapter(InspectionItemStatusAdapter());
     
+    // Register document enum adapters
+    Hive.registerAdapter(DocumentTypeAdapter());
+    
     // Register sync enum adapters
     Hive.registerAdapter(SyncStatusAdapter());
     Hive.registerAdapter(SyncOperationAdapter());
@@ -48,6 +52,9 @@ class DatabaseService {
     Hive.registerAdapter(LocationInfoAdapter());
     Hive.registerAdapter(InspectionAdapter());
     Hive.registerAdapter(UserAdapter());
+    
+    // Register document model adapters
+    Hive.registerAdapter(DocumentAttachmentAdapter());
     
     // Register sync model adapters
     Hive.registerAdapter(SyncMetadataAdapter());

@@ -1014,6 +1014,18 @@ abstract class AppLocalizations {
   /// **'{count} photo{count, plural, =1{} other{s}} attached'**
   String photoAttached(int count);
 
+  /// Message showing number of documents attached
+  ///
+  /// In en, this message translates to:
+  /// **'{count} document{count, plural, =1{} other{s}} attached'**
+  String documentAttached(int count);
+
+  /// Number of documents attached to inspection item
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No documents} =1{1 document attached} other{{count} documents attached}}'**
+  String documentsAttachedToItem(int count);
+
   /// Error message when signature is required
   ///
   /// In en, this message translates to:

@@ -11,6 +11,7 @@ import '../../presentation/pages/inspection/inspection_details_page.dart';
 import '../../presentation/pages/inspection/defect_reporting_page.dart';
 import '../../presentation/pages/signature/signature_page.dart';
 import '../../presentation/pages/report/report_preview_page.dart';
+import '../../presentation/pages/reports/reports_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/help/help_page.dart';
 import '../../presentation/pages/sync/offline_sync_page.dart';
@@ -143,6 +144,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       
       GoRoute(
+        path: RouteNames.reports,
+        name: 'reports',
+        builder: (context, state) => const ReportsPage(),
+      ),
+      
+      GoRoute(
         path: RouteNames.settings,
         name: 'settings',
         builder: (context, state) => const SettingsPage(),
@@ -225,6 +232,8 @@ extension AppNavigation on BuildContext {
   
   void goToReportPreview(String inspectionId) => 
       go(RouteNames.reportPreview, extra: inspectionId);
+  
+  void goToReports() => go(RouteNames.reports);
   
   void goToSettings() => push(RouteNames.settings);
   void goToHelp() => go(RouteNames.help);

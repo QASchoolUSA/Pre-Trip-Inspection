@@ -367,18 +367,28 @@ class EnhancedInspectionRepository {
   /// Update inspection item
   Future<void> updateInspectionItem(String inspectionId, InspectionItem item) async {
     try {
+      print('DEBUG: EnhancedInspectionRepository.updateInspectionItem called');
+      print('DEBUG: Inspection ID: $inspectionId');
+      print('DEBUG: Item ID: ${item.id}');
+      print('DEBUG: Item attachments count: ${item.documentAttachments.length}');
+      
       final inspection = await getInspectionById(inspectionId);
       if (inspection == null) {
         throw Exception('Inspection not found: $inspectionId');
       }
 
+      print('DEBUG: Found inspection with ${inspection.items.length} items');
+
       // Update the specific item in the inspection
       final updatedItems = inspection.items.map((existingItem) {
         if (existingItem.id == item.id) {
+          print('DEBUG: Updating item ${item.id} with ${item.documentAttachments.length} attachments');
           return item;
         }
         return existingItem;
       }).toList();
+
+      print('DEBUG: Updated items list created');
 
       final updatedInspection = inspection.copyWith(
         items: updatedItems,
@@ -387,8 +397,11 @@ class EnhancedInspectionRepository {
         version: inspection.version + 1,
       );
 
+      print('DEBUG: About to call updateInspection');
       await updateInspection(updatedInspection);
+      print('DEBUG: updateInspection completed successfully');
     } catch (e) {
+      print('DEBUG: Error in updateInspectionItem: $e');
       if (kDebugMode) {
         print('Error updating inspection item: $e');
       }
