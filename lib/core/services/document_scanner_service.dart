@@ -35,9 +35,10 @@ class DocumentScannerService {
     bool enableTorch = false,
   }) async {
     try {
-      // For web platform, use image picker as fallback
+      // For web platform, skip advanced scanning and use regular photo capture directly
       if (kIsWeb) {
-        return await _scanDocumentWeb();
+        debugPrint('Web platform detected - using regular photo capture instead of advanced scanning');
+        return await captureSimplePhoto();
       }
 
       // Request camera permission for mobile platforms
@@ -162,6 +163,12 @@ class DocumentScannerService {
     double quality = 0.8,
   }) async {
     try {
+      // Skip PDF conversion on web to avoid _Namespace errors
+      if (kIsWeb) {
+        debugPrint('PDF conversion skipped on web platform');
+        return null;
+      }
+      
       if (imagePaths.isEmpty) {
         debugPrint('No images provided for PDF conversion');
         return null;
@@ -462,24 +469,57 @@ class DocumentScannerService {
         throw Exception('Camera permission denied. Please allow camera access and try again.');
       }
       
-      // Fallback to gallery if camera fails on web
-      try {
-        debugPrint('Attempting gallery fallback...');
-        final XFile? image = await _imagePicker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 85,
-          maxWidth: 1920,
-          maxHeight: 1080,
-        );
-        if (image != null) {
-          debugPrint('Gallery fallback successful: ${image.path}');
-          debugPrint('Image size: ${await image.length()} bytes');
-        }
-        return image?.path;
-      } catch (fallbackError) {
-        debugPrint('Error with gallery fallback: $fallbackError');
-        throw Exception('Unable to access camera or gallery. Please check permissions.');
+      // For other errors, don't try gallery fallback as it might cause confusion
+      // Let the calling code handle the fallback to captureSimplePhoto
+      debugPrint('Web document scan failed, letting caller handle fallback');
+      throw Exception('Web document scanning failed: $e');
+    }
+  }
+
+  /// Simple photo capture for web without any advanced processing
+  /// This is used as a fallback when advanced scanning fails
+  Future<String?> captureSimplePhoto() async {
+    try {
+      debugPrint('Starting simple photo capture...');
+      
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 90,
+        preferredCameraDevice: CameraDevice.rear,
+        maxWidth: 1920,
+        maxHeight: 1080,
+      );
+      
+      if (image != null) {
+        debugPrint('Simple photo capture successful: ${image.path}');
+        debugPrint('Image size: ${await image.length()} bytes');
+        return image.path;
       }
+      
+      debugPrint('Simple photo capture returned null - user cancelled or no image selected');
+      return null; // Return null instead of throwing exception for user cancellation
+    } catch (e) {
+      debugPrint('Error capturing simple photo: $e');
+      debugPrint('Error type: ${e.runtimeType}');
+      
+      // Check for specific Safari/mobile web errors
+      if (e.toString().contains('NotAllowedError') || 
+          e.toString().contains('permission') ||
+          e.toString().contains('denied')) {
+        debugPrint('Camera permission denied on mobile Safari');
+        throw Exception('Camera permission denied. Please allow camera access in your browser settings.');
+      }
+      
+      // For user cancellation or other non-critical errors, return null
+      if (e.toString().contains('cancelled') || 
+          e.toString().contains('abort') ||
+          e.toString().contains('user')) {
+        debugPrint('Photo capture cancelled by user');
+        return null;
+      }
+      
+      // For other errors, throw with more context
+      throw Exception('Failed to capture photo on mobile browser: $e');
     }
   }
 
@@ -530,53 +570,55 @@ class DocumentScannerService {
    /// Scan document and automatically convert to PDF
    /// This simplifies the workflow by combining scanning and PDF generation
    Future<String?> scanDocumentToPdf({
-     String? fileName,
-     bool enableAutoCapture = true,
-     bool enableTorch = false,
-   }) async {
-     try {
-       debugPrint('DocumentScannerService: Starting scan-to-PDF workflow...');
-       
-       // First scan the document
-       final scannedPath = await scanDocument(
-         enableAutoCapture: enableAutoCapture,
-         enableTorch: enableTorch,
-       );
-       
-       if (scannedPath == null) {
-         debugPrint('DocumentScannerService: Scan cancelled or failed');
-         return null;
-       }
-       
-       debugPrint('DocumentScannerService: Document scanned, converting to PDF...');
-       
-       // Automatically convert to PDF
-       final pdfPath = await convertToPdf(
-         [scannedPath],
-         fileName: fileName ?? 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
-       );
-       
-       if (pdfPath != null) {
-         debugPrint('DocumentScannerService: PDF generated successfully: $pdfPath');
-         
-         // Clean up the temporary image file
-         try {
-           final tempFile = File(scannedPath);
-           if (await tempFile.exists()) {
-             await tempFile.delete();
-             debugPrint('DocumentScannerService: Temporary image file cleaned up');
-           }
-         } catch (e) {
-           debugPrint('DocumentScannerService: Error cleaning up temp file: $e');
-         }
-       }
-       
-       return pdfPath;
-     } catch (e) {
-       debugPrint('DocumentScannerService: Error in scan-to-PDF workflow: $e');
-       return null;
-     }
-   }
+    String? fileName,
+    bool enableAutoCapture = true,
+    bool enableTorch = false,
+  }) async {
+    try {
+      debugPrint('DocumentScannerService: Starting scan-to-PDF workflow...');
+      
+      // Scan the document (now web-friendly)
+      final scannedPath = await scanDocument(
+        enableAutoCapture: enableAutoCapture,
+        enableTorch: enableTorch,
+      );
+      
+      if (scannedPath == null) {
+        debugPrint('DocumentScannerService: Scan cancelled or failed');
+        throw Exception('Document scanning was cancelled or failed');
+      }
+      
+      debugPrint('DocumentScannerService: Document scanned, converting to PDF...');
+      
+      // Automatically convert to PDF
+      final pdfPath = await convertToPdf(
+        [scannedPath],
+        fileName: fileName ?? 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+      );
+      
+      if (pdfPath != null) {
+        debugPrint('DocumentScannerService: PDF generated successfully: $pdfPath');
+        
+        // Clean up the temporary image file
+        try {
+          final tempFile = File(scannedPath);
+          if (await tempFile.exists()) {
+            await tempFile.delete();
+            debugPrint('DocumentScannerService: Temporary image file cleaned up');
+          }
+        } catch (e) {
+          debugPrint('DocumentScannerService: Error cleaning up temp file: $e');
+        }
+        
+        return pdfPath;
+      } else {
+        throw Exception('Failed to convert scanned image to PDF');
+      }
+    } catch (e) {
+      debugPrint('DocumentScannerService: Error in scan-to-PDF workflow: $e');
+      rethrow;
+    }
+  }
    
    /// Scan multiple documents and automatically convert to PDF
    /// This simplifies the workflow for multi-page documents

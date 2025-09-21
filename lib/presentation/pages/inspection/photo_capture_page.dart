@@ -198,7 +198,7 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
 
   Future<void> _updateInspectionItem() async {
     try {
-      final inspections = ref.read(inspectionsProvider);
+      final inspections = ref.read(enhancedInspectionsProvider);
       final inspection = inspections.firstWhere(
         (i) => i.id == widget.inspectionId,
       );
@@ -212,7 +212,7 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
           photoUrls: _photoUrls,
         );
         
-        await ref.read(inspectionsProvider.notifier).updateInspectionItem(
+        await ref.read(enhancedInspectionsProvider.notifier).updateInspectionItem(
           widget.inspectionId,
           updatedItem,
         );
@@ -373,7 +373,7 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
             ),
           ),
           
-          // Photo count
+          // Photo count and done button
           if (_photoUrls.isNotEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding),
@@ -402,6 +402,19 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
                         ),
                       ),
                     ),
+                  const SizedBox(width: 12),
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    icon: const Icon(Icons.check, size: 16),
+                    label: const Text('Done'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.successGreen,
+                      foregroundColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      minimumSize: const Size(0, 32),
+                      textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                  ),
                 ],
               ),
             ),

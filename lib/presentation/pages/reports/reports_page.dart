@@ -137,6 +137,9 @@ class _ReportsPageState extends ConsumerState<ReportsPage> {
     // Apply status filter
     if (_selectedStatus != null) {
       filtered = filtered.where((inspection) => inspection.status == _selectedStatus).toList();
+    } else {
+      // Default: show only completed inspections for "past reports"
+      filtered = filtered.where((inspection) => inspection.status == InspectionStatus.completed).toList();
     }
 
     // Apply date range filter

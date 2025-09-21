@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:signature/signature.dart';
-import 'dart:typed_data';
-import '../../../generated/l10n/app_localizations.dart';
+import 'dart:convert';
 
+import '../../../generated/l10n/app_localizations.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/navigation/app_router.dart';
 import '../../../data/models/inspection_models.dart';
 import '../../providers/app_providers.dart';
-import '../report/report_preview_page.dart';
-import '../../../core/navigation/app_router.dart';
 
 /// Digital signature page for inspection completion
 class SignaturePage extends ConsumerStatefulWidget {
@@ -47,7 +48,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
   }
 
   void _loadInspection() {
-    final inspections = ref.read(inspectionsProvider);
+    final inspections = ref.read(enhancedInspectionsProvider);
     _inspection = inspections.firstWhere(
       (inspection) => inspection.id == widget.inspectionId,
       orElse: () => throw Exception('Inspection not found'),
@@ -59,7 +60,7 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
     }
   }
 
-  void _completeInspection() {
+  Future<void> _completeInspection() async {
     if (_signatureController.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -70,19 +71,48 @@ class _SignaturePageState extends ConsumerState<SignaturePage> {
       return;
     }
 
-    // Save signature and complete inspection
-    final signatureBytes = _signatureController.toPngBytes();
-    
-    // Navigate back to dashboard with success message using GoRouter
-    context.goToDashboard();
-    
-    // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.inspectionCompletedSuccessfully),
-        backgroundColor: Colors.green,
-      ),
-    );
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Save signature and complete inspection
+      final signatureBytes = await _signatureController.toPngBytes();
+      if (signatureBytes == null) {
+        throw Exception('Failed to generate signature');
+      }
+      final signatureBase64 = base64Encode(signatureBytes);
+      
+      // Complete the inspection using the enhanced provider
+      await ref.read(enhancedInspectionsProvider.notifier).completeInspection(
+        widget.inspectionId,
+        signatureBase64,
+        notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+      );
+      
+      // Navigate back to dashboard with success message using GoRouter
+      context.goToDashboard();
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.inspectionCompletedSuccessfully),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error completing inspection: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   String _bytesToBase64(Uint8List bytes) {

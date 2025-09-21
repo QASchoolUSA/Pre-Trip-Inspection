@@ -67,7 +67,7 @@ class _InspectionItemScannerPageState extends ConsumerState<InspectionItemScanne
     if (_currentItem == null) return;
 
     try {
-      final repository = ref.read(enhancedInspectionRepositoryProvider);
+      final repository = ref.read(inspectionRepositoryProvider);
       
       // Update the item with new document attachments
       final updatedItem = _currentItem!.copyWith(

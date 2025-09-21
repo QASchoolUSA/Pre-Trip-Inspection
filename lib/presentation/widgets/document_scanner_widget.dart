@@ -74,7 +74,7 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: _isScanning ? null : _scanDocument,
+                      onPressed: _isScanning ? null : (_canScanMore() ? _scanDocument : null),
                       icon: _isScanning 
                         ? const SizedBox(
                             width: 20,
@@ -82,9 +82,9 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.document_scanner),
-                      label: Text(_isScanning ? 'Scanning...' : 'Scan Document'),
+                      label: Text(_isScanning ? 'Scanning...' : (_canScanMore() ? 'Scan Document' : 'Document Attached')),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: _canScanMore() ? Theme.of(context).primaryColor : Colors.grey,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
@@ -93,11 +93,11 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: _pickFromGallery,
+                      onPressed: _canScanMore() ? _pickFromGallery : null,
                       icon: const Icon(Icons.photo_library),
                       label: const Text('Gallery'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[600],
+                        backgroundColor: _canScanMore() ? Colors.grey[600] : Colors.grey[400],
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
@@ -229,22 +229,38 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
               // Image Preview
               ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                child: kIsWeb && imagePath.startsWith('data:')
-                    ? Image.memory(
-                        base64Decode(imagePath.split(',')[1]),
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+                child: kIsWeb
+                    ? (imagePath.startsWith('data:')
+                        ? Image.memory(
+                            base64Decode(imagePath.split(',')[1]),
+                            width: double.infinity,
                             height: 200,
-                            color: Colors.grey[300],
-                            child: const Center(
-                              child: Icon(Icons.error, color: Colors.red),
-                            ),
-                          );
-                        },
-                      )
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 200,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(Icons.error, color: Colors.red),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.network(
+                            imagePath,
+                            width: double.infinity,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 200,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(Icons.error, color: Colors.red),
+                                ),
+                              );
+                            },
+                          ))
                     : Image.file(
                         File(imagePath),
                         width: double.infinity,
@@ -297,6 +313,14 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
     );
   }
 
+  bool _canScanMore() {
+    if (widget.allowMultiplePages) {
+      return _scannedImages.length < widget.maxPages;
+    } else {
+      return _scannedImages.isEmpty;
+    }
+  }
+
   Future<void> _scanDocument() async {
     if (!widget.allowMultiplePages && _scannedImages.isNotEmpty) {
       _showSnackBar('Only one document allowed');
@@ -315,16 +339,74 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
     try {
       debugPrint('DocumentScannerWidget: Starting document scan...');
       
-      if (widget.autoGeneratePdf) {
-        // Simplified workflow: scan and automatically generate PDF
-        final pdfPath = widget.allowMultiplePages 
-          ? await _scannerService.scanMultipleDocumentsToPdf(
-              maxPages: widget.maxPages,
-              fileName: 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
-            )
-          : await _scannerService.scanDocumentToPdf(
-              fileName: 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
-            );
+      // For web, skip PDF generation and just capture photos
+      if (kIsWeb) {
+        debugPrint('DocumentScannerWidget: Web platform - capturing photo without PDF conversion');
+        String? scannedPath;
+        
+        try {
+          scannedPath = await _scannerService.scanDocument();
+          debugPrint('DocumentScannerWidget: Photo capture result: $scannedPath');
+        } catch (e) {
+          debugPrint('DocumentScannerWidget: Photo capture failed: $e');
+          _showSnackBar('Photo capture failed: $e');
+          scannedPath = null;
+        }
+        
+        if (scannedPath != null) {
+          // For web, we can't get file size from blob URLs, so use a default value
+          int fileSizeBytes = 0;
+          if (!kIsWeb) {
+            try {
+              fileSizeBytes = await File(scannedPath).length();
+            } catch (e) {
+              debugPrint('DocumentScannerWidget: Could not get file size: $e');
+              fileSizeBytes = 0;
+            }
+          }
+          
+          final documentAttachment = DocumentAttachment(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            fileName: 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg',
+            filePath: scannedPath,
+            type: DocumentType.photo,
+            fileSizeBytes: fileSizeBytes,
+            createdAt: DateTime.now(),
+          );
+
+          setState(() {
+            _scannedImages.add(scannedPath!);
+            _documentAttachments.add(documentAttachment);
+          });
+          
+          _showSnackBar('Photo captured successfully');
+          widget.onDocumentsScanned?.call(_scannedImages);
+          widget.onDocumentsChanged?.call(_documentAttachments);
+          
+          // Haptic feedback
+          HapticFeedback.lightImpact();
+        } else {
+          debugPrint('DocumentScannerWidget: Photo capture returned null');
+          _showSnackBar('Photo capture cancelled or failed');
+        }
+      } else if (widget.autoGeneratePdf) {
+        // Mobile: Simplified workflow: scan and automatically generate PDF
+        String? pdfPath;
+        
+        try {
+          pdfPath = widget.allowMultiplePages 
+            ? await _scannerService.scanMultipleDocumentsToPdf(
+                maxPages: widget.maxPages,
+                fileName: 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+              )
+            : await _scannerService.scanDocumentToPdf(
+                fileName: 'scanned_document_${DateTime.now().millisecondsSinceEpoch}.pdf',
+              );
+        } catch (pdfError) {
+          debugPrint('DocumentScannerWidget: PDF generation failed: $pdfError');
+          _showSnackBar('Failed to generate PDF: $pdfError');
+          pdfPath = null;
+        }
         
         if (pdfPath != null) {
           // Create PDF document attachment
@@ -355,8 +437,16 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
         }
       } else {
         // Original workflow: scan individual images
-        final scannedPath = await _scannerService.scanDocument();
-        debugPrint('DocumentScannerWidget: Scan result: $scannedPath');
+        String? scannedPath;
+        
+        try {
+          scannedPath = await _scannerService.scanDocument();
+          debugPrint('DocumentScannerWidget: Scan result: $scannedPath');
+        } catch (e) {
+          debugPrint('DocumentScannerWidget: Scanning failed: $e');
+          _showSnackBar('Scan cancelled or failed: $e');
+          scannedPath = null;
+        }
         
         if (scannedPath != null) {
           final documentAttachment = DocumentAttachment(
@@ -369,7 +459,7 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
           );
 
           setState(() {
-            _scannedImages.add(scannedPath);
+            _scannedImages.add(scannedPath!);
             _documentAttachments.add(documentAttachment);
           });
           
@@ -408,12 +498,23 @@ class _DocumentScannerWidgetState extends State<DocumentScannerWidget> {
     try {
       final imagePath = await _scannerService.pickImageFromGallery();
       if (imagePath != null) {
+        // For web, we can't get file size from blob URLs, so use a default value
+        int fileSizeBytes = 0;
+        if (!kIsWeb) {
+          try {
+            fileSizeBytes = await File(imagePath).length();
+          } catch (e) {
+            debugPrint('DocumentScannerWidget: Could not get file size: $e');
+            fileSizeBytes = 0;
+          }
+        }
+        
         final documentAttachment = DocumentAttachment(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           fileName: 'gallery_${DateTime.now().millisecondsSinceEpoch}.jpg',
           filePath: imagePath,
           type: DocumentType.photo,
-          fileSizeBytes: await File(imagePath).length(),
+          fileSizeBytes: fileSizeBytes,
           createdAt: DateTime.now(),
         );
 

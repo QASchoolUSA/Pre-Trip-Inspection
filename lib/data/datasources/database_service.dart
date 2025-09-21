@@ -25,6 +25,9 @@ class DatabaseService {
     // Open boxes
     await _openBoxes();
 
+    // Migrate database if needed
+    await migrateDatabase();
+
     _isInitialized = true;
   }
 
@@ -103,6 +106,25 @@ class DatabaseService {
       usersBox.clear(),
       settingsBox.clear(),
     ]);
+  }
+
+  /// Migrate database to handle SyncStatus null values
+  Future<void> migrateDatabase() async {
+    try {
+      // Check if migration is needed by trying to read a vehicle
+      final vehicles = vehiclesBox.values.toList();
+      print('DEBUG: Found ${vehicles.length} vehicles in database');
+      
+      // Check if inspections can be read
+      final inspections = inspectionsBox.values.toList();
+      print('DEBUG: Found ${inspections.length} inspections in database');
+      
+    } catch (e) {
+      print('DEBUG: Database migration needed due to error: $e');
+      // Clear corrupted data
+      await clearAllData();
+      print('DEBUG: Cleared corrupted database data');
+    }
   }
 
   /// Get database size information

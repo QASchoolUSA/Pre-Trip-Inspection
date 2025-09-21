@@ -16,7 +16,6 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
-    final inspectionStats = ref.watch(inspectionsProvider.notifier).getStats();
     final vehicleStats = ref.watch(vehiclesProvider.notifier).getStats();
     
     return Scaffold(
@@ -55,7 +54,19 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(height: 24),
             
             // Statistics Section
-            _buildStatsSection(context, inspectionStats, vehicleStats),
+            FutureBuilder<Map<String, dynamic>>(
+              future: ref.read(enhancedInspectionsProvider.notifier).getStats(),
+              builder: (context, snapshot) {
+                final inspectionStats = snapshot.data ?? {
+                  'total': 0,
+                  'completed': 0,
+                  'in_progress': 0,
+                  'pending': 0,
+                  'completion_rate': 0.0,
+                };
+                return _buildStatsSection(context, inspectionStats, vehicleStats);
+              },
+            ),
             
             const SizedBox(height: 24),
             

@@ -266,8 +266,13 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
   }
 
   void _onDocumentsScanned(List<String> scannedPaths) {
-    // Documents are scanned but not yet saved to inspection item
-    // This is handled when PDF is generated or individual images are processed
+    // For web platform, photos are captured directly and need to be saved immediately
+    // since PDF generation is not available
+    if (scannedPaths.isNotEmpty) {
+      // Save the most recent photo (last in the list)
+      final latestPhotoPath = scannedPaths.last;
+      _attachDocumentToInspectionItem(latestPhotoPath, DocumentType.photo);
+    }
   }
 
   Future<void> _onPdfGenerated(String pdfPath) async {
@@ -289,15 +294,28 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
     });
 
     try {
-      final file = File(filePath);
-      if (!await file.exists()) {
-        throw Exception('File not found: $filePath');
+      // Handle web platform blob URLs differently
+      int fileSize;
+      String fileName;
+      
+      if (filePath.startsWith('blob:')) {
+        // For web platform blob URLs, we can't use File() constructor
+        // Instead, we'll use a placeholder size and generate a filename
+        fileSize = 0; // Will be updated when we implement proper blob handling
+        fileName = 'captured_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        print('DEBUG: Web blob URL detected, using placeholder values');
+      } else {
+        // For mobile platforms, use File operations
+        final file = File(filePath);
+        if (!await file.exists()) {
+          throw Exception('File not found: $filePath');
+        }
+        
+        final fileStats = await file.stat();
+        fileSize = fileStats.size;
+        fileName = file.path.split('/').last;
+        print('DEBUG: File exists, size: $fileSize bytes');
       }
-
-      final fileStats = await file.stat();
-      final fileName = file.path.split('/').last;
-
-      print('DEBUG: File exists, size: ${fileStats.size} bytes');
 
       // Create document attachment
       final attachment = DocumentAttachment(
@@ -305,7 +323,7 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         fileName: fileName,
         filePath: filePath,
         type: documentType ?? _getDocumentTypeEnum(),
-        fileSizeBytes: fileStats.size,
+        fileSizeBytes: fileSize,
         createdAt: DateTime.now(),
         description: 'Scanned document for ${widget.itemName}',
       );

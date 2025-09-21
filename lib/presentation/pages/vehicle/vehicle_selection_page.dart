@@ -137,7 +137,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
     try {
       // Create new inspection
-      final inspection = await ref.read(inspectionsProvider.notifier).createInspection(
+      final inspection = await ref.read(enhancedInspectionsProvider.notifier).createInspection(
         context: context,
         driverId: currentUser.id,
         driverName: currentUser.name,
@@ -147,6 +147,9 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
       // Set as current inspection
       ref.read(currentInspectionProvider.notifier).state = inspection;
+
+      // Add a small delay to ensure the inspection is properly set in the provider
+      await Future.delayed(const Duration(milliseconds: 50));
 
       // Navigate to inspection page
       if (mounted) {
@@ -187,6 +190,11 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.selectVehicle),
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.goToDashboard(),
+          tooltip: AppLocalizations.of(context)!.goToDashboard,
+        ),
       ),
       body: Column(
         children: [

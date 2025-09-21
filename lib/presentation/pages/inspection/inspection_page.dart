@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../generated/l10n/app_localizations.dart';
@@ -31,11 +32,15 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   Set<String> _expandedItems = {}; // Track expanded items
   ScrollController _scrollController = ScrollController();
   bool _hasModifications = false; // Track if any items have been modified
+  bool _isLoading = true; // Track loading state to prevent error UI flash
 
   @override
   void initState() {
     super.initState();
-    _loadInspection();
+    // Delay the provider modification to avoid lifecycle error
+    Future(() {
+      _loadInspection();
+    });
   }
 
   @override
@@ -56,9 +61,12 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
 
   void _loadInspection() async {
     if (widget.inspectionId != null) {
-      // Wait for inspections to load if they haven't yet
+      // Load inspections first and wait for completion
       final inspectionsNotifier = ref.read(enhancedInspectionsProvider.notifier);
-      await inspectionsNotifier.loadInspections();
+      inspectionsNotifier.loadInspections();
+      
+      // Add a small delay to ensure data is loaded
+      await Future.delayed(const Duration(milliseconds: 100));
       
       final inspections = ref.read(enhancedInspectionsProvider);
       print('DEBUG: Available inspections: ${inspections.length}');
@@ -75,11 +83,20 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
           print('DEBUG: Inspection item: ${item.id} - ${item.name} (${item.documentAttachments.length} docs)');
         }
       } catch (e) {
-        print('DEBUG: Inspection ${widget.inspectionId} not found in enhanced provider, checking current inspection provider');
+        print('DEBUG: Inspection ${widget.inspectionId} not found in provider, checking current inspection provider');
         _currentInspection = ref.read(currentInspectionProvider);
         if (_currentInspection?.id != widget.inspectionId) {
           print('ERROR: Could not find inspection ${widget.inspectionId}');
-          // Handle the error gracefully - maybe navigate back or show error
+          // Handle the error gracefully - navigate back or show error
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Inspection not found. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            Navigator.of(context).pop();
+          }
           return;
         }
       }
@@ -96,7 +113,9 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
     
     // Trigger UI update after loading
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _isLoading = false; // Set loading to false after inspection is loaded
+      });
     }
   }
 
@@ -123,7 +142,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   Future<void> _updateInspectionItem(InspectionItem item) async {
     if (_currentInspection == null) return;
 
-    await ref.read(inspectionsProvider.notifier).updateInspectionItem(
+    await ref.read(enhancedInspectionsProvider.notifier).updateInspectionItem(
       _currentInspection!.id,
       item,
     );
@@ -134,7 +153,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
     });
 
     // Refresh current inspection
-    final updatedInspections = ref.read(inspectionsProvider);
+    final updatedInspections = ref.read(enhancedInspectionsProvider);
     _currentInspection = updatedInspections.firstWhere(
       (inspection) => inspection.id == _currentInspection!.id,
     );
@@ -211,6 +230,18 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
 
   @override
   Widget build(BuildContext context) {
+    // Show loading indicator while data is being loaded
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Inspection'),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    
     if (_currentInspection == null || _tabController == null) {
       return Scaffold(
         appBar: AppBar(
@@ -410,17 +441,23 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
   }
 
   Widget _buildInspectionItemCard(InspectionItem item) {
-    final hasPhotos = item.photoUrls.isNotEmpty;
+    final hasPhotos = item.photoUrls.isNotEmpty || item.documentAttachments.isNotEmpty;
     final hasNotes = item.notes != null && item.notes!.isNotEmpty;
     final hasDocuments = item.documentAttachments.isNotEmpty;
     final isExpanded = _expandedItems.contains(item.id);
     
-    // Debug print to check document attachments
-    if (item.id == 'cdl_license' || item.id == 'dot_medical_card' || item.id == 'paperwork') {
-      print('DEBUG: Item ${item.id} has ${item.documentAttachments.length} document attachments');
-      print('DEBUG: hasDocuments = $hasDocuments');
+    // Debug print to check photo and document data
+    print('DEBUG: Item ${item.id}:');
+    print('  - photoUrls.length: ${item.photoUrls.length}');
+    print('  - documentAttachments.length: ${item.documentAttachments.length}');
+    print('  - hasPhotos: $hasPhotos');
+    print('  - hasDocuments: $hasDocuments');
+    if (item.photoUrls.isNotEmpty) {
+      print('  - photoUrls: ${item.photoUrls}');
+    }
+    if (item.documentAttachments.isNotEmpty) {
       for (var doc in item.documentAttachments) {
-        print('DEBUG: Document: ${doc.fileName} at ${doc.filePath}');
+        print('  - Document: ${doc.fileName} at ${doc.filePath}');
       }
     }
     
@@ -518,7 +555,9 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                               const Icon(Icons.photo_camera, size: 12, color: AppColors.white),
                               const SizedBox(width: 4),
                               Text(
-                                AppLocalizations.of(context)!.photoAttached(item.photoUrls.length),
+                                item.photoUrls.isNotEmpty 
+                                  ? AppLocalizations.of(context)!.photoAttached(item.photoUrls.length)
+                                  : AppLocalizations.of(context)!.documentAttached(item.documentAttachments.length),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -838,8 +877,8 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                 
                 Row(
                   children: [
-                    // Only show photo button for items that don't require document scanning
-                    if (!_shouldShowDocumentScanner(item))
+                    // Show photo button for all items on web, or for non-document items on mobile
+                    if (!_shouldShowDocumentScanner(item) || kIsWeb)
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () async {
@@ -855,10 +894,13 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                             
                             // Always refresh the inspection data when returning from photo capture
                             // The PhotoCapturePage updates the state, so we need to reload it
-                            final updatedInspections = ref.read(inspectionsProvider);
+                            final updatedInspections = ref.read(enhancedInspectionsProvider);
                             _currentInspection = updatedInspections.firstWhere(
                               (inspection) => inspection.id == _currentInspection!.id,
                             );
+                            
+                            // Also update the currentInspectionProvider to keep them in sync
+                            ref.read(currentInspectionProvider.notifier).state = _currentInspection;
                             
                             // Update categorized items with fresh data
                             _setupCategories();
@@ -907,10 +949,10 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                       ),
                     ),
                     // Only show spacing when photo button is visible
-                    if (!_shouldShowDocumentScanner(item))
+                    if (!_shouldShowDocumentScanner(item) || kIsWeb)
                       const SizedBox(width: 6),
-                    // Only show document scanner for specific items that require documentation
-                    if (_shouldShowDocumentScanner(item))
+                    // Only show document scanner for specific items that require documentation on mobile platforms
+                    if (_shouldShowDocumentScanner(item) && !kIsWeb)
                       Expanded(
                         child: ElevatedButton.icon(
                           onPressed: () async {
@@ -977,7 +1019,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
                           ),
                         ),
                       ),
-                    if (_shouldShowDocumentScanner(item))
+                    if (_shouldShowDocumentScanner(item) && !kIsWeb)
                       const SizedBox(width: 6),
                     Expanded(
                       child: ElevatedButton.icon(
@@ -1257,7 +1299,7 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
       final shouldExit = await _showExitConfirmationDialog();
       if (shouldExit) {
         // Delete the unsaved inspection
-        await ref.read(inspectionsProvider.notifier).deleteInspection(_currentInspection!.id);
+        await ref.read(enhancedInspectionsProvider.notifier).deleteInspection(_currentInspection!.id);
         context.go(RouteNames.dashboard);
       }
     } else {
@@ -1275,17 +1317,46 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
           title: const Text('Exit Inspection'),
           content: const Text('This inspection has not been modified. Exiting will remove it from your reports. Are you sure you want to exit?'),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.cancel),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.errorRed,
-                foregroundColor: AppColors.white,
-              ),
-              child: const Text('Exit'),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: const BorderSide(color: AppColors.grey400),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.cancel,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.grey700,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.errorRed,
+                      foregroundColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Exit',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         );

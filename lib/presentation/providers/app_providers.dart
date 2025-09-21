@@ -6,6 +6,7 @@ import '../../core/services/api_service.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/services/sync_service.dart';
 import '../../core/services/conflict_resolution_service.dart';
+import '../../core/constants/localized_inspection_data.dart';
 import '../../data/datasources/database_service.dart';
 import '../../data/repositories/inspection_repository.dart';
 import '../../data/repositories/vehicle_repository.dart';
@@ -107,7 +108,7 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
       driverName: driverName,
       type: type,
       status: InspectionStatus.inProgress,
-      items: [],
+      items: LocalizedInspectionData.getAllInspectionItems(context),
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
       syncStatus: SyncStatus.pending,
@@ -227,7 +228,12 @@ class InspectionsNotifier extends StateNotifier<List<Inspection>> {
       location: location,
     );
     
-    loadInspections(); // Refresh the list
+    // Refresh the list and ensure the new inspection is in the state
+    loadInspections();
+    
+    // Add a small delay to ensure state propagation
+    await Future.delayed(const Duration(milliseconds: 50));
+    
     return inspection;
   }
 

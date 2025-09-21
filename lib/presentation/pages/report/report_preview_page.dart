@@ -33,7 +33,7 @@ class _ReportPreviewPageState extends ConsumerState<ReportPreviewPage> {
   }
 
   void _loadInspection() {
-    final inspections = ref.read(inspectionsProvider);
+    final inspections = ref.read(enhancedInspectionsProvider);
     _inspection = inspections.firstWhere(
       (inspection) => inspection.id == widget.inspectionId,
       orElse: () => throw Exception('Inspection not found'),
