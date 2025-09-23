@@ -50,9 +50,6 @@ class EnhancedInspectionRepository {
 
       return localInspections;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspections: $e');
-      }
       // Return local data even if sync fails
       return _dbService.inspectionsBox.values
           .where((inspection) => !inspection.isDeleted)
@@ -86,9 +83,6 @@ class EnhancedInspectionRepository {
         rethrow;
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspection by ID: $e');
-      }
       return null;
     }
   }
@@ -120,16 +114,10 @@ class EnhancedInspectionRepository {
         await _syncService.syncEntity('Inspection', inspection.id);
       } catch (e) {
         // Sync will be retried later, continue with local operation
-        if (kDebugMode) {
-          print('Immediate sync failed, will retry later: $e');
-        }
       }
 
       return inspectionWithSync;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error creating inspection: $e');
-      }
       rethrow;
     }
   }
@@ -160,16 +148,10 @@ class EnhancedInspectionRepository {
         await _syncService.syncEntity('Inspection', inspection.id);
       } catch (e) {
         // Sync will be retried later
-        if (kDebugMode) {
-          print('Immediate sync failed, will retry later: $e');
-        }
       }
 
       return updatedInspection;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error updating inspection: $e');
-      }
       rethrow;
     }
   }
@@ -202,14 +184,8 @@ class EnhancedInspectionRepository {
         await _syncService.syncEntity('Inspection', id);
       } catch (e) {
         // Sync will be retried later
-        if (kDebugMode) {
-          print('Immediate sync failed, will retry later: $e');
-        }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error deleting inspection: $e');
-      }
       rethrow;
     }
   }
@@ -222,9 +198,6 @@ class EnhancedInspectionRepository {
           .where((inspection) => inspection.driverId == driverId)
           .toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspections by driver ID: $e');
-      }
       return [];
     }
   }
@@ -237,9 +210,6 @@ class EnhancedInspectionRepository {
           .where((inspection) => inspection.vehicle.id == vehicleId)
           .toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspections by vehicle ID: $e');
-      }
       return [];
     }
   }
@@ -252,9 +222,6 @@ class EnhancedInspectionRepository {
           .where((inspection) => inspection.status == status)
           .toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspections by status: $e');
-      }
       return [];
     }
   }
@@ -272,9 +239,6 @@ class EnhancedInspectionRepository {
               inspection.createdAt.isBefore(endDate))
           .toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspections by date range: $e');
-      }
       return [];
     }
   }
@@ -286,9 +250,6 @@ class EnhancedInspectionRepository {
           .where((inspection) => inspection.syncStatus == SyncStatus.pending)
           .toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting pending sync inspections: $e');
-      }
       return [];
     }
   }
@@ -324,9 +285,6 @@ class EnhancedInspectionRepository {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error syncing inspections from server: $e');
-      }
       rethrow;
     }
   }
@@ -336,9 +294,6 @@ class EnhancedInspectionRepository {
     try {
       await _dbService.inspectionsBox.clear();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error clearing inspections: $e');
-      }
       rethrow;
     }
   }
@@ -357,9 +312,6 @@ class EnhancedInspectionRepository {
         'deleted': allInspections.where((i) => i.isDeleted).length,
       };
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting sync statistics: $e');
-      }
       return {};
     }
   }
@@ -367,28 +319,18 @@ class EnhancedInspectionRepository {
   /// Update inspection item
   Future<void> updateInspectionItem(String inspectionId, InspectionItem item) async {
     try {
-      print('DEBUG: EnhancedInspectionRepository.updateInspectionItem called');
-      print('DEBUG: Inspection ID: $inspectionId');
-      print('DEBUG: Item ID: ${item.id}');
-      print('DEBUG: Item attachments count: ${item.documentAttachments.length}');
-      
       final inspection = await getInspectionById(inspectionId);
       if (inspection == null) {
         throw Exception('Inspection not found: $inspectionId');
       }
 
-      print('DEBUG: Found inspection with ${inspection.items.length} items');
-
       // Update the specific item in the inspection
       final updatedItems = inspection.items.map((existingItem) {
         if (existingItem.id == item.id) {
-          print('DEBUG: Updating item ${item.id} with ${item.documentAttachments.length} attachments');
           return item;
         }
         return existingItem;
       }).toList();
-
-      print('DEBUG: Updated items list created');
 
       final updatedInspection = inspection.copyWith(
         items: updatedItems,
@@ -397,14 +339,8 @@ class EnhancedInspectionRepository {
         version: inspection.version + 1,
       );
 
-      print('DEBUG: About to call updateInspection');
       await updateInspection(updatedInspection);
-      print('DEBUG: updateInspection completed successfully');
     } catch (e) {
-      print('DEBUG: Error in updateInspectionItem: $e');
-      if (kDebugMode) {
-        print('Error updating inspection item: $e');
-      }
       rethrow;
     }
   }
@@ -429,9 +365,6 @@ class EnhancedInspectionRepository {
 
       await updateInspection(completedInspection);
     } catch (e) {
-      if (kDebugMode) {
-        print('Error completing inspection: $e');
-      }
       rethrow;
     }
   }
@@ -441,9 +374,6 @@ class EnhancedInspectionRepository {
     try {
       await _syncInspectionsFromServer();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error syncing from server: $e');
-      }
       rethrow;
     }
   }
@@ -464,9 +394,6 @@ class EnhancedInspectionRepository {
         'completion_rate': allInspections.isEmpty ? 0.0 : (completedInspections.length / allInspections.length) * 100,
       };
     } catch (e) {
-      if (kDebugMode) {
-        print('Error getting inspection stats: $e');
-      }
       return {
         'total': 0,
         'completed': 0,

@@ -59,63 +59,34 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
     super.dispose();
   }
 
-  void _loadInspection() async {
+  void _loadInspection() {
+    final inspections = ref.read(enhancedInspectionsProvider);
+    
     if (widget.inspectionId != null) {
-      // Load inspections first and wait for completion
-      final inspectionsNotifier = ref.read(enhancedInspectionsProvider.notifier);
-      inspectionsNotifier.loadInspections();
+      final inspection = inspections.firstWhere(
+        (i) => i.id == widget.inspectionId,
+        orElse: () => throw Exception('Inspection not found'),
+      );
       
-      // Add a small delay to ensure data is loaded
-      await Future.delayed(const Duration(milliseconds: 100));
-      
-      final inspections = ref.read(enhancedInspectionsProvider);
-      print('DEBUG: Available inspections: ${inspections.length}');
-      for (var inspection in inspections) {
-        print('DEBUG: Available inspection ID: ${inspection.id}');
-      }
-      
-      try {
-        _currentInspection = inspections.firstWhere(
-          (inspection) => inspection.id == widget.inspectionId,
-        );
-        print('DEBUG: Loading existing inspection ${_currentInspection!.id} with ${_currentInspection!.items.length} items');
-        for (var item in _currentInspection!.items) {
-          print('DEBUG: Inspection item: ${item.id} - ${item.name} (${item.documentAttachments.length} docs)');
+      if (inspection != null) {
+        _currentInspection = inspection;
+        for (final item in _currentInspection!.items) {
+          // Initialize item state
         }
-      } catch (e) {
-        print('DEBUG: Inspection ${widget.inspectionId} not found in provider, checking current inspection provider');
-        _currentInspection = ref.read(currentInspectionProvider);
-        if (_currentInspection?.id != widget.inspectionId) {
-          print('ERROR: Could not find inspection ${widget.inspectionId}');
-          // Handle the error gracefully - navigate back or show error
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Inspection not found. Please try again.'),
-                backgroundColor: Colors.red,
-              ),
-            );
-            Navigator.of(context).pop();
-          }
-          return;
+      } else {
+        final currentInspection = ref.read(currentInspectionProvider);
+        if (currentInspection == null) {
+          throw Exception('Could not find inspection ${widget.inspectionId}');
         }
       }
     } else {
-      _currentInspection = ref.read(currentInspectionProvider);
-      print('DEBUG: Loading current inspection from provider');
-      if (_currentInspection != null) {
-        print('DEBUG: Current inspection ${_currentInspection!.id} with ${_currentInspection!.items.length} items');
-        for (var item in _currentInspection!.items) {
-          print('DEBUG: Current inspection item: ${item.id} - ${item.name} (${item.documentAttachments.length} docs)');
+      final currentInspection = ref.read(currentInspectionProvider);
+      if (currentInspection != null) {
+        _currentInspection = currentInspection;
+        for (final item in _currentInspection!.items) {
+          // Initialize item state
         }
       }
-    }
-    
-    // Trigger UI update after loading
-    if (mounted) {
-      setState(() {
-        _isLoading = false; // Set loading to false after inspection is loaded
-      });
     }
   }
 
@@ -197,8 +168,6 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
       print('Should advance: $shouldAdvance (${completedAllItems.length}/${allItems.length} completed)');
       
       if (shouldAdvance && currentIndex < categories.length - 1) {
-        print('Auto-advancing from $currentCategory to next section...');
-        
         // Auto-advance to next tab immediately
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted && _tabController != null) {

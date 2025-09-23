@@ -422,7 +422,7 @@ class LocationInfo {
 
 /// Main inspection model
 @HiveType(typeId: 7)
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Inspection with SyncableMixin {
   @HiveField(0)
   final String id;

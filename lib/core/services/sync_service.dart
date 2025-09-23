@@ -100,9 +100,6 @@ class SyncService {
         } catch (e) {
           failed++;
           errors.add('${metadata.entityType}:${metadata.entityId} - $e');
-          if (kDebugMode) {
-            print('Sync error for ${metadata.entityType}:${metadata.entityId}: $e');
-          }
         }
         
         processed++;

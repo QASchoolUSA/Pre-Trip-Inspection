@@ -322,20 +322,18 @@ class ApiService {
 /// Retry interceptor for handling failed requests
 class RetryInterceptor extends Interceptor {
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (_shouldRetry(err)) {
-      try {
-        final response = await _retry(err.requestOptions);
-        handler.resolve(response);
-        return;
-      } catch (e) {
-        // Retry failed, continue with original error
-        if (kDebugMode) {
-          print('❌ Retry failed after ${ApiConfig.maxRetries} attempts: $e');
-        }
-      }
-    }
-    handler.next(err);
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    handler.next(options);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    handler.next(response);
+  }
+
+  @override
+  void onError(DioException error, ErrorInterceptorHandler handler) {
+    handler.next(error);
   }
 
   bool _shouldRetry(DioException err) {
@@ -375,6 +373,54 @@ class RetryInterceptor extends Interceptor {
           print('❌ Retry ${i + 1} failed: $e');
         }
         if (i == ApiConfig.maxRetries - 1) rethrow;
+      }
+    }
+    
+    throw Exception('Max retries exceeded');
+  }
+
+  Future<T> _executeWithRetry<T>(
+    Future<T> Function() operation,
+    RequestOptions requestOptions,
+  ) async {
+    Exception? lastException;
+    
+    for (int i = 0; i < ApiConfig.maxRetries; i++) {
+      try {
+        return await operation();
+      } catch (e) {
+        lastException = e is Exception ? e : Exception(e.toString());
+        
+        if (i == ApiConfig.maxRetries - 1) {
+          rethrow;
+        }
+        
+        // Wait before retry with exponential backoff
+        await Future.delayed(Duration(
+          milliseconds: ApiConfig.retryDelay * (i + 1),
+        ));
+      }
+    }
+    
+    throw lastException!;
+  }
+
+  Future<T> _retryOperation<T>(
+    Future<T> Function() operation,
+    RequestOptions requestOptions,
+  ) async {
+    for (int i = 0; i < ApiConfig.maxRetries; i++) {
+      try {
+        return await operation();
+      } catch (e) {
+        if (i == ApiConfig.maxRetries - 1) {
+          rethrow;
+        }
+        
+        // Wait before retry
+        await Future.delayed(Duration(
+          milliseconds: ApiConfig.retryDelay * (i + 1),
+        ));
       }
     }
     

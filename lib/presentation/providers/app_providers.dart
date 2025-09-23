@@ -86,9 +86,7 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
       final inspections = await _repository.getAllInspections();
       state = inspections;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading inspections: $e');
-      }
+      rethrow;
     }
   }
 
@@ -132,15 +130,10 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
 
   Future<void> updateInspectionItem(String inspectionId, InspectionItem updatedItem) async {
     try {
-      print('DEBUG: EnhancedInspectionsNotifier.updateInspectionItem called for inspection $inspectionId, item ${updatedItem.id}');
       await _repository.updateInspectionItem(inspectionId, updatedItem);
-      print('DEBUG: Repository update completed, reloading inspections');
-      await loadInspections(); // Reload all inspections to refresh state
-      print('DEBUG: State refreshed with ${state.length} inspections');
+      await loadInspections();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error updating inspection item: $e');
-      }
+      rethrow;
     }
   }
 
@@ -182,9 +175,6 @@ class EnhancedInspectionsNotifier extends StateNotifier<List<Inspection>> {
       await _repository.syncFromServer();
       loadInspections(); // Refresh after sync
     } catch (e) {
-      if (kDebugMode) {
-        print('Error syncing inspections from server: $e');
-      }
       rethrow;
     }
   }
@@ -283,14 +273,12 @@ class EnhancedVehiclesNotifier extends StateNotifier<List<Vehicle>> {
     loadVehicles();
   }
 
-  void loadVehicles() async {
+  Future<void> loadVehicles() async {
     try {
-      final vehicles = await _repository.getAllVehicles();
+      final vehicles = _repository.getAllVehicles();
       state = vehicles;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error loading vehicles: $e');
-      }
+      state = [];
     }
   }
 
@@ -361,9 +349,6 @@ class EnhancedVehiclesNotifier extends StateNotifier<List<Vehicle>> {
       await _repository.syncFromServer();
       loadVehicles(); // Refresh after sync
     } catch (e) {
-      if (kDebugMode) {
-        print('Error syncing vehicles from server: $e');
-      }
       rethrow;
     }
   }
@@ -387,15 +372,12 @@ class VehiclesNotifier extends StateNotifier<List<Vehicle>> {
   }
 
   void loadVehicles() {
-    print('DEBUG: VehiclesNotifier.loadVehicles() - Starting to load vehicles...');
-    final vehicles = _repository.getAllVehicles();
-    print('DEBUG: VehiclesNotifier.loadVehicles() - Found ${vehicles.length} vehicles from repository');
-    for (final vehicle in vehicles) {
-      print('DEBUG: Vehicle in state - ${vehicle.unitNumber}: ${vehicle.make} ${vehicle.model}');
+    try {
+      final vehicles = _repository.getAllVehicles();
+      state = vehicles;
+    } catch (e) {
+      state = [];
     }
-    print('DEBUG: VehiclesNotifier.loadVehicles() - Setting state with ${vehicles.length} vehicles');
-    state = vehicles;
-    print('DEBUG: VehiclesNotifier.loadVehicles() - State updated, current state has ${state.length} vehicles');
   }
 
   Future<Vehicle> createVehicle({

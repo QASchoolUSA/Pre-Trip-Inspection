@@ -466,10 +466,7 @@ class ConflictResolutionService {
       // Default to manual resolution
       return null;
     } catch (e) {
-      if (kDebugMode) {
-        print('Error suggesting auto resolution: $e');
-      }
-      return null;
+      rethrow;
     }
   }
 }

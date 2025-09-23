@@ -350,7 +350,6 @@ class SyncErrorBottomSheet extends ConsumerWidget {
     // Trigger a retry for the specific operation that failed
     final syncService = ref.read(syncServiceProvider);
     // TODO: Implement retry logic when SyncService has retryFailedOperation method
-    print('Retry sync for operation: ${error.operationId}');
   }
 
   void _dismissError(WidgetRef ref, SyncError error) {

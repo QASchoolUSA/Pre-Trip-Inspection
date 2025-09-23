@@ -147,10 +147,9 @@ class _SplashPageState extends ConsumerState<SplashPage>
         _navigateToNextPage();
       }
     } catch (e) {
-      // Log error and navigate to login as fallback
-      print('Splash initialization error: $e');
+      // Handle initialization error
       if (mounted) {
-        context.go('/login');
+        Navigator.of(context).pushReplacementNamed('/login');
       }
     }
   }

@@ -1,0 +1,1 @@
+genhtml coverage/lcov.info -o /Users/nikitakedrov/PTI-Mobile-App/pti_mobile_app/coverage/html

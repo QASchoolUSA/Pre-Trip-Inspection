@@ -11,7 +11,6 @@ class VehicleRepository {
   List<Vehicle> getAllVehicles() {
     final vehicles = _db.vehiclesBox.values.toList()
       ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
-    print('DEBUG: VehicleRepository.getAllVehicles() - Found ${vehicles.length} vehicles in database');
     return vehicles;
   }
 
@@ -193,7 +192,6 @@ class VehicleRepository {
 
   /// Add sample vehicles for development/testing
   Future<void> addSampleVehicles() async {
-    print('DEBUG: addSampleVehicles() called');
     final sampleVehicles = [
       Vehicle(
         id: _uuid.v4(),
@@ -228,11 +226,8 @@ class VehicleRepository {
       ),
     ];
 
-    print('DEBUG: Adding ${sampleVehicles.length} sample vehicles to database');
     for (final vehicle in sampleVehicles) {
       await _db.vehiclesBox.put(vehicle.id, vehicle);
-      print('DEBUG: Added vehicle ${vehicle.unitNumber} to database');
     }
-    print('DEBUG: Sample vehicles added successfully');
   }
 }
