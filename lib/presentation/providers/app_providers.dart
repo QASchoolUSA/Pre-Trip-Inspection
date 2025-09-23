@@ -275,7 +275,7 @@ class EnhancedVehiclesNotifier extends StateNotifier<List<Vehicle>> {
 
   Future<void> loadVehicles() async {
     try {
-      final vehicles = _repository.getAllVehicles();
+      final vehicles = await _repository.getAllVehicles();
       state = vehicles;
     } catch (e) {
       state = [];

@@ -236,8 +236,12 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
         title: const Text('Delete Photo'),
         content: const Text('Are you sure you want to delete this photo?'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.grey300,
+              foregroundColor: AppColors.grey700,
+            ),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -263,6 +267,7 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.errorRed,
+              foregroundColor: AppColors.white,
             ),
             child: const Text('Delete'),
           ),
@@ -527,7 +532,18 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
                       ),
           ),
           
-          // Delete button
+          // Single tap overlay covering entire photo
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _viewPhoto(index),
+                child: Container(),
+              ),
+            ),
+          ),
+          
+          // Delete button (positioned above overlay)
           Positioned(
             top: 8,
             right: 8,
@@ -566,17 +582,6 @@ class _PhotoCapturePageState extends ConsumerState<PhotoCapturePage> {
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
-              ),
-            ),
-          ),
-          
-          // Tap to view overlay
-          Positioned.fill(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => _viewPhoto(index),
-                child: Container(),
               ),
             ),
           ),

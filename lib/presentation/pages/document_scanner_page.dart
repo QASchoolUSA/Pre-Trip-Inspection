@@ -285,10 +285,6 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
   ) async {
     if (_isSaving) return;
 
-    print('DEBUG: Starting _attachDocumentToInspectionItem for ${widget.inspectionItemId}');
-    print('DEBUG: File path: $filePath');
-    print('DEBUG: Current attachments count: ${_inspectionItem?.documentAttachments.length ?? 0}');
-
     setState(() {
       _isSaving = true;
     });
@@ -303,7 +299,6 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         // Instead, we'll use a placeholder size and generate a filename
         fileSize = 0; // Will be updated when we implement proper blob handling
         fileName = 'captured_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        print('DEBUG: Web blob URL detected, using placeholder values');
       } else {
         // For mobile platforms, use File operations
         final file = File(filePath);
@@ -314,7 +309,6 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         final fileStats = await file.stat();
         fileSize = fileStats.size;
         fileName = file.path.split('/').last;
-        print('DEBUG: File exists, size: $fileSize bytes');
       }
 
       // Create document attachment
@@ -328,14 +322,10 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         description: 'Scanned document for ${widget.itemName}',
       );
 
-      print('DEBUG: Created attachment with ID: ${attachment.id}');
-
       // Update inspection item with new attachment
       final updatedAttachments = List<DocumentAttachment>.from(
         _inspectionItem!.documentAttachments,
       )..add(attachment);
-
-      print('DEBUG: Updated attachments count: ${updatedAttachments.length}');
 
       final updatedItem = _inspectionItem!.copyWith(
         documentAttachments: updatedAttachments,
@@ -343,15 +333,11 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         status: InspectionItemStatus.passed, // Mark as passed when document is attached
       );
 
-      print('DEBUG: About to save to repository - inspection: ${widget.inspectionId}, item: ${widget.inspectionItemId}');
-
       // Save to repository
       await _inspectionRepository.updateInspectionItem(
         widget.inspectionId,
         updatedItem,
       );
-
-      print('DEBUG: Successfully saved to repository');
 
       // Refresh the enhanced inspections provider state
       await ref.read(enhancedInspectionsProvider.notifier).updateInspectionItem(
@@ -359,18 +345,13 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         updatedItem,
       );
 
-      print('DEBUG: Enhanced inspections provider state refreshed');
-
       // Update local state
       setState(() {
         _inspectionItem = updatedItem;
       });
 
-      print('DEBUG: Updated local state, new attachments count: ${_inspectionItem?.documentAttachments.length}');
-
       _showSuccessSnackBar('Document attached successfully');
     } catch (e) {
-      print('DEBUG: Error in _attachDocumentToInspectionItem: $e');
       _showErrorSnackBar('Error attaching document: $e');
     } finally {
       setState(() {

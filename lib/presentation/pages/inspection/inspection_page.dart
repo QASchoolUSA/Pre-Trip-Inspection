@@ -88,6 +88,11 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
         }
       }
     }
+    
+    // Set loading to false after inspection is loaded
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _setupCategories() {
@@ -152,20 +157,14 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
           .where((item) => item.category == currentCategory)
           .toList();
       
-      print('Auto-advance check: Category=$currentCategory, Items=${categoryItems.length}');
-      
       // Check if ALL items in current category are completed (have been explicitly checked)
       final allItems = categoryItems;
       final completedAllItems = allItems.where(
         (item) => item.checkedAt != null
       );
       
-      print('All items: ${allItems.length}, Completed all: ${completedAllItems.length}');
-      
       // Only advance when ALL items are completed (100% completion)
       final shouldAdvance = allItems.isNotEmpty && allItems.length == completedAllItems.length;
-      
-      print('Should advance: $shouldAdvance (${completedAllItems.length}/${allItems.length} completed)');
       
       if (shouldAdvance && currentIndex < categories.length - 1) {
         // Auto-advance to next tab immediately
@@ -414,21 +413,6 @@ class _InspectionPageState extends ConsumerState<InspectionPage>
     final hasNotes = item.notes != null && item.notes!.isNotEmpty;
     final hasDocuments = item.documentAttachments.isNotEmpty;
     final isExpanded = _expandedItems.contains(item.id);
-    
-    // Debug print to check photo and document data
-    print('DEBUG: Item ${item.id}:');
-    print('  - photoUrls.length: ${item.photoUrls.length}');
-    print('  - documentAttachments.length: ${item.documentAttachments.length}');
-    print('  - hasPhotos: $hasPhotos');
-    print('  - hasDocuments: $hasDocuments');
-    if (item.photoUrls.isNotEmpty) {
-      print('  - photoUrls: ${item.photoUrls}');
-    }
-    if (item.documentAttachments.isNotEmpty) {
-      for (var doc in item.documentAttachments) {
-        print('  - Document: ${doc.fileName} at ${doc.filePath}');
-      }
-    }
     
     return Card(
       margin: const EdgeInsets.only(bottom: 12),

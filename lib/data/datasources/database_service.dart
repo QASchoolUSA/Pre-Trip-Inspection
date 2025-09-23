@@ -113,17 +113,13 @@ class DatabaseService {
     try {
       // Check if migration is needed by trying to read a vehicle
       final vehicles = vehiclesBox.values.toList();
-      print('DEBUG: Found ${vehicles.length} vehicles in database');
       
       // Check if inspections can be read
       final inspections = inspectionsBox.values.toList();
-      print('DEBUG: Found ${inspections.length} inspections in database');
       
     } catch (e) {
-      print('DEBUG: Database migration needed due to error: $e');
       // Clear corrupted data
       await clearAllData();
-      print('DEBUG: Cleared corrupted database data');
     }
   }
 
