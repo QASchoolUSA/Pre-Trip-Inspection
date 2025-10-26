@@ -8,6 +8,8 @@ import '../../../core/navigation/app_router.dart';
 import '../../../generated/l10n/app_localizations.dart';
 import '../../providers/app_providers.dart';
 import '../vehicle/vehicle_selection_page.dart';
+import '../../providers/loadboard_providers.dart';
+import '../../../data/models/load_models.dart';
 
 /// Main dashboard page
 class DashboardPage extends ConsumerWidget {
@@ -16,7 +18,11 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
-    final vehicleStats = ref.watch(vehiclesProvider.notifier).getStats();
+    final driverLoadsAsync = ref.watch(driverLoadsProvider);
+    final deliveredLoadsCount = driverLoadsAsync.maybeWhen(
+      data: (loads) => loads.where((l) => l.status == LoadStatus.delivered).length,
+      orElse: () => 0,
+    );
     
     return Scaffold(
       appBar: AppBar(
@@ -64,7 +70,7 @@ class DashboardPage extends ConsumerWidget {
                   'pending': 0,
                   'completion_rate': 0.0,
                 };
-                return _buildStatsSection(context, inspectionStats, vehicleStats);
+                return _buildStatsSection(context, inspectionStats, deliveredLoadsCount);
               },
             ),
             
@@ -75,14 +81,7 @@ class DashboardPage extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _startNewInspection(context);
-        },
-        icon: const Icon(Icons.add_task),
-        label: Text(AppLocalizations.of(context)!.newInspection),
-        backgroundColor: AppColors.secondaryOrange,
-      ),
+
     );
   }
 
@@ -180,34 +179,35 @@ class DashboardPage extends ConsumerWidget {
             Expanded(
               child: _buildActionCard(
                 context,
-                icon: Icons.local_shipping,
-                title: AppLocalizations.of(context)!.manageVehicles,
-                subtitle: AppLocalizations.of(context)!.addEditVehicles,
+                icon: Icons.list_alt,
+                title: AppConstants.loadboardTitle,
+                subtitle: AppConstants.loadboardSubtitle,
                 color: AppColors.secondaryOrange,
-                onTap: () => _manageVehicles(context),
+                onTap: () => context.goToLoadboard(),
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: _buildActionCard(
                 context,
-                icon: Icons.settings,
-                title: AppLocalizations.of(context)!.settings,
-                subtitle: AppLocalizations.of(context)!.appPreferences,
-                color: AppColors.primaryBlue,
-                onTap: () => context.goToSettings(),
+                icon: Icons.map,
+                title: 'Map & Navigation',
+                subtitle: 'Find truck stops and services',
+                color: AppColors.successGreen,
+                onTap: () => context.goToMap(),
               ),
             ),
           ],
         ),
-      ],
-    );
-  }
+
+       ],
+     );
+   }
 
   Widget _buildStatsSection(
     BuildContext context,
     Map<String, dynamic> inspectionStats,
-    Map<String, dynamic> vehicleStats,
+    int deliveredLoadsCount,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,34 +234,10 @@ class DashboardPage extends ConsumerWidget {
             Expanded(
               child: _buildStatCard(
                 context,
-                title: AppLocalizations.of(context)!.thisMonth,
-                value: '${inspectionStats['recent'] ?? 0}',
-                icon: Icons.calendar_today,
-                color: AppColors.successGreen,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: AppLocalizations.of(context)!.activeVehicles,
-                value: '${vehicleStats['active'] ?? 0}',
+                title: 'Loads Delivered',
+                value: '$deliveredLoadsCount',
                 icon: Icons.local_shipping,
-                color: AppColors.secondaryOrange,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildStatCard(
-                context,
-                title: AppLocalizations.of(context)!.totalVehicles,
-                value: '${vehicleStats['total'] ?? 0}',
-                icon: Icons.garage,
-                color: AppColors.infoBlue,
+                color: AppColors.successGreen,
               ),
             ),
           ],
@@ -431,14 +407,6 @@ class DashboardPage extends ConsumerWidget {
     context.goToReports();
   }
 
-  void _manageVehicles(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.vehicleManagementComingSoon),
-        backgroundColor: Colors.blue,
-      ),
-    );
-  }
 
   void _syncData(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(

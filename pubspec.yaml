@@ -78,6 +78,15 @@ dependencies:
   geolocator: ^14.0.2
   geocoding: ^4.0.0
   
+  # Maps & Navigation
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  
+  # Firebase Services
+  firebase_core: ^3.8.0
+  cloud_firestore: ^5.6.0
+  firebase_auth: ^5.3.3
+  
   # Audio/Voice (for TTS with human-like voice)
   flutter_tts: ^4.2.3
   speech_to_text: ^7.3.0

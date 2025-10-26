@@ -12,6 +12,7 @@ import 'core/navigation/app_router.dart';
 import 'presentation/providers/app_providers.dart';
 import 'generated/l10n/app_localizations.dart';
 import 'data/datasources/database_service.dart';
+import 'presentation/widgets/trip_assistant_button.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +60,16 @@ class PTIMobileApp extends ConsumerWidget {
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
+      builder: (context, child) {
+        final currentUser = ref.watch(currentUserProvider);
+        final isLoggedIn = currentUser != null;
+        return Stack(
+          children: [
+            if (child != null) child,
+            if (isLoggedIn) const TripAssistantButton(),
+          ],
+        );
+      },
     );
   }
 }

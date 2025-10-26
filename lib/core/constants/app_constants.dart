@@ -4,6 +4,10 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   static const String appDescription = 'Pre-Trip Inspection Progressive Web App';
   
+  // Dashboard labels (temporary until l10n update)
+  static const String loadboardTitle = 'Loadboard';
+  static const String loadboardSubtitle = 'View assigned loads';
+  
   // Database constants
   static const String hiveBoxName = 'pti_box';
   static const String inspectionsBoxName = 'inspections_box';
@@ -81,6 +85,8 @@ class RouteNames {
   static const String settings = '/settings';
   static const String help = '/help';
   static const String offlineSync = '/offline-sync';
+  static const String map = '/map';
+  static const String loadboard = '/loadboard';
 }
 
 /// Error messages

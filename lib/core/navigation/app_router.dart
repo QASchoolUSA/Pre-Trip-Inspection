@@ -15,6 +15,8 @@ import '../../presentation/pages/reports/reports_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/help/help_page.dart';
 import '../../presentation/pages/sync/offline_sync_page.dart';
+import '../../presentation/pages/map/map_page.dart';
+import '../../presentation/pages/loadboard/loadboard_page.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../presentation/providers/app_providers.dart';
@@ -166,6 +168,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         name: 'offline-sync',
         builder: (context, state) => const OfflineSyncPage(),
       ),
+      
+      GoRoute(
+        path: RouteNames.map,
+        name: 'map',
+        builder: (context, state) => const MapPage(),
+      ),
+
+      GoRoute(
+        path: RouteNames.loadboard,
+        name: 'loadboard',
+        builder: (context, state) => const LoadboardPage(),
+      ),
     ],
     
     errorBuilder: (context, state) => Consumer(
@@ -238,17 +252,19 @@ extension AppNavigation on BuildContext {
   void goToSettings() => push(RouteNames.settings);
   void goToHelp() => go(RouteNames.help);
   void goToOfflineSync() => go(RouteNames.offlineSync);
+  void goToMap() => go(RouteNames.map);
+  void goToLoadboard() => go(RouteNames.loadboard);
   
   // Push methods for overlay navigation
-  void pushInspection([String? inspectionId]) => 
+  void pushInspection([String? inspectionId]) =>
       push(RouteNames.inspection, extra: inspectionId);
   
-  void pushDefectReporting(String inspectionId, String itemId) => 
+  void pushDefectReporting(String inspectionId, String itemId) =>
       push(RouteNames.defectReporting, extra: {
         'inspectionId': inspectionId,
         'itemId': itemId,
       });
   
-  void pushSignature(String inspectionId) => 
+  void pushSignature(String inspectionId) =>
       push(RouteNames.signature, extra: inspectionId);
 }
