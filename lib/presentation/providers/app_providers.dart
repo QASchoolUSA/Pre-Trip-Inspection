@@ -6,6 +6,7 @@ import '../../core/services/api_service.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/services/sync_service.dart';
 import '../../core/services/conflict_resolution_service.dart';
+import '../../core/services/supabase_service.dart';
 import '../../core/constants/localized_inspection_data.dart';
 import '../../data/datasources/database_service.dart';
 import '../../data/repositories/inspection_repository.dart';
@@ -35,6 +36,10 @@ final syncServiceProvider = Provider<SyncService>((ref) {
 
 final conflictResolutionServiceProvider = Provider<ConflictResolutionService>((ref) {
   return ConflictResolutionService.instance;
+});
+
+final supabaseServiceProvider = Provider<SupabaseService>((ref) {
+  return SupabaseService.instance;
 });
 
 /// Legacy repository providers (for backward compatibility)
@@ -529,6 +534,9 @@ final enhancedAppInitializationProvider = FutureProvider<bool>((ref) async {
     await ApiService.instance.initialize();
     await AuthService.instance.initialize();
     await SyncService.instance.initialize();
+
+    // Initialize Supabase (optional; only if configured)
+    await SupabaseService.instance.initialize();
     
     // Check authentication status
     final isAuthenticated = await AuthService.instance.isAuthenticated();
@@ -538,6 +546,54 @@ final enhancedAppInitializationProvider = FutureProvider<bool>((ref) async {
     ref.read(enhancedInspectionsProvider.notifier).loadInspections();
     ref.read(enhancedVehiclesProvider.notifier).loadVehicles();
     ref.read(usersProvider.notifier).loadUsers();
+
+    // Temporary: use a demo user consistently across app and Supabase
+    const desiredDemoUserId = 'fd89ca03-c7fb-4a44-8685-ea2c1563c98d';
+    const demoEmail = 'demo@ptiplus.com';
+    final supabase = SupabaseService.instance;
+    if (supabase.isInitialized) {
+      try {
+        final existing = await supabase.getUserByEmail(demoEmail);
+        final resolvedId = existing != null ? existing['id'].toString() : desiredDemoUserId;
+
+        if (existing == null) {
+          // Create or merge the demo user on the desired ID
+          await supabase.upsertUser({
+            'id': resolvedId,
+            'name': 'Demo Driver',
+            'cdl_number': 'CDL123456',
+            'cdl_expiry_date': '2026-10-27T20:14:28.127',
+            'medical_cert_expiry_date': '2026-04-25T20:14:28.127',
+            'phone_number': '555-0123',
+            'email': demoEmail,
+            'is_active': true,
+          });
+        }
+
+        ref.read(currentUserProvider.notifier).state = User(
+          id: resolvedId,
+          name: 'Demo Driver',
+          cdlNumber: 'CDL123456',
+          cdlExpiryDate: DateTime.parse('2026-10-27T20:14:28.127'),
+          medicalCertExpiryDate: DateTime.parse('2026-04-25T20:14:28.127'),
+          phoneNumber: '555-0123',
+          email: demoEmail,
+          isActive: true,
+        );
+      } catch (_) {
+        // Fallback to local demo user if network fails
+        ref.read(currentUserProvider.notifier).state = User(
+          id: desiredDemoUserId,
+          name: 'Demo Driver',
+          cdlNumber: 'CDL123456',
+          cdlExpiryDate: DateTime.parse('2026-10-27T20:14:28.127'),
+          medicalCertExpiryDate: DateTime.parse('2026-04-25T20:14:28.127'),
+          phoneNumber: '555-0123',
+          email: demoEmail,
+          isActive: true,
+        );
+      }
+    }
     
     // Start sync if authenticated
     if (isAuthenticated) {
@@ -560,6 +616,19 @@ final appInitializationProvider = FutureProvider<bool>((ref) async {
     ref.read(inspectionsProvider.notifier).loadInspections();
     ref.read(vehiclesProvider.notifier).loadVehicles();
     ref.read(usersProvider.notifier).loadUsers();
+
+    // Temporary: use a demo user consistently even without Supabase
+    const demoUserId = 'fd89ca03-c7fb-4a44-8685-ea2c1563c98d';
+    ref.read(currentUserProvider.notifier).state = User(
+      id: demoUserId,
+      name: 'Demo Driver',
+      cdlNumber: 'CDL123456',
+      cdlExpiryDate: DateTime.parse('2026-10-27T20:14:28.127'),
+      medicalCertExpiryDate: DateTime.parse('2026-04-25T20:14:28.127'),
+      phoneNumber: '555-0123',
+      email: 'demo@ptiplus.com',
+      isActive: true,
+    );
     
     return true;
   } catch (e) {

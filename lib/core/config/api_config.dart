@@ -4,10 +4,28 @@ import 'package:flutter/foundation.dart';
 class ApiConfig {
   // Base URL for your PostgreSQL backend
   static const String _baseUrlDev = 'http://localhost:3000/api/v1';
+  static const String _androidEmulatorBaseUrlDev = 'http://10.0.2.2:3000/api/v1';
   static const String _baseUrlProd = 'https://api.ptiplus.com/v1';
+  // Allow overriding via --dart-define=API_BASE_URL
+  static const String _envBaseUrl = String.fromEnvironment('API_BASE_URL');
   
   /// Get the appropriate base URL based on build mode
-  static String get baseUrl => kDebugMode ? _baseUrlDev : _baseUrlProd;
+  static String get baseUrl {
+    // If provided via env, always use it
+    if (_envBaseUrl.isNotEmpty) return _envBaseUrl;
+
+    if (!kDebugMode) return _baseUrlProd;
+
+    // In debug: pick platform-aware dev base URL
+    // Web and iOS simulators can use localhost directly
+    // Android emulator needs 10.0.2.2 to reach host machine
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return _androidEmulatorBaseUrlDev;
+      default:
+        return _baseUrlDev;
+    }
+  }
   
   // API Endpoints
   static const String authEndpoint = '/auth';

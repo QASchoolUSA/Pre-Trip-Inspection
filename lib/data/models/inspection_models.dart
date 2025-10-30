@@ -664,6 +664,9 @@ class User {
   @HiveField(8)
   final DateTime? lastLoginAt;
 
+  @HiveField(9)
+  final String? role; // optional role (driver, dispatcher, admin, etc.)
+
   User({
     required this.id,
     required this.name,
@@ -674,6 +677,7 @@ class User {
     this.email,
     this.isActive = true,
     this.lastLoginAt,
+    this.role,
   });
 
   factory User.fromJson(Map<String, dynamic> json) =>
@@ -707,6 +711,7 @@ class User {
     String? email,
     bool? isActive,
     DateTime? lastLoginAt,
+    String? role,
   }) {
     return User(
       id: id ?? this.id,
@@ -718,6 +723,7 @@ class User {
       email: email ?? this.email,
       isActive: isActive ?? this.isActive,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+      role: role ?? this.role,
     );
   }
 }

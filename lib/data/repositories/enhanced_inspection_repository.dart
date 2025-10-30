@@ -7,6 +7,7 @@ import '../../core/services/api_service.dart';
 import '../../core/services/sync_service.dart';
 import '../../core/exceptions/api_exceptions.dart';
 import '../../core/config/api_config.dart';
+import '../../core/services/supabase_service.dart';
 
 /// Enhanced repository for inspection operations with PostgreSQL sync
 class EnhancedInspectionRepository {
@@ -109,6 +110,39 @@ class EnhancedInspectionRepository {
         data: inspectionWithSync.toJson(),
       );
 
+      // Try immediate Supabase upsert
+      try {
+        final supabase = SupabaseService.instance;
+        await supabase.initialize();
+        if (supabase.isInitialized) {
+          final j = inspectionWithSync.toJson();
+          final success = await supabase.upsertInspection({
+            'id': inspectionWithSync.id,
+            'driver_id': inspectionWithSync.driverId,
+            'driver_name': inspectionWithSync.driverName,
+            'vehicle_id': inspectionWithSync.vehicle.id,
+            'vehicle_unit': inspectionWithSync.vehicle.unitNumber,
+            'type': j['type'],
+            'status': j['status'],
+            'created_at': inspectionWithSync.createdAt.toIso8601String(),
+            'updated_at': inspectionWithSync.updatedAt.toIso8601String(),
+            'completed_at': inspectionWithSync.completedAt?.toIso8601String(),
+            'signature': inspectionWithSync.signature,
+            'overall_notes': inspectionWithSync.overallNotes,
+          });
+          if (success) {
+            final synced = inspectionWithSync.copyWith(
+              isSynced: true,
+              syncStatus: SyncStatus.synced,
+              lastSyncAt: DateTime.now(),
+            );
+            await _dbService.inspectionsBox.put(synced.id, synced);
+          }
+        }
+      } catch (e) {
+        // Keep local pending; sync will retry later
+      }
+
       // Try immediate sync if connected
       try {
         await _syncService.syncEntity('Inspection', inspection.id);
@@ -142,6 +176,39 @@ class EnhancedInspectionRepository {
         SyncOperation.update,
         data: updatedInspection.toJson(),
       );
+
+      // Try immediate Supabase upsert
+      try {
+        final supabase = SupabaseService.instance;
+        await supabase.initialize();
+        if (supabase.isInitialized) {
+          final j = updatedInspection.toJson();
+          final success = await supabase.upsertInspection({
+            'id': updatedInspection.id,
+            'driver_id': updatedInspection.driverId,
+            'driver_name': updatedInspection.driverName,
+            'vehicle_id': updatedInspection.vehicle.id,
+            'vehicle_unit': updatedInspection.vehicle.unitNumber,
+            'type': j['type'],
+            'status': j['status'],
+            'created_at': updatedInspection.createdAt.toIso8601String(),
+            'updated_at': updatedInspection.updatedAt.toIso8601String(),
+            'completed_at': updatedInspection.completedAt?.toIso8601String(),
+            'signature': updatedInspection.signature,
+            'overall_notes': updatedInspection.overallNotes,
+          });
+          if (success) {
+            final synced = updatedInspection.copyWith(
+              isSynced: true,
+              syncStatus: SyncStatus.synced,
+              lastSyncAt: DateTime.now(),
+            );
+            await _dbService.inspectionsBox.put(synced.id, synced);
+          }
+        }
+      } catch (e) {
+        // Keep local pending; sync will retry later
+      }
 
       // Try immediate sync if connected
       try {
@@ -364,6 +431,42 @@ class EnhancedInspectionRepository {
       );
 
       await updateInspection(completedInspection);
+      
+      // Also upsert completion to Supabase
+      try {
+        final supabase = SupabaseService.instance;
+        await supabase.initialize();
+        if (supabase.isInitialized) {
+          final j = completedInspection.toJson();
+          final success = await supabase.upsertInspection({
+            'id': completedInspection.id,
+            'driver_id': completedInspection.driverId,
+            'driver_name': completedInspection.driverName,
+            'vehicle_id': completedInspection.vehicle.id,
+            'vehicle_unit': completedInspection.vehicle.unitNumber,
+            'type': j['type'],
+            'status': j['status'],
+            'created_at': completedInspection.createdAt.toIso8601String(),
+            'updated_at': completedInspection.updatedAt.toIso8601String(),
+            'completed_at': completedInspection.completedAt?.toIso8601String(),
+            'signature': completedInspection.signature,
+            'overall_notes': completedInspection.overallNotes,
+          });
+          if (success) {
+            final synced = completedInspection.copyWith(
+              isSynced: true,
+              syncStatus: SyncStatus.synced,
+              lastSyncAt: DateTime.now(),
+            );
+            await _dbService.inspectionsBox.put(synced.id, synced);
+          }
+        }
+      } catch (e) {
+        // Keep local pending; sync will retry later
+      }
+
+      // Removed erroneous return in void method
+      // return inspectionWithSync;
     } catch (e) {
       rethrow;
     }

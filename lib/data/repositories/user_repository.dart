@@ -1,6 +1,7 @@
 import '../models/inspection_models.dart';
 import '../datasources/database_service.dart';
 import 'package:uuid/uuid.dart';
+import '../../core/services/supabase_service.dart';
 
 /// Repository for managing user data
 class UserRepository {
@@ -41,6 +42,7 @@ class UserRepository {
     DateTime? medicalCertExpiryDate,
     String? phoneNumber,
     String? email,
+    String? role,
   }) async {
     final user = User(
       id: _uuid.v4(),
@@ -50,15 +52,56 @@ class UserRepository {
       medicalCertExpiryDate: medicalCertExpiryDate,
       phoneNumber: phoneNumber,
       email: email,
+      role: role,
     );
 
     await _db.usersBox.put(user.id, user);
+
+    // Optional: upsert to Supabase
+    try {
+      final supabase = SupabaseService.instance;
+      await supabase.initialize();
+      if (supabase.isInitialized) {
+        await supabase.upsertUser({
+          'id': user.id,
+          'name': user.name,
+          'cdl_number': user.cdlNumber,
+          'cdl_expiry_date': user.cdlExpiryDate?.toIso8601String(),
+          'medical_cert_expiry_date': user.medicalCertExpiryDate?.toIso8601String(),
+          'phone_number': user.phoneNumber,
+          'email': user.email,
+          'is_active': user.isActive,
+          'last_login_at': user.lastLoginAt?.toIso8601String(),
+          'role': user.role,
+        });
+      }
+    } catch (_) {}
+
     return user;
   }
 
   /// Update user
   Future<void> updateUser(User user) async {
     await _db.usersBox.put(user.id, user);
+
+    try {
+      final supabase = SupabaseService.instance;
+      await supabase.initialize();
+      if (supabase.isInitialized) {
+        await supabase.upsertUser({
+          'id': user.id,
+          'name': user.name,
+          'cdl_number': user.cdlNumber,
+          'cdl_expiry_date': user.cdlExpiryDate?.toIso8601String(),
+          'medical_cert_expiry_date': user.medicalCertExpiryDate?.toIso8601String(),
+          'phone_number': user.phoneNumber,
+          'email': user.email,
+          'is_active': user.isActive,
+          'last_login_at': user.lastLoginAt?.toIso8601String(),
+          'role': user.role,
+        });
+      }
+    } catch (_) {}
   }
 
   /// Update user login timestamp
@@ -91,6 +134,13 @@ class UserRepository {
   /// Delete user
   Future<void> deleteUser(String id) async {
     await _db.usersBox.delete(id);
+    try {
+      final supabase = SupabaseService.instance;
+      await supabase.initialize();
+      if (supabase.isInitialized) {
+        await supabase.client!.from('users').delete().eq('id', id);
+      }
+    } catch (_) {}
   }
 
   /// Search users by name or CDL number
@@ -170,6 +220,7 @@ class UserRepository {
         medicalCertExpiryDate: DateTime.now().add(const Duration(days: 90)),
         phoneNumber: '555-0101',
         email: 'john.smith@ptiplus.com',
+        role: 'driver',
       ),
       User(
         id: _uuid.v4(),
@@ -179,20 +230,40 @@ class UserRepository {
         medicalCertExpiryDate: DateTime.now().add(const Duration(days: 120)),
         phoneNumber: '555-0102',
         email: 'maria.garcia@ptiplus.com',
+        role: 'dispatcher',
       ),
       User(
         id: _uuid.v4(),
         name: 'Robert Johnson',
         cdlNumber: 'CDL345678',
-        cdlExpiryDate: DateTime.now().add(const Duration(days: 20)), // Expiring soon
-        medicalCertExpiryDate: DateTime.now().add(const Duration(days: 15)), // Expiring soon
+        cdlExpiryDate: DateTime.now().add(const Duration(days: 20)),
+        medicalCertExpiryDate: DateTime.now().add(const Duration(days: 15)),
         phoneNumber: '555-0103',
         email: 'robert.johnson@ptiplus.com',
+        role: 'driver',
       ),
     ];
 
     for (final user in sampleUsers) {
       await _db.usersBox.put(user.id, user);
+      try {
+        final supabase = SupabaseService.instance;
+        await supabase.initialize();
+        if (supabase.isInitialized) {
+          await supabase.upsertUser({
+            'id': user.id,
+            'name': user.name,
+            'cdl_number': user.cdlNumber,
+            'cdl_expiry_date': user.cdlExpiryDate?.toIso8601String(),
+            'medical_cert_expiry_date': user.medicalCertExpiryDate?.toIso8601String(),
+            'phone_number': user.phoneNumber,
+            'email': user.email,
+            'is_active': user.isActive,
+            'last_login_at': user.lastLoginAt?.toIso8601String(),
+            'role': user.role,
+          });
+        }
+      } catch (_) {}
     }
   }
 }

@@ -1,12 +1,19 @@
 import 'dart:async';
 
 import '../models/load_models.dart';
+import '../../core/services/supabase_service.dart';
 
 class LoadRepository {
   LoadRepository();
 
-  // In a real app, replace with API/database call.
   Future<List<Load>> getLoadsForDriver(String driverId) async {
+    final supabase = SupabaseService.instance;
+    if (supabase.isInitialized && supabase.client != null) {
+      final rows = await supabase.fetchLoadsForDriver(driverId);
+      return rows.map(_mapRowToLoad).toList();
+    }
+
+    // Fallback sample data when Supabase is not configured
     await Future.delayed(const Duration(milliseconds: 200));
     final now = DateTime.now();
     final sample = <Load>[
@@ -58,5 +65,42 @@ class LoadRepository {
     ];
 
     return sample;
+  }
+
+  Load _mapRowToLoad(Map<String, dynamic> row) {
+    final statusStr = (row['status'] as String?) ?? 'assigned';
+    final status = _statusFromString(statusStr);
+    return Load(
+      id: row['id'].toString(),
+      driverId: row['driver_id'].toString(),
+      referenceNumber: row['reference_number'] ?? '',
+      pickupCity: row['pickup_city'] ?? '',
+      pickupState: row['pickup_state'] ?? '',
+      pickupTime: DateTime.parse((row['pickup_time'] ?? row['pickup_date']).toString()),
+      dropoffCity: row['dropoff_city'] ?? '',
+      dropoffState: row['dropoff_state'] ?? '',
+      dropoffTime: DateTime.parse((row['dropoff_time'] ?? row['dropoff_date']).toString()),
+      status: status,
+      weightLbs: (row['weight_lbs'] as num?)?.toDouble(),
+      rateUsd: (row['rate_usd'] as num?)?.toDouble(),
+      brokerName: row['broker_name'] as String?,
+      notes: row['notes'] as String?,
+    );
+  }
+
+  LoadStatus _statusFromString(String s) {
+    switch (s) {
+      case 'assigned':
+        return LoadStatus.assigned;
+      case 'inTransit':
+      case 'in_transit':
+        return LoadStatus.inTransit;
+      case 'delivered':
+        return LoadStatus.delivered;
+      case 'cancelled':
+        return LoadStatus.cancelled;
+      default:
+        return LoadStatus.assigned;
+    }
   }
 }

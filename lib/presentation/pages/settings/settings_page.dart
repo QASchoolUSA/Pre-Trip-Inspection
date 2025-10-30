@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/simple_notification_service.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../data/repositories/user_repository.dart';
 import '../../providers/app_providers.dart';
 import '../../widgets/language_switcher.dart';
 import '../../../generated/l10n/app_localizations.dart';
@@ -83,6 +84,31 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           backgroundColor: AppColors.successGreen,
         ),
       );
+    }
+  }
+
+  Future<void> _createTestUsers() async {
+    try {
+      final userRepository = UserRepository();
+      await userRepository.addSampleUsers();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Test users created and synced to Supabase!'),
+            backgroundColor: AppColors.successGreen,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error creating test users: $e'),
+            backgroundColor: AppColors.errorRed,
+          ),
+        );
+      }
     }
   }
 
@@ -195,6 +221,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               label: Text(l10n.sendTestNotification),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
+              ),
+            ),
+            
+            const SizedBox(height: AppConstants.defaultPadding),
+            
+            // Test Users Button (for Supabase testing)
+            ElevatedButton.icon(
+              onPressed: _createTestUsers,
+              icon: const Icon(Icons.person_add),
+              label: const Text('Create Test Users (Supabase)'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 48),
+                backgroundColor: AppColors.primaryBlue,
+                foregroundColor: AppColors.white,
               ),
             ),
             

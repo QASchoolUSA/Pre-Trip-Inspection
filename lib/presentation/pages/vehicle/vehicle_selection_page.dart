@@ -28,10 +28,6 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
   @override
   void initState() {
     super.initState();
-    // Load sample vehicles if none exist
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadSampleDataIfNeeded();
-    });
   }
 
   @override
@@ -41,19 +37,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
     super.dispose();
   }
 
-  Future<void> _loadSampleDataIfNeeded() async {
-    final vehicles = ref.read(vehiclesProvider);
-    
-    if (vehicles.isEmpty) {
-      await ref.read(vehicleRepositoryProvider).addSampleVehicles();
-      ref.read(vehiclesProvider.notifier).loadVehicles();
-      
-      // Force UI update
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
+  // Removed demo data loading; vehicles now come from enhanced provider synced with DB
 
   void _startScanning() {
     setState(() {
@@ -80,7 +64,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
   void _handleScannedVehicle(String scannedData) {
     // Try to find vehicle by unit number or VIN
-    final vehicles = ref.read(vehiclesProvider);
+    final vehicles = ref.read(enhancedVehiclesProvider);
     final vehicle = vehicles.firstWhere(
       (v) => v.unitNumber == scannedData || v.vinNumber == scannedData,
       orElse: () => vehicles.first, // Fallback to first vehicle for demo
@@ -154,7 +138,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    final vehicles = ref.watch(vehiclesProvider);
+    final vehicles = ref.watch(enhancedVehiclesProvider);
     final activeVehicles = vehicles.where((v) => v.isActive).toList();
     
     final filteredVehicles = _searchController.text.isEmpty
@@ -600,9 +584,10 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: () {
-              _searchController.clear();
-              setState(() {});
+            onPressed: () async {
+              // Trigger a sync from server to pull vehicles
+              await ref.read(enhancedVehiclesProvider.notifier).syncFromServer();
+              if (mounted) setState(() {});
             },
             icon: const Icon(Icons.refresh),
             label: Text(AppLocalizations.of(context)!.refresh),

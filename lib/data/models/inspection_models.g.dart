@@ -363,13 +363,14 @@ class UserAdapter extends TypeAdapter<User> {
       email: fields[6] as String?,
       isActive: fields[7] as bool,
       lastLoginAt: fields[8] as DateTime?,
+      role: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -387,7 +388,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(7)
       ..write(obj.isActive)
       ..writeByte(8)
-      ..write(obj.lastLoginAt);
+      ..write(obj.lastLoginAt)
+      ..writeByte(9)
+      ..write(obj.role);
   }
 
   @override
@@ -876,6 +879,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       lastLoginAt: json['lastLoginAt'] == null
           ? null
           : DateTime.parse(json['lastLoginAt'] as String),
+      role: json['role'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -889,4 +893,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'isActive': instance.isActive,
       'lastLoginAt': instance.lastLoginAt?.toIso8601String(),
+      'role': instance.role,
     };

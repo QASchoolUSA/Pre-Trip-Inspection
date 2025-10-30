@@ -137,7 +137,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
   Future<void> _initializeApp() async {
     try {
       // Initialize the app
-      await ref.read(appInitializationProvider.future);
+      await ref.read(enhancedAppInitializationProvider.future);
       
       // Wait for at least 2 seconds to show splash screen
       await Future.delayed(const Duration(seconds: 2));
@@ -149,7 +149,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
     } catch (e) {
       // Handle initialization error
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        // Use GoRouter for navigation to avoid missing onGenerateRoute
+        context.go('/login');
       }
     }
   }
@@ -170,7 +171,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
 
   @override
   Widget build(BuildContext context) {
-    final appInitialization = ref.watch(appInitializationProvider);
+    final appInitialization = ref.watch(enhancedAppInitializationProvider);
     
     return Scaffold(
       body: Container(
