@@ -9,8 +9,12 @@ class LoadRepository {
   Future<List<Load>> getLoadsForDriver(String driverId) async {
     final supabase = SupabaseService.instance;
     if (supabase.isInitialized && supabase.client != null) {
-      final rows = await supabase.fetchLoadsForDriver(driverId);
-      return rows.map(_mapRowToLoad).toList();
+      try {
+        final rows = await supabase.fetchLoadsForDriver(driverId);
+        return rows.map(_mapRowToLoad).toList();
+      } catch (_) {
+        // If Supabase errors (e.g., 404 table missing), fall back to sample data
+      }
     }
 
     // Fallback sample data when Supabase is not configured
