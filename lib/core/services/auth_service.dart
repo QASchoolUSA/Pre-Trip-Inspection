@@ -31,6 +31,8 @@ class AuthService {
   }
 
   /// Login with email and password
+  /// NOTE: This does NOT fetch from Firestore to avoid cold start delays
+  /// Profile data will be fetched lazily on dashboard if needed
   Future<AuthResult> login(String email, String password) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
@@ -40,13 +42,13 @@ class AuthService {
 
       final user = userCredential.user;
       if (user != null) {
-        // Fetch user data from Firestore
-        final userData = await _fetchUserData(user.uid);
-        return AuthResult.success(userData ?? {
+        // Return Firebase Auth user data immediately - no Firestore call!
+        // This eliminates 5-15 second Firestore cold start delay on web
+        return AuthResult.success({
           'id': user.uid,
           'email': user.email ?? '',
-          'name': user.displayName ?? 'User',
-          'cdlNumber': '',
+          'name': user.displayName ?? user.email?.split('@').first ?? 'User',
+          'cdlNumber': '', // Will be populated on profile fetch later
           'isActive': true,
         });
       } else {
