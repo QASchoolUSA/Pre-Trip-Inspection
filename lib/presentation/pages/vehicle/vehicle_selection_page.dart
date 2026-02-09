@@ -250,6 +250,11 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
+            style: TextButton.styleFrom(
+              backgroundColor: AppColors.grey200,
+              foregroundColor: AppColors.grey800,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            ),
             child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
@@ -749,6 +754,19 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
             ),
           ),
           const SizedBox(height: 24),
+          // Add Vehicle button - primary action
+          ElevatedButton.icon(
+            onPressed: () => _showAddVehicleDialog(context),
+            icon: const Icon(Icons.add),
+            label: Text(AppLocalizations.of(context)!.addVehicle),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.successGreen,
+              foregroundColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Refresh button - secondary action
           ElevatedButton.icon(
             onPressed: () async {
               // Trigger a sync from server to pull vehicles
@@ -757,6 +775,11 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
             },
             icon: const Icon(Icons.refresh),
             label: Text(AppLocalizations.of(context)!.refresh),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryBlue,
+              foregroundColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
           ),
         ],
       ),

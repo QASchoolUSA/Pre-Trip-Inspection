@@ -1,5 +1,5 @@
 // Service Worker for Local Notifications with iOS PWA support
-const CACHE_NAME = 'pti-mobile-app-v1';
+const CACHE_NAME = 'pti-mobile-app-v2';  // Increment version to bust cache
 const urlsToCache = [
   '/',
   '/index.html',
@@ -8,15 +8,18 @@ const urlsToCache = [
 ];
 
 // Development mode flag - set to true to disable caching during development
-const DEVELOPMENT_MODE = true;
+const DEVELOPMENT_MODE = false;  // Set to false for production
 
 // Install event - cache assets
 self.addEventListener('install', event => {
+  // Skip waiting to activate new service worker immediately
+  self.skipWaiting();
+
   if (DEVELOPMENT_MODE) {
     console.log('Development mode: Skipping cache installation');
     return;
   }
-  
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -34,9 +37,9 @@ self.addEventListener('fetch', event => {
       fetch(event.request)
         .catch(() => {
           // Only fallback to cache for essential resources if network fails
-          if (event.request.url.includes('/icons/') || 
-              event.request.url.endsWith('/') || 
-              event.request.url.includes('index.html')) {
+          if (event.request.url.includes('/icons/') ||
+            event.request.url.endsWith('/') ||
+            event.request.url.includes('index.html')) {
             return caches.match(event.request);
           }
           throw new Error('Network unavailable and no cache fallback');
@@ -44,7 +47,7 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
-  
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
@@ -57,7 +60,7 @@ self.addEventListener('fetch', event => {
 // Handle push notifications with iOS-specific options
 self.addEventListener('push', event => {
   console.log('Push event received:', event);
-  
+
   let notificationData;
   if (event.data) {
     notificationData = event.data.json();
@@ -68,7 +71,7 @@ self.addEventListener('push', event => {
       icon: '/icons/icon-192.png'
     };
   }
-  
+
   const options = {
     body: notificationData.body,
     icon: notificationData.icon || '/icons/icon-192.png',
@@ -94,7 +97,7 @@ self.addEventListener('push', event => {
     renotify: true,
     tag: 'pti-notification'
   };
-  
+
   event.waitUntil(
     self.registration.showNotification(notificationData.title, options)
   );
@@ -103,9 +106,9 @@ self.addEventListener('push', event => {
 // Handle notification clicks
 self.addEventListener('notificationclick', event => {
   console.log('Notification click received:', event);
-  
+
   event.notification.close();
-  
+
   // Handle action buttons
   if (event.action === 'perform-inspection') {
     event.waitUntil(
@@ -123,15 +126,15 @@ self.addEventListener('notificationclick', event => {
 function storeScheduledNotification(notification) {
   if (self.indexedDB) {
     const request = indexedDB.open('PTINotifications', 1);
-    
-    request.onupgradeneeded = function(event) {
+
+    request.onupgradeneeded = function (event) {
       const db = event.target.result;
       if (!db.objectStoreNames.contains('scheduled')) {
         db.createObjectStore('scheduled', { keyPath: 'id' });
       }
     };
-    
-    request.onsuccess = function(event) {
+
+    request.onsuccess = function (event) {
       const db = event.target.result;
       const transaction = db.transaction(['scheduled'], 'readwrite');
       const store = transaction.objectStore('scheduled');
@@ -145,23 +148,23 @@ function getScheduledNotifications() {
   return new Promise((resolve, reject) => {
     if (self.indexedDB) {
       const request = indexedDB.open('PTINotifications', 1);
-      
-      request.onsuccess = function(event) {
+
+      request.onsuccess = function (event) {
         const db = event.target.result;
         const transaction = db.transaction(['scheduled'], 'readonly');
         const store = transaction.objectStore('scheduled');
         const getAllRequest = store.getAll();
-        
-        getAllRequest.onsuccess = function(event) {
+
+        getAllRequest.onsuccess = function (event) {
           resolve(event.target.result || []);
         };
-        
-        getAllRequest.onerror = function() {
+
+        getAllRequest.onerror = function () {
           resolve([]);
         };
       };
-      
-      request.onerror = function() {
+
+      request.onerror = function () {
         resolve([]);
       };
     } else {
@@ -173,7 +176,7 @@ function getScheduledNotifications() {
 // Handle messages from the app
 self.addEventListener('message', event => {
   console.log('Message received:', event.data);
-  
+
   // Common notification options with iOS support
   const baseOptions = {
     icon: event.data.icon || '/icons/icon-192.png',
@@ -184,7 +187,7 @@ self.addEventListener('message', event => {
     renotify: true,
     tag: 'pti-notification'
   };
-  
+
   switch (event.data.type) {
     case 'SHOW_NOTIFICATION':
       self.registration.showNotification(
@@ -195,7 +198,7 @@ self.addEventListener('message', event => {
         }
       );
       break;
-      
+
     case 'SCHEDULE_DAILY_REMINDER':
       // Store the scheduled notification
       const scheduledNotification = {
@@ -207,9 +210,9 @@ self.addEventListener('message', event => {
         requireInteraction: event.data.requireInteraction || false,
         createdAt: Date.now()
       };
-      
+
       storeScheduledNotification(scheduledNotification);
-      
+
       // For this demo, we'll just show a notification immediately
       // In a real implementation, you would set up periodic notifications
       self.registration.showNotification(
@@ -219,7 +222,7 @@ self.addEventListener('message', event => {
           ...baseOptions
         }
       );
-      
+
       // Set up periodic notifications using background sync if available
       if ('periodicSync' in self.registration) {
         self.registration.periodicSync.register('pti-daily-reminder', {
@@ -229,7 +232,7 @@ self.addEventListener('message', event => {
         });
       }
       break;
-      
+
     case 'CANCEL_NOTIFICATIONS':
       // Cancel any scheduled notifications
       // In a real implementation, you would clear any timeouts or intervals
@@ -250,7 +253,7 @@ async function handleDailyReminder() {
     // Get scheduled notifications
     const scheduledNotifications = await getScheduledNotifications();
     const dailyReminder = scheduledNotifications.find(n => n.id === 'daily-reminder');
-    
+
     if (dailyReminder) {
       // Show the notification
       await self.registration.showNotification(dailyReminder.title, {
