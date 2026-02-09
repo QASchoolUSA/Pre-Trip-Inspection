@@ -29,30 +29,50 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch event - serve cached content when offline
+// Activate event - clear old caches and take control immediately
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    Promise.all([
+      // Clear ALL old caches
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      }),
+      // Take control of all clients immediately
+      self.clients.claim()
+    ])
+  );
+});
+
+// Fetch event - NETWORK-FIRST strategy to always get fresh content
 self.addEventListener('fetch', event => {
-  if (DEVELOPMENT_MODE) {
-    // In development mode, always fetch from network
-    event.respondWith(
-      fetch(event.request)
-        .catch(() => {
-          // Only fallback to cache for essential resources if network fails
-          if (event.request.url.includes('/icons/') ||
-            event.request.url.endsWith('/') ||
-            event.request.url.includes('index.html')) {
-            return caches.match(event.request);
-          }
-          throw new Error('Network unavailable and no cache fallback');
-        })
-    );
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
 
+  // Network-first strategy: try network, fall back to cache
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then(response => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
+        // Clone the response before caching
+        if (response.status === 200 && !DEVELOPMENT_MODE) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        // Network failed, try cache
+        return caches.match(event.request);
       })
   );
 });
