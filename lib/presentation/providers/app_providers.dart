@@ -58,14 +58,22 @@ final inspectionsProvider = StateNotifierProvider<InspectionsNotifier, List<Insp
 class InspectionsNotifier extends StateNotifier<List<Inspection>> {
   final InspectionRepository _repository;
 
-  InspectionsNotifier(this._repository) : super([]) {
-    loadInspections();
+  InspectionsNotifier(this._repository) : super([]);
+
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
+  Future<void> ensureLoaded() async {
+    if (!_isLoaded) {
+      await loadInspections();
+    }
   }
 
   Future<void> loadInspections() async {
     try {
       final inspections = await _repository.fetchAllInspections();
       state = inspections;
+      _isLoaded = true;
     } catch (e) {
       print('Error loading inspections: $e');
       state = [];
@@ -160,8 +168,15 @@ final vehiclesProvider = StateNotifierProvider<VehiclesNotifier, List<Vehicle>>(
 class VehiclesNotifier extends StateNotifier<List<Vehicle>> {
   final VehicleRepository _repository;
 
-  VehiclesNotifier(this._repository) : super([]) {
-    loadVehicles();
+  VehiclesNotifier(this._repository) : super([]);
+
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
+  Future<void> ensureLoaded() async {
+    if (!_isLoaded) {
+      await loadVehicles();
+    }
   }
 
   Future<void> syncFromServer() async {
@@ -172,6 +187,7 @@ class VehiclesNotifier extends StateNotifier<List<Vehicle>> {
     try {
       final vehicles = await _repository.fetchAllVehicles();
       state = vehicles;
+      _isLoaded = true;
     } catch (e) {
       state = [];
     }
@@ -254,13 +270,21 @@ final usersProvider = StateNotifierProvider<UsersNotifier, List<User>>((ref) {
 class UsersNotifier extends StateNotifier<List<User>> {
   final UserRepository _repository;
 
-  UsersNotifier(this._repository) : super([]) {
-    loadUsers();
+  UsersNotifier(this._repository) : super([]);
+
+  bool _isLoaded = false;
+  bool get isLoaded => _isLoaded;
+
+  Future<void> ensureLoaded() async {
+    if (!_isLoaded) {
+      await loadUsers();
+    }
   }
 
   Future<void> loadUsers() async {
     final users = await _repository.fetchUsers();
     state = users;
+    _isLoaded = true;
   }
 
   Future<User> createUser({
@@ -334,22 +358,15 @@ final authStatusProvider = StateProvider<bool>((ref) => false);
 /// App initialization provider
 final appInitializationProvider = FutureProvider<bool>((ref) async {
   try {
-    // Initialize Firebase
-    await FirebaseService.instance.initialize();
-    // ApiService is removed
+    // Firebase is already initialized in main.dart
+    // Just initialize AuthService (lightweight - just sets up listener)
     await AuthService.instance.initialize();
 
     // Check authentication status
     final isAuthenticated = await AuthService.instance.isAuthenticated();
     ref.read(authStatusProvider.notifier).state = isAuthenticated;
     
-    // Load initial data
-    // Note: Since notifiers call load in constructor, reading them triggers load
-    ref.read(inspectionsProvider);
-    ref.read(vehiclesProvider);
-    ref.read(usersProvider);
-    
-    // Get current user if authenticated
+    // Get current user if authenticated (deferred data loading happens on dashboard)
     if (isAuthenticated) {
       final userData = await AuthService.instance.getUserData();
       if (userData != null) {
