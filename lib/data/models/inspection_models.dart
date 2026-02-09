@@ -1,5 +1,5 @@
-
 import 'package:json_annotation/json_annotation.dart';
+import 'package:hive/hive.dart';
 import 'document_attachment.dart';
 
 part 'inspection_models.g.dart';
@@ -350,7 +350,10 @@ class Inspection {
   @HiveField(14)
   String? reportPdfPath;
 
-  @HiveField(15)
+  @HiveField(16)
+  final bool isDeleted;
+
+  @HiveField(17)
   final DateTime updatedAt;
 
   Inspection({
@@ -369,9 +372,9 @@ class Inspection {
     this.isSynced = false,
     this.lastSyncAt,
     this.reportPdfPath,
-    DateTime? updatedAt,
-  }) : items = items ?? [],
-       updatedAt = updatedAt ?? DateTime.now();
+    this.isDeleted = false,
+    required this.updatedAt,
+  }) : items = items ?? [];
 
   factory Inspection.fromJson(Map<String, dynamic> json) =>
       _$InspectionFromJson(json);
@@ -432,6 +435,7 @@ class Inspection {
     bool? isSynced,
     DateTime? lastSyncAt,
     String? reportPdfPath,
+    bool? isDeleted,
     DateTime? updatedAt,
   }) {
     return Inspection(
@@ -450,6 +454,7 @@ class Inspection {
       isSynced: isSynced ?? this.isSynced,
       lastSyncAt: lastSyncAt ?? this.lastSyncAt,
       reportPdfPath: reportPdfPath ?? this.reportPdfPath,
+      isDeleted: isDeleted ?? this.isDeleted,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }

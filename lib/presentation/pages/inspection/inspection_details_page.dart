@@ -40,7 +40,7 @@ class _InspectionDetailsPageState extends ConsumerState<InspectionDetailsPage> {
         _errorMessage = null;
       });
 
-      final inspection = await ref.read(enhancedInspectionRepositoryProvider).getInspectionById(widget.inspectionId);
+      final inspection = await ref.read(inspectionRepositoryProvider).getInspectionById(widget.inspectionId);
 
       if (mounted) {
         setState(() {

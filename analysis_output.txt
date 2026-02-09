@@ -1,0 +1,193 @@
+Analyzing pti_mobile_app...                                     
+
+warning • Unused import: '../../data/models/document_attachment.dart' • lib/core/constants/localized_inspection_data.dart:3:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/core/constants/localized_inspection_data.dart:10:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/core/constants/localized_inspection_data.dart:38:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/core/constants/localized_inspection_data.dart:80:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/core/constants/localized_inspection_data.dart:136:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/core/navigation/app_router.dart:187:50 • unnecessary_non_null_assertion
+   info • The import of 'dart:typed_data' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/foundation.dart' • lib/core/services/document_scanner_service.dart:2:8 • unnecessary_import
+   info • The import of 'dart:ui' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' • lib/core/services/document_scanner_service.dart:3:8 • unnecessary_import
+   info • The imported package 'permission_handler' isn't a dependency of the importing package • lib/core/services/document_scanner_service.dart:10:8 • depend_on_referenced_packages
+   info • The imported package 'path' isn't a dependency of the importing package • lib/core/services/document_scanner_service.dart:12:8 • depend_on_referenced_packages
+warning • The declaration '_scanDocumentWeb' isn't referenced • lib/core/services/document_scanner_service.dart:439:19 • unused_element
+warning • Unused import: 'dart:typed_data' • lib/core/services/document_storage_service.dart:2:8 • unused_import
+   info • The imported package 'path' isn't a dependency of the importing package • lib/core/services/document_storage_service.dart:3:8 • depend_on_referenced_packages
+   info • The import of 'package:flutter/foundation.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' • lib/core/services/web_notification_service.dart:1:8 • unnecessary_import
+   info • 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead • lib/core/services/web_notification_service.dart:3:1 • deprecated_member_use
+   info • Don't use web-only libraries outside Flutter web plugins • lib/core/services/web_notification_service.dart:3:1 • avoid_web_libraries_in_flutter
+   info • 'dart:js' is deprecated and shouldn't be used. Use dart:js_interop instead • lib/core/services/web_notification_service.dart:4:1 • deprecated_member_use
+   info • Don't use web-only libraries outside Flutter web plugins • lib/core/services/web_notification_service.dart:4:1 • avoid_web_libraries_in_flutter
+warning • Unused import: 'dart:js' • lib/core/services/web_notification_service.dart:4:8 • unused_import
+  error • 'updatedAt' isn't a field in the enclosing class • lib/data/models/inspection_models.dart:375:8 • initializer_for_non_existent_field
+  error • The getter 'updatedAt' isn't defined for the type 'Inspection' • lib/data/models/inspection_models.dart:456:36 • undefined_getter
+warning • Unused import: 'package:flutter/foundation.dart' • lib/data/models/load_models.dart:1:8 • unused_import
+   info • Don't invoke 'print' in production code • lib/data/repositories/inspection_repository.dart:30:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/data/repositories/load_repository.dart:23:7 • avoid_print
+   info • Use interpolation to compose strings and values • lib/data/repositories/map_repository.dart:69:38 • prefer_interpolation_to_compose_strings
+   info • Use interpolation to compose strings and values • lib/data/repositories/map_repository.dart:75:41 • prefer_interpolation_to_compose_strings
+   info • The parameter name 'sum' matches a visible type name • lib/data/repositories/map_repository.dart:314:47 • avoid_types_as_parameter_names
+   info • Don't invoke 'print' in production code • lib/data/repositories/user_repository.dart:38:7 • avoid_print
+   info • Don't invoke 'print' in production code • lib/data/repositories/vehicle_repository.dart:28:7 • avoid_print
+warning • Unused import: 'package:firebase_core/firebase_core.dart' • lib/main.dart:17:8 • unused_import
+warning • Unused import: 'package:go_router/go_router.dart' • lib/presentation/pages/auth/login_page.dart:3:8 • unused_import
+warning • Unused import: '../dashboard/dashboard_page.dart' • lib/presentation/pages/auth/login_page.dart:10:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/auth/login_page.dart:180:63 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/auth/login_page.dart:197:75 • unnecessary_non_null_assertion
+warning • Unused import: 'package:go_router/go_router.dart' • lib/presentation/pages/dashboard/dashboard_page.dart:3:8 • unused_import
+warning • Unused import: '../vehicle/vehicle_selection_page.dart' • lib/presentation/pages/dashboard/dashboard_page.dart:10:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:29:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:33:50 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:40:50 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:112:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:119:63 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:126:76 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:145:39 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:157:52 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:158:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:168:52 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:169:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:216:39 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:227:52 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:254:39 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:280:45 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:379:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:380:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:386:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:394:55 • unnecessary_non_null_assertion
+warning • The declaration '_syncData' isn't referenced • lib/presentation/pages/dashboard/dashboard_page.dart:411:8 • unused_element
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/dashboard/dashboard_page.dart:414:51 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/pages/document_scanner_page.dart:131:53 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/help/help_page.dart:10:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/defect_reporting_page.dart:17:46 • unnecessary_non_null_assertion
+  error • Undefined name 'enhancedInspectionRepositoryProvider' • lib/presentation/pages/inspection/inspection_details_page.dart:43:41 • undefined_identifier
+warning • Unused import: '../signature/signature_page.dart' • lib/presentation/pages/inspection/inspection_page.dart:14:8 • unused_import
+   info • The private field _expandedItems could be 'final' • lib/presentation/pages/inspection/inspection_page.dart:32:15 • prefer_final_fields
+   info • The private field _scrollController could be 'final' • lib/presentation/pages/inspection/inspection_page.dart:33:20 • prefer_final_fields
+warning • The operand can't be 'null', so the condition is always 'true' • lib/presentation/pages/inspection/inspection_page.dart:71:22 • unnecessary_null_comparison
+warning • The value of the local variable 'item' isn't used • lib/presentation/pages/inspection/inspection_page.dart:73:20 • unused_local_variable
+warning • The value of the local variable 'item' isn't used • lib/presentation/pages/inspection/inspection_page.dart:86:20 • unused_local_variable
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:482:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:512:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:513:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:537:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:561:62 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:686:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:762:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:817:61 • unnecessary_non_null_assertion
+warning • The value of the local variable 'result' isn't used • lib/presentation/pages/inspection/inspection_page.dart:838:35 • unused_local_variable
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:869:52 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:875:67 • use_build_context_synchronously
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:875:75 • unnecessary_non_null_assertion
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:875:114 • use_build_context_synchronously
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:875:122 • unnecessary_non_null_assertion
+warning • The value of the local variable 'result' isn't used • lib/presentation/pages/inspection/inspection_page.dart:912:35 • unused_local_variable
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:940:50 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:946:84 • use_build_context_synchronously
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:946:92 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:1045:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:1068:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:1095:46 • unnecessary_non_null_assertion
+warning • The value of the local variable 'viewportHeight' isn't used • lib/presentation/pages/inspection/inspection_page.dart:1124:15 • unused_local_variable
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/inspection/inspection_page.dart:1256:9 • use_build_context_synchronously
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/inspection_page.dart:1265:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/photo_capture_page.dart:67:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/photo_capture_page.dart:85:58 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/inspection/photo_capture_page.dart:118:57 • unnecessary_non_null_assertion
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/presentation/pages/inspection/photo_capture_page.dart:260:38 • use_build_context_synchronously
+  error • Target of URI doesn't exist: '../../data/repositories/enhanced_inspection_repository.dart' • lib/presentation/pages/inspection_item_scanner_page.dart:5:8 • uri_does_not_exist
+  error • Undefined name 'enhancedInspectionRepositoryProvider' • lib/presentation/pages/inspection_item_scanner_page.dart:38:35 • undefined_identifier
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/loadboard/loadboard_page.dart:49:48 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/pages/loadboard/loadboard_page.dart:82:64 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/pages/map/favorites_page.dart:170:35 • deprecated_member_use
+   info • The imported package 'permission_handler' isn't a dependency of the importing package • lib/presentation/pages/map/map_page.dart:7:8 • depend_on_referenced_packages
+warning • Unused import: 'package:permission_handler/permission_handler.dart' • lib/presentation/pages/map/map_page.dart:7:8 • unused_import
+warning • Unused import: '../../providers/map_providers.dart' • lib/presentation/pages/map/map_page.dart:11:8 • unused_import
+   info • 'desiredAccuracy' is deprecated and shouldn't be used. use settings parameter with AndroidSettings, AppleSettings, WebSettings, or LocationSettings • lib/presentation/pages/map/map_page.dart:78:9 • deprecated_member_use
+warning • The declaration '_onSearchSubmitted' isn't referenced • lib/presentation/pages/map/map_page.dart:247:16 • unused_element
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/pages/map/map_page.dart:361:48 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/report/report_preview_page.dart:69:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/report/report_preview_page.dart:78:58 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/report/report_preview_page.dart:92:46 • unnecessary_non_null_assertion
+   info • Unnecessary use of 'toList' in a spread • lib/presentation/pages/report/report_preview_page.dart:196:12 • unnecessary_to_list_in_spreads
+  error • Target of URI doesn't exist: '../../../data/repositories/enhanced_inspection_repository.dart' • lib/presentation/pages/reports/reports_page.dart:5:8 • uri_does_not_exist
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/reports/reports_page.dart:38:49 • unnecessary_non_null_assertion
+warning • Unused import: '../../../core/services/simple_notification_service.dart' • lib/presentation/pages/settings/settings_page.dart:5:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/settings/settings_page.dart:73:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/settings/settings_page.dart:117:46 • unnecessary_non_null_assertion
+   info • Unnecessary use of string interpolation • lib/presentation/pages/settings/settings_page.dart:207:17 • unnecessary_string_interpolations
+warning • Unused import: 'package:go_router/go_router.dart' • lib/presentation/pages/signature/signature_page.dart:4:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:67:53 • unnecessary_non_null_assertion
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/signature/signature_page.dart:94:7 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/signature/signature_page.dart:97:28 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/signature/signature_page.dart:99:45 • use_build_context_synchronously
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:99:53 • unnecessary_non_null_assertion
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/pages/signature/signature_page.dart:105:28 • use_build_context_synchronously
+warning • The declaration '_bytesToBase64' isn't referenced • lib/presentation/pages/signature/signature_page.dart:118:10 • unused_element
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:154:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:170:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:202:92 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:226:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:233:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:240:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:241:78 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:241:119 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:273:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:281:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:303:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:313:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:322:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:329:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:361:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:366:50 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:397:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:407:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:438:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:460:58 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/signature/signature_page.dart:494:46 • unnecessary_non_null_assertion
+warning • Unused import: 'auth/login_page.dart' • lib/presentation/pages/splash_page.dart:9:8 • unused_import
+warning • Unused import: 'dashboard/dashboard_page.dart' • lib/presentation/pages/splash_page.dart:10:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/sync/offline_sync_page.dart:10:46 • unnecessary_non_null_assertion
+warning • Unused import: '../inspection/inspection_page.dart' • lib/presentation/pages/vehicle/vehicle_selection_page.dart:11:8 • unused_import
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:79:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:89:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:100:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:131:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:160:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:165:48 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:189:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:212:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:229:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:240:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:248:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:256:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:324:63 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:339:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:356:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:394:45 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:571:41 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:579:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:580:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:593:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:603:44 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:605:44 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/pages/vehicle/vehicle_selection_page.dart:607:44 • unnecessary_non_null_assertion
+   info • Don't invoke 'print' in production code • lib/presentation/providers/app_providers.dart:70:7 • avoid_print
+warning • The value of the local variable 'selectedLocation' isn't used • lib/presentation/providers/map_providers.dart:87:9 • unused_local_variable
+warning • This default clause is covered by the previous cases • lib/presentation/providers/map_providers.dart:120:5 • unreachable_switch_default
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/document_scanner_widget.dart:65:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/document_scanner_widget.dart:137:39 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/widgets/language_switcher.dart:15:46 • unnecessary_non_null_assertion
+   info • Unnecessary use of 'toList' in a spread • lib/presentation/widgets/language_switcher.dart:117:14 • unnecessary_to_list_in_spreads
+warning • The '!' will have no effect because the receiver can't be null • lib/presentation/widgets/language_switcher.dart:132:46 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/custom_map_markers.dart:35:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/favorites_widget.dart:27:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/favorites_widget.dart:144:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/map_search_bar.dart:60:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/map_search_bar.dart:131:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/parking_status_widget.dart:110:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/parking_status_widget.dart:112:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/widgets/map/parking_status_widget.dart:166:40 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/presentation/widgets/trip_assistant_button.dart:22:28 • use_build_context_synchronously
+
+189 issues found. (ran in 1.3s)

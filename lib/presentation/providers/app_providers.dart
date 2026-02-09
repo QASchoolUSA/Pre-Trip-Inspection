@@ -138,9 +138,7 @@ class InspectionsNotifier extends StateNotifier<List<Inspection>> {
 }
 
 // Alias enhancedInspectionsProvider to inspectionsProvider for backward compatibility
-final enhancedInspectionsProvider = Provider<List<Inspection>>((ref) {
-  return ref.watch(inspectionsProvider);
-});
+final enhancedInspectionsProvider = inspectionsProvider;
 
 // IMPORTANT: We need a way to access the notifier of the 'enhanced' provider if existing code uses .notifier on it.
 // StateNotifierProvider is complex to alias perfectly with .notifier access.
@@ -164,6 +162,10 @@ class VehiclesNotifier extends StateNotifier<List<Vehicle>> {
 
   VehiclesNotifier(this._repository) : super([]) {
     loadVehicles();
+  }
+
+  Future<void> syncFromServer() async {
+    await loadVehicles();
   }
 
   Future<void> loadVehicles() async {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/inspection_models.dart';
 import '../../data/models/document_attachment.dart';
-import '../../data/repositories/enhanced_inspection_repository.dart';
 import '../widgets/document_scanner_widget.dart';
 import '../providers/app_providers.dart';
 
@@ -35,7 +34,7 @@ class _InspectionItemScannerPageState extends ConsumerState<InspectionItemScanne
 
   Future<void> _loadInspectionItem() async {
     try {
-      final repository = ref.read(enhancedInspectionRepositoryProvider);
+      final repository = ref.read(inspectionRepositoryProvider);
       final inspection = await repository.getInspectionById(widget.inspectionId);
       
       if (inspection != null) {

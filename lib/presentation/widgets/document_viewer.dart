@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:dio/dio.dart';
+// import 'dart:io'; // Not supported on Web
+// import 'package:path_provider/path_provider.dart'; // Not used in simplified version
+// import 'package:dio/dio.dart'; // Removed
 
 import '../../core/themes/app_theme.dart';
 import '../../data/models/document_attachment.dart';
@@ -20,7 +20,7 @@ class DocumentViewer extends StatefulWidget {
 }
 
 class _DocumentViewerState extends State<DocumentViewer> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
   String? _errorMessage;
 
   @override
@@ -33,7 +33,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
-            onPressed: _downloadDocument,
+            onPressed: _openInExternalApp, // Simplified to open URL
           ),
           IconButton(
             icon: const Icon(Icons.open_in_new),
@@ -122,7 +122,7 @@ class _DocumentViewerState extends State<DocumentViewer> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton.icon(
-                onPressed: _downloadDocument,
+                onPressed: _openInExternalApp, // Simplified
                 icon: const Icon(Icons.download),
                 label: const Text('Download'),
                 style: ElevatedButton.styleFrom(
@@ -172,53 +172,16 @@ class _DocumentViewerState extends State<DocumentViewer> {
     }
   }
 
+  /*
   Future<void> _downloadDocument() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      final dio = Dio();
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/${widget.document.fileName}';
-
-      // For local files, just copy them
-      if (widget.document.serverUrl != null) {
-        await dio.download(widget.document.serverUrl!, filePath);
-      } else {
-        // Copy local file
-        final sourceFile = File(widget.document.filePath);
-        if (await sourceFile.exists()) {
-          await sourceFile.copy(filePath);
-        } else {
-          throw 'Source file not found';
-        }
-      }
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Downloaded to: $filePath'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = 'Failed to download document: $e';
-      });
-    }
+    // ... removed non-web compatible download logic ...
+    _openInExternalApp();
   }
+  */
 
   Future<void> _openInExternalApp() async {
     setState(() {
-      _isLoading = true;
+      // _isLoading = true; // No async work really
       _errorMessage = null;
     });
 
@@ -226,24 +189,26 @@ class _DocumentViewerState extends State<DocumentViewer> {
       Uri uri;
       if (widget.document.serverUrl != null) {
         uri = Uri.parse(widget.document.serverUrl!);
+         if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          throw 'Could not launch document';
+        }
       } else {
-        // For local files, use file:// scheme
-        uri = Uri.file(widget.document.filePath);
-      }
-      
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        throw 'Could not launch document';
+        // Local files are not easily openable in Web unless they are assets or blobs
+        // For now, we assume serverUrl is present for remote docs
+        throw 'Cannot open local files in Web mode yet';
       }
     } catch (e) {
       setState(() {
         _errorMessage = 'Failed to open document: $e';
       });
     } finally {
+      /*
       setState(() {
         _isLoading = false;
       });
+      */
     }
   }
 }

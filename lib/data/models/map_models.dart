@@ -1,5 +1,6 @@
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:hive/hive.dart';
 
 part 'map_models.g.dart';
 
