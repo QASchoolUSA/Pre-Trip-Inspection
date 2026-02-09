@@ -139,8 +139,8 @@ class _SplashPageState extends ConsumerState<SplashPage>
       // Initialize the app
       await ref.read(enhancedAppInitializationProvider.future);
       
-      // Wait for at least 2 seconds to show splash screen
-      await Future.delayed(const Duration(seconds: 2));
+      // Minimum animation time for smooth transition (reduced from 2s)
+      await Future.delayed(const Duration(milliseconds: 500));
       
       // Navigate to appropriate page
       if (mounted) {

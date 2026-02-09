@@ -23,14 +23,15 @@ void main() async {
   // Initialize Firebase
   await FirebaseService.instance.initialize();
   
-  // Initialize notification service
-  await SimpleNotificationService().requestPermission();
-  
+  // Start app immediately - defer notification permission to later
   runApp(
     const ProviderScope(
       child: PTIMobileApp(),
     ),
   );
+  
+  // Request notification permission in the background (non-blocking)
+  SimpleNotificationService().requestPermission();
 }
 
 class PTIMobileApp extends ConsumerWidget {
