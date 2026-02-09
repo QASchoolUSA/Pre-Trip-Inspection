@@ -42,7 +42,13 @@ class AuthService {
       if (user != null) {
         // Fetch user data from Firestore
         final userData = await _fetchUserData(user.uid);
-        return AuthResult.success(userData ?? {'id': user.uid, 'email': user.email});
+        return AuthResult.success(userData ?? {
+          'id': user.uid,
+          'email': user.email ?? '',
+          'name': user.displayName ?? 'User',
+          'cdlNumber': '',
+          'isActive': true,
+        });
       } else {
         return AuthResult.failure('Login failed: No user returned');
       }
