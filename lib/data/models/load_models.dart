@@ -35,6 +35,47 @@ class Load {
     this.notes,
   });
 
+  factory Load.fromJson(Map<String, dynamic> json) {
+    return Load(
+      id: json['id'] as String,
+      driverId: json['driverId'] as String,
+      referenceNumber: json['referenceNumber'] as String,
+      pickupCity: json['pickupCity'] as String,
+      pickupState: json['pickupState'] as String,
+      pickupTime: DateTime.parse(json['pickupTime'] as String),
+      dropoffCity: json['dropoffCity'] as String,
+      dropoffState: json['dropoffState'] as String,
+      dropoffTime: DateTime.parse(json['dropoffTime'] as String),
+      status: LoadStatus.values.firstWhere(
+        (e) => e.toString().split('.').last == json['status'],
+        orElse: () => LoadStatus.assigned,
+      ),
+      weightLbs: (json['weightLbs'] as num?)?.toDouble(),
+      rateUsd: (json['rateUsd'] as num?)?.toDouble(),
+      brokerName: json['brokerName'] as String?,
+      notes: json['notes'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'driverId': driverId,
+      'referenceNumber': referenceNumber,
+      'pickupCity': pickupCity,
+      'pickupState': pickupState,
+      'pickupTime': pickupTime.toIso8601String(),
+      'dropoffCity': dropoffCity,
+      'dropoffState': dropoffState,
+      'dropoffTime': dropoffTime.toIso8601String(),
+      'status': status.toString().split('.').last,
+      'weightLbs': weightLbs,
+      'rateUsd': rateUsd,
+      'brokerName': brokerName,
+      'notes': notes,
+    };
+  }
+
   Load copyWith({
     String? id,
     String? driverId,

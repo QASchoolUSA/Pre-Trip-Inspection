@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/models/inspection_models.dart';
 import '../../data/models/document_attachment.dart';
-import '../../data/repositories/enhanced_inspection_repository.dart';
 import '../providers/app_providers.dart';
 import '../widgets/document_scanner_widget.dart';
 
@@ -29,7 +28,6 @@ class DocumentScannerPage extends ConsumerStatefulWidget {
 }
 
 class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
-  final EnhancedInspectionRepository _inspectionRepository = EnhancedInspectionRepository.instance;
   final Uuid _uuid = const Uuid();
   
   InspectionItem? _inspectionItem;
@@ -44,17 +42,47 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
 
   Future<void> _loadInspectionItem() async {
     try {
-      final inspection = await _inspectionRepository.getInspectionById(widget.inspectionId);
-      if (inspection != null) {
-        final item = inspection.items.firstWhere(
-          (item) => item.id == widget.inspectionItemId,
-        );
-        setState(() {
-          _inspectionItem = item;
-          _isLoading = false;
-        });
-      }
+      final inspections = ref.read(inspectionsProvider);
+      // If list is empty, might need to wait for load or fetch individually
+      // But standard way is to rely on provider state.
+      // If needed, we can fetch directly from repo, but using provider state is consistent.
+      
+      final inspection = inspections.firstWhere(
+        (i) => i.id == widget.inspectionId,
+        orElse: () => throw Exception('Inspection not found'),
+      );
+      
+      // If we found it in state, great. 
+      // Ideally we should handle if it is NOT in state (e.g. fetch specific).
+      // But standard pattern here was seemingly relying on repo methods.
+      // Let's rely on provider logic which we recently updated to use state.
+      // However, to be safe, we can try to find in state, or use repository to fetch if missing.
+      
+      final item = inspection.items.firstWhere(
+        (item) => item.id == widget.inspectionItemId,
+      );
+      setState(() {
+        _inspectionItem = item;
+        _isLoading = false;
+      });
+
     } catch (e) {
+       // Try fetching from repo as fallback
+      try {
+        final repo = ref.read(inspectionRepositoryProvider);
+        final inspection = await repo.getInspectionById(widget.inspectionId);
+        if (inspection != null) {
+           final item = inspection.items.firstWhere(
+            (item) => item.id == widget.inspectionItemId,
+          );
+          setState(() {
+            _inspectionItem = item;
+            _isLoading = false;
+          });
+          return;
+        }
+      } catch (_) {}
+
       setState(() {
         _isLoading = false;
       });
@@ -333,14 +361,8 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         status: InspectionItemStatus.passed, // Mark as passed when document is attached
       );
 
-      // Save to repository
-      await _inspectionRepository.updateInspectionItem(
-        widget.inspectionId,
-        updatedItem,
-      );
-
-      // Refresh the enhanced inspections provider state
-      await ref.read(enhancedInspectionsProvider.notifier).updateInspectionItem(
+      // Save using notifier
+      await ref.read(inspectionsProvider.notifier).updateInspectionItem(
         widget.inspectionId,
         updatedItem,
       );
@@ -409,8 +431,8 @@ class _DocumentScannerPageState extends ConsumerState<DocumentScannerPage> {
         documentAttachments: updatedAttachments,
       );
 
-      // Save to repository
-      await _inspectionRepository.updateInspectionItem(
+      // Save using notifier
+      await ref.read(inspectionsProvider.notifier).updateInspectionItem(
         widget.inspectionId,
         updatedItem,
       );

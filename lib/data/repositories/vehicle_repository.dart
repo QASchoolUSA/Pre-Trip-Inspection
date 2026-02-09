@@ -1,37 +1,76 @@
-import '../models/inspection_models.dart';
-import '../datasources/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
+import '../../core/services/firebase_service.dart';
+import '../models/inspection_models.dart';
 
-/// Repository for managing vehicle data
+/// Repository for managing vehicle data using Firestore
 class VehicleRepository {
-  final DatabaseService _db = DatabaseService.instance;
+  final FirebaseService _firebase = FirebaseService.instance;
   final Uuid _uuid = const Uuid();
+  
+  CollectionReference<Map<String, dynamic>> get _vehiclesCollection => 
+      _firebase.collection('vehicles');
 
   /// Get all vehicles
+  /// Note: Returns empty list synchronously. Use fetchAllVehicles for async.
   List<Vehicle> getAllVehicles() {
-    final vehicles = _db.vehiclesBox.values.toList()
-      ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
-    return vehicles;
+    return [];
+  }
+  
+  /// Fetch all vehicles from Firestore
+  Future<List<Vehicle>> fetchAllVehicles() async {
+    try {
+      final snapshot = await _vehiclesCollection
+        .orderBy('unit_number')
+        .get();
+      return snapshot.docs.map((doc) => Vehicle.fromJson(doc.data())).toList();
+    } catch (e) {
+      print('Error fetching vehicles: $e');
+      return [];
+    }
   }
 
   /// Get active vehicles
-  List<Vehicle> getActiveVehicles() {
-    return _db.vehiclesBox.values
-        .where((vehicle) => vehicle.isActive)
-        .toList()
-      ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
+  Future<List<Vehicle>> getActiveVehicles() async {
+    try {
+      final snapshot = await _vehiclesCollection
+          .where('is_active', isEqualTo: true)
+          .orderBy('unit_number')
+          .get();
+      return snapshot.docs.map((doc) => Vehicle.fromJson(doc.data())).toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   /// Get vehicle by ID
-  Vehicle? getVehicleById(String id) {
-    return _db.vehiclesBox.get(id);
+  Future<Vehicle?> getVehicleById(String id) async {
+    try {
+      final doc = await _vehiclesCollection.doc(id).get();
+      if (doc.exists && doc.data() != null) {
+        return Vehicle.fromJson(doc.data()!);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Get vehicle by unit number
-  Vehicle? getVehicleByUnitNumber(String unitNumber) {
-    return _db.vehiclesBox.values
-        .where((vehicle) => vehicle.unitNumber == unitNumber)
-        .firstOrNull;
+  Future<Vehicle?> getVehicleByUnitNumber(String unitNumber) async {
+    try {
+      final snapshot = await _vehiclesCollection
+          .where('unit_number', isEqualTo: unitNumber)
+          .limit(1)
+          .get();
+      
+      if (snapshot.docs.isNotEmpty) {
+        return Vehicle.fromJson(snapshot.docs.first.data());
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Create new vehicle
@@ -54,93 +93,89 @@ class VehicleRepository {
       vinNumber: vinNumber,
       plateNumber: plateNumber,
       trailerNumber: trailerNumber,
-      mileage: mileage,
+      mileage: mileage ?? 0.0,
+      isActive: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
 
-    await _db.vehiclesBox.put(vehicle.id, vehicle);
+    await _vehiclesCollection.doc(vehicle.id).set(vehicle.toJson());
     return vehicle;
   }
 
   /// Update vehicle
   Future<void> updateVehicle(Vehicle vehicle) async {
-    await _db.vehiclesBox.put(vehicle.id, vehicle);
+    final updated = vehicle.copyWith(updatedAt: DateTime.now());
+    await _vehiclesCollection.doc(vehicle.id).update(updated.toJson());
   }
 
   /// Update vehicle mileage
   Future<void> updateVehicleMileage(String id, double mileage) async {
-    final vehicle = getVehicleById(id);
-    if (vehicle == null) return;
-
-    final updatedVehicle = vehicle.copyWith(mileage: mileage);
-    await updateVehicle(updatedVehicle);
+    await _vehiclesCollection.doc(id).update({
+      'mileage': mileage,
+      'updated_at': DateTime.now().toIso8601String(),
+    });
   }
 
   /// Update last inspection date
   Future<void> updateLastInspectionDate(String id, DateTime date) async {
-    final vehicle = getVehicleById(id);
-    if (vehicle == null) return;
-
-    final updatedVehicle = vehicle.copyWith(lastInspectionDate: date);
-    await updateVehicle(updatedVehicle);
+    await _vehiclesCollection.doc(id).update({
+      'last_inspection_date': date.toIso8601String(),
+      'updated_at': DateTime.now().toIso8601String(),
+    });
   }
 
   /// Deactivate vehicle
   Future<void> deactivateVehicle(String id) async {
-    final vehicle = getVehicleById(id);
-    if (vehicle == null) return;
-
-    final deactivatedVehicle = vehicle.copyWith(isActive: false);
-    await updateVehicle(deactivatedVehicle);
+    await _vehiclesCollection.doc(id).update({'is_active': false});
   }
 
   /// Activate vehicle
   Future<void> activateVehicle(String id) async {
-    final vehicle = getVehicleById(id);
-    if (vehicle == null) return;
-
-    final activatedVehicle = vehicle.copyWith(isActive: true);
-    await updateVehicle(activatedVehicle);
+    await _vehiclesCollection.doc(id).update({'is_active': true});
   }
 
   /// Delete vehicle
   Future<void> deleteVehicle(String id) async {
-    await _db.vehiclesBox.delete(id);
+    await _vehiclesCollection.doc(id).delete();
   }
 
   /// Search vehicles by various criteria
-  List<Vehicle> searchVehicles(String query) {
+  Future<List<Vehicle>> searchVehicles(String query) async {
+    // Client-side search for flexibility
+    final vehicles = await fetchAllVehicles();
     final lowercaseQuery = query.toLowerCase();
     
-    return _db.vehiclesBox.values
-        .where((vehicle) =>
+    return vehicles.where((vehicle) =>
             vehicle.unitNumber.toLowerCase().contains(lowercaseQuery) ||
             vehicle.make.toLowerCase().contains(lowercaseQuery) ||
             vehicle.model.toLowerCase().contains(lowercaseQuery) ||
             vehicle.plateNumber.toLowerCase().contains(lowercaseQuery) ||
             vehicle.vinNumber.toLowerCase().contains(lowercaseQuery) ||
             (vehicle.trailerNumber?.toLowerCase().contains(lowercaseQuery) ?? false))
-        .toList()
-      ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
+        .toList();
   }
 
   /// Get vehicles due for inspection (over 30 days since last inspection)
-  List<Vehicle> getVehiclesDueForInspection() {
+  Future<List<Vehicle>> getVehiclesDueForInspection() async {
+    final activeVehicles = await getActiveVehicles();
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     
-    return _db.vehiclesBox.values
-        .where((vehicle) =>
-            vehicle.isActive &&
-            (vehicle.lastInspectionDate == null ||
-             vehicle.lastInspectionDate!.isBefore(thirtyDaysAgo)))
-        .toList()
-      ..sort((a, b) => a.unitNumber.compareTo(b.unitNumber));
+    return activeVehicles.where((vehicle) =>
+            vehicle.lastInspectionDate == null ||
+            vehicle.lastInspectionDate!.isBefore(thirtyDaysAgo))
+        .toList();
   }
 
   /// Get vehicle statistics
-  Map<String, dynamic> getVehicleStats() {
-    final vehicles = getAllVehicles();
-    final activeVehicles = getActiveVehicles();
-    final dueForInspection = getVehiclesDueForInspection();
+  Future<Map<String, dynamic>> getVehicleStats() async {
+    final vehicles = await fetchAllVehicles();
+    final activeVehicles = vehicles.where((v) => v.isActive).toList();
+    final dueForInspection = activeVehicles.where((vehicle) {
+        final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+        return vehicle.lastInspectionDate == null ||
+               vehicle.lastInspectionDate!.isBefore(thirtyDaysAgo);
+    }).toList();
 
     return {
       'total': vehicles.length,
@@ -202,6 +237,7 @@ class VehicleRepository {
         vinNumber: '1FUJGBDV2NLKA1234',
         plateNumber: 'ABC123',
         mileage: 125000,
+        isActive: true,
       ),
       Vehicle(
         id: _uuid.v4(),
@@ -213,6 +249,7 @@ class VehicleRepository {
         plateNumber: 'DEF456',
         trailerNumber: 'TR001',
         mileage: 98000,
+        isActive: true,
       ),
       Vehicle(
         id: _uuid.v4(),
@@ -223,11 +260,12 @@ class VehicleRepository {
         vinNumber: '1XKYDP9X1NJ789012',
         plateNumber: 'GHI789',
         mileage: 75000,
+        isActive: true,
       ),
     ];
 
     for (final vehicle in sampleVehicles) {
-      await _db.vehiclesBox.put(vehicle.id, vehicle);
+      await _vehiclesCollection.doc(vehicle.id).set(vehicle.toJson());
     }
   }
 }

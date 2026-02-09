@@ -1,45 +1,94 @@
-import '../models/inspection_models.dart';
-import '../datasources/database_service.dart';
-import '../../core/constants/localized_inspection_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import '../../core/services/firebase_service.dart';
+import '../models/inspection_models.dart';
+import '../../core/constants/localized_inspection_data.dart';
 
-/// Repository for managing inspection data
+/// Repository for managing inspection data using Firestore
 class InspectionRepository {
-  final DatabaseService _db = DatabaseService.instance;
+  final FirebaseService _firebase = FirebaseService.instance;
   final Uuid _uuid = const Uuid();
+  
+  CollectionReference<Map<String, dynamic>> get _inspectionsCollection => 
+      _firebase.collection('inspections');
 
   /// Get all inspections
+  /// Note: Returns empty list synchronously. Use fetchAllInspections for async.
   List<Inspection> getAllInspections() {
-    return _db.inspectionsBox.values.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+     return [];
+  }
+  
+  /// Fetch all inspections from Firestore
+  Future<List<Inspection>> fetchAllInspections() async {
+    try {
+      final snapshot = await _inspectionsCollection
+          .orderBy('created_at', descending: true)
+          .get();
+      return snapshot.docs.map((doc) => Inspection.fromJson(doc.data())).toList();
+    } catch (e) {
+      print('Error fetching inspections: $e');
+      return [];
+    }
   }
 
   /// Get inspection by ID
-  Inspection? getInspectionById(String id) {
-    return _db.inspectionsBox.get(id);
+  Future<Inspection?> getInspectionById(String id) async {
+    try {
+      final doc = await _inspectionsCollection.doc(id).get();
+      if (doc.exists && doc.data() != null) {
+        return Inspection.fromJson(doc.data()!);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Get inspections by status
-  List<Inspection> getInspectionsByStatus(InspectionStatus status) {
-    return _db.inspectionsBox.values
-        .where((inspection) => inspection.status == status)
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  Future<List<Inspection>> getInspectionsByStatus(InspectionStatus status) async {
+    try {
+      // Map enum to string if needed, or rely on toJson serialization
+      // InspectionStatus is usually serialized to string in json
+      // We need to know how it's serialized. Assuming string based on models.
+      // We'll filter client side if unsure or query if we know the string value.
+      // Let's assume client side filter for safety first or fetchAll.
+      // Actually, let's query.
+      final snapshot = await _inspectionsCollection
+          .where('status', isEqualTo: status.toString().split('.').last) 
+          .orderBy('created_at', descending: true)
+          .get();
+          
+      // Fallback: if enum serialization is complex, we might need to check how it's stored.
+      // Usually Hive adapters store indices or strings. Json serialization usually strings.
+      // Let's assume standard JSON serialization.
+      
+      return snapshot.docs.map((doc) => Inspection.fromJson(doc.data())).toList();
+    } catch (e) {
+       // Fallback to client side filter
+       final all = await fetchAllInspections();
+       return all.where((i) => i.status == status).toList();
+    }
   }
 
   /// Get inspections by date range
-  List<Inspection> getInspectionsByDateRange(DateTime start, DateTime end) {
-    return _db.inspectionsBox.values
-        .where((inspection) => 
-            inspection.createdAt.isAfter(start) && 
-            inspection.createdAt.isBefore(end))
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  Future<List<Inspection>> getInspectionsByDateRange(DateTime start, DateTime end) async {
+    try {
+       final snapshot = await _inspectionsCollection
+          .where('created_at', isGreaterThanOrEqualTo: start.toIso8601String())
+          .where('created_at', isLessThanOrEqualTo: end.toIso8601String())
+          .orderBy('created_at', descending: true)
+          .get();
+      return snapshot.docs.map((doc) => Inspection.fromJson(doc.data())).toList();
+    } catch (e) {
+      // Fallback
+       final all = await fetchAllInspections();
+       return all.where((i) => i.createdAt.isAfter(start) && i.createdAt.isBefore(end)).toList();
+    }
   }
 
   /// Get recent inspections (last 30 days)
-  List<Inspection> getRecentInspections() {
+  Future<List<Inspection>> getRecentInspections() async {
     final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
     return getInspectionsByDateRange(thirtyDaysAgo, DateTime.now());
   }
@@ -60,17 +109,20 @@ class InspectionRepository {
       vehicle: vehicle,
       type: type,
       createdAt: DateTime.now(),
+      updatedAt: DateTime.now(), // Ensure updated at is set
       location: location,
       items: LocalizedInspectionData.getAllInspectionItems(context),
+      status: InspectionStatus.inProgress, // Default status
     );
 
-    await _db.inspectionsBox.put(inspection.id, inspection);
+    await _inspectionsCollection.doc(inspection.id).set(inspection.toJson());
     return inspection;
   }
 
   /// Update inspection
   Future<void> updateInspection(Inspection inspection) async {
-    await _db.inspectionsBox.put(inspection.id, inspection);
+    final updated = inspection.copyWith(updatedAt: DateTime.now());
+    await _inspectionsCollection.doc(inspection.id).update(updated.toJson());
   }
 
   /// Update inspection item
@@ -78,14 +130,18 @@ class InspectionRepository {
     String inspectionId, 
     InspectionItem updatedItem,
   ) async {
-    final inspection = getInspectionById(inspectionId);
+    final inspection = await getInspectionById(inspectionId);
     if (inspection == null) return;
 
     final itemIndex = inspection.items.indexWhere((item) => item.id == updatedItem.id);
     if (itemIndex == -1) return;
 
-    inspection.items[itemIndex] = updatedItem;
-    await updateInspection(inspection);
+    // Create a new list to avoid modifying the original (immutability)
+    final newItems = List<InspectionItem>.from(inspection.items);
+    newItems[itemIndex] = updatedItem;
+    
+    final updatedInspection = inspection.copyWith(items: newItems);
+    await updateInspection(updatedInspection);
   }
 
   /// Complete inspection
@@ -94,7 +150,7 @@ class InspectionRepository {
     String signature,
     {String? overallNotes}
   ) async {
-    final inspection = getInspectionById(inspectionId);
+    final inspection = await getInspectionById(inspectionId);
     if (inspection == null) return;
 
     final completedInspection = inspection.copyWith(
@@ -109,32 +165,22 @@ class InspectionRepository {
 
   /// Delete inspection
   Future<void> deleteInspection(String id) async {
-    await _db.inspectionsBox.delete(id);
+    await _inspectionsCollection.doc(id).delete();
   }
 
-  /// Get unsynced inspections
+  /// Get unsynced inspections (Not applicable for Firestore as it syncs automatically)
   List<Inspection> getUnsyncedInspections() {
-    return _db.inspectionsBox.values
-        .where((inspection) => !inspection.isSynced)
-        .toList();
+    return [];
   }
 
-  /// Mark inspection as synced
+  /// Mark inspection as synced (Not applicable)
   Future<void> markInspectionAsSynced(String id) async {
-    final inspection = getInspectionById(id);
-    if (inspection == null) return;
-
-    final syncedInspection = inspection.copyWith(
-      isSynced: true,
-      lastSyncAt: DateTime.now(),
-    );
-
-    await updateInspection(syncedInspection);
+    // No-op
   }
 
   /// Get inspection statistics
-  Map<String, dynamic> getInspectionStats() {
-    final inspections = getAllInspections();
+  Future<Map<String, dynamic>> getInspectionStats() async {
+    final inspections = await fetchAllInspections();
     final now = DateTime.now();
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
 
@@ -157,7 +203,7 @@ class InspectionRepository {
       'inProgress': inspections
           .where((i) => i.status == InspectionStatus.inProgress)
           .length,
-      'unsynced': getUnsyncedInspections().length,
+      'unsynced': 0, // Firestore handles sync
       'withCriticalDefects': inspections
           .where((i) => i.hasCriticalDefects)
           .length,

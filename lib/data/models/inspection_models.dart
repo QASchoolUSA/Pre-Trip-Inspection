@@ -1,12 +1,10 @@
-import 'package:hive/hive.dart';
+
 import 'package:json_annotation/json_annotation.dart';
-import 'sync_models.dart';
 import 'document_attachment.dart';
 
 part 'inspection_models.g.dart';
 
 /// Enumeration for inspection status
-@HiveType(typeId: 0)
 enum InspectionStatus {
   @HiveField(0)
   @JsonValue('pending')
@@ -26,7 +24,6 @@ enum InspectionStatus {
 }
 
 /// Enumeration for inspection type
-@HiveType(typeId: 1)
 enum InspectionType {
   @HiveField(0)
   @JsonValue('pre_trip')
@@ -42,7 +39,6 @@ enum InspectionType {
 }
 
 /// Enumeration for defect severity
-@HiveType(typeId: 2)
 enum DefectSeverity {
   @HiveField(0)
   @JsonValue('minor')
@@ -62,7 +58,6 @@ enum DefectSeverity {
 }
 
 /// Enumeration for inspection item status
-@HiveType(typeId: 3)
 enum InspectionItemStatus {
   @HiveField(0)
   @JsonValue('passed')
@@ -78,9 +73,8 @@ enum InspectionItemStatus {
 }
 
 /// Model for individual inspection item
-@HiveType(typeId: 4)
 @JsonSerializable()
-class InspectionItem with SyncableMixin {
+class InspectionItem {
   @HiveField(0)
   final String id;
   
@@ -114,53 +108,14 @@ class InspectionItem with SyncableMixin {
   @HiveField(10)
   String? checkedBy;
 
-  @HiveField(22)
+  @HiveField(22) // Keeping original field ID to assume compatibility if needed, though clean wipe expected
   List<DocumentAttachment> documentAttachments;
 
-  // Sync fields
   @HiveField(11)
-  @override
   final DateTime createdAt;
   
   @HiveField(12)
-  @override
   final DateTime updatedAt;
-  
-  @HiveField(13)
-  @override
-  final SyncStatus syncStatus;
-  
-  @HiveField(14)
-  @override
-  final DateTime? lastSyncAt;
-  
-  @HiveField(15)
-  @override
-  final String? serverVersion;
-  
-  @HiveField(16)
-  @override
-  final bool isDeleted;
-  
-  @HiveField(17)
-  @override
-  final String? conflictData;
-  
-  @HiveField(18)
-  @override
-  final int version;
-  
-  @HiveField(19)
-  @override
-  final DateTime? serverUpdatedAt;
-  
-  @HiveField(20)
-  @override
-  final String? dataHash;
-  
-  @HiveField(21)
-  @override
-  final List<SyncOperation> pendingOperations;
 
   InspectionItem({
     required this.id,
@@ -177,20 +132,10 @@ class InspectionItem with SyncableMixin {
     List<DocumentAttachment>? documentAttachments,
     DateTime? createdAt,
     DateTime? updatedAt,
-    this.syncStatus = SyncStatus.pending,
-    this.lastSyncAt,
-    this.serverVersion,
-    this.isDeleted = false,
-    this.conflictData,
-    this.version = 1,
-    this.serverUpdatedAt,
-    this.dataHash,
-    List<SyncOperation>? pendingOperations,
   }) : photoUrls = photoUrls ?? [],
        documentAttachments = documentAttachments ?? [],
        createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now(),
-       pendingOperations = pendingOperations ?? [];
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory InspectionItem.fromJson(Map<String, dynamic> json) =>
       _$InspectionItemFromJson(json);
@@ -212,15 +157,6 @@ class InspectionItem with SyncableMixin {
     List<DocumentAttachment>? documentAttachments,
     DateTime? createdAt,
     DateTime? updatedAt,
-    SyncStatus? syncStatus,
-    DateTime? lastSyncAt,
-    String? serverVersion,
-    bool? isDeleted,
-    String? conflictData,
-    int? version,
-    DateTime? serverUpdatedAt,
-    String? dataHash,
-    List<SyncOperation>? pendingOperations,
   }) {
     return InspectionItem(
       id: id ?? this.id,
@@ -237,23 +173,13 @@ class InspectionItem with SyncableMixin {
       documentAttachments: documentAttachments ?? this.documentAttachments,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      syncStatus: syncStatus ?? this.syncStatus,
-      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
-      serverVersion: serverVersion ?? this.serverVersion,
-      isDeleted: isDeleted ?? this.isDeleted,
-      conflictData: conflictData ?? this.conflictData,
-      version: version ?? this.version,
-      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
-      dataHash: dataHash ?? this.dataHash,
-      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }
 
 /// Model for vehicle information
-@HiveType(typeId: 5)
 @JsonSerializable()
-class Vehicle with SyncableMixin {
+class Vehicle {
   @HiveField(0)
   final String id;
   
@@ -287,33 +213,11 @@ class Vehicle with SyncableMixin {
   @HiveField(10)
   final bool isActive;
   
-  // Sync-related fields
   @HiveField(11)
   final DateTime createdAt;
   
   @HiveField(12)
   final DateTime updatedAt;
-  
-  @HiveField(13)
-  final SyncStatus syncStatus;
-  
-  @HiveField(14)
-  final DateTime? lastSyncAt;
-  
-  @HiveField(15)
-  final DateTime? serverUpdatedAt;
-  
-  @HiveField(16)
-  final int version;
-  
-  @HiveField(17)
-  final String? dataHash;
-  
-  @HiveField(18)
-  final bool isDeleted;
-  
-  @HiveField(19)
-  final List<SyncOperation> pendingOperations;
 
   Vehicle({
     required this.id,
@@ -329,13 +233,6 @@ class Vehicle with SyncableMixin {
     this.isActive = true,
     DateTime? createdAt,
     DateTime? updatedAt,
-    this.syncStatus = SyncStatus.pending,
-    this.lastSyncAt,
-    this.serverUpdatedAt,
-    this.version = 1,
-    this.dataHash,
-    this.isDeleted = false,
-    this.pendingOperations = const [],
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 
@@ -358,13 +255,6 @@ class Vehicle with SyncableMixin {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-    SyncStatus? syncStatus,
-    DateTime? lastSyncAt,
-    DateTime? serverUpdatedAt,
-    int? version,
-    String? dataHash,
-    bool? isDeleted,
-    List<SyncOperation>? pendingOperations,
   }) {
     return Vehicle(
       id: id ?? this.id,
@@ -380,19 +270,11 @@ class Vehicle with SyncableMixin {
       isActive: isActive ?? this.isActive,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
-      syncStatus: syncStatus ?? this.syncStatus,
-      lastSyncAt: lastSyncAt ?? this.lastSyncAt,
-      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
-      version: version ?? this.version,
-      dataHash: dataHash ?? this.dataHash,
-      isDeleted: isDeleted ?? this.isDeleted,
-      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }
 
 /// Model for location information
-@HiveType(typeId: 6)
 @JsonSerializable()
 class LocationInfo {
   @HiveField(0)
@@ -421,9 +303,8 @@ class LocationInfo {
 }
 
 /// Main inspection model
-@HiveType(typeId: 7)
 @JsonSerializable(explicitToJson: true)
-class Inspection with SyncableMixin {
+class Inspection {
   @HiveField(0)
   final String id;
   
@@ -469,42 +350,8 @@ class Inspection with SyncableMixin {
   @HiveField(14)
   String? reportPdfPath;
 
-  // Sync fields
   @HiveField(15)
-  @override
   final DateTime updatedAt;
-  
-  @HiveField(16)
-  @override
-  final SyncStatus syncStatus;
-  
-  @HiveField(17)
-  @override
-  final String? serverVersion;
-  
-  @HiveField(18)
-  @override
-  final bool isDeleted;
-  
-  @HiveField(19)
-  @override
-  final String? conflictData;
-  
-  @HiveField(20)
-  @override
-  final int version;
-  
-  @HiveField(21)
-  @override
-  final DateTime? serverUpdatedAt;
-  
-  @HiveField(22)
-  @override
-  final String? dataHash;
-  
-  @HiveField(23)
-  @override
-  final List<SyncOperation> pendingOperations;
 
   Inspection({
     required this.id,
@@ -523,17 +370,8 @@ class Inspection with SyncableMixin {
     this.lastSyncAt,
     this.reportPdfPath,
     DateTime? updatedAt,
-    this.syncStatus = SyncStatus.pending,
-    this.serverVersion,
-    this.isDeleted = false,
-    this.conflictData,
-    this.version = 1,
-    this.serverUpdatedAt,
-    this.dataHash,
-    List<SyncOperation>? pendingOperations,
   }) : items = items ?? [],
-       updatedAt = updatedAt ?? DateTime.now(),
-       pendingOperations = pendingOperations ?? [];
+       updatedAt = updatedAt ?? DateTime.now();
 
   factory Inspection.fromJson(Map<String, dynamic> json) =>
       _$InspectionFromJson(json);
@@ -595,14 +433,6 @@ class Inspection with SyncableMixin {
     DateTime? lastSyncAt,
     String? reportPdfPath,
     DateTime? updatedAt,
-    SyncStatus? syncStatus,
-    String? serverVersion,
-    bool? isDeleted,
-    String? conflictData,
-    int? version,
-    DateTime? serverUpdatedAt,
-    String? dataHash,
-    List<SyncOperation>? pendingOperations,
   }) {
     return Inspection(
       id: id ?? this.id,
@@ -621,20 +451,11 @@ class Inspection with SyncableMixin {
       lastSyncAt: lastSyncAt ?? this.lastSyncAt,
       reportPdfPath: reportPdfPath ?? this.reportPdfPath,
       updatedAt: updatedAt ?? this.updatedAt,
-      syncStatus: syncStatus ?? this.syncStatus,
-      serverVersion: serverVersion ?? this.serverVersion,
-      isDeleted: isDeleted ?? this.isDeleted,
-      conflictData: conflictData ?? this.conflictData,
-      version: version ?? this.version,
-      serverUpdatedAt: serverUpdatedAt ?? this.serverUpdatedAt,
-      dataHash: dataHash ?? this.dataHash,
-      pendingOperations: pendingOperations ?? this.pendingOperations,
     );
   }
 }
 
 /// Model for user information
-@HiveType(typeId: 8)
 @JsonSerializable()
 class User {
   @HiveField(0)

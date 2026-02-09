@@ -1,264 +1,151 @@
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dio/dio.dart';
-import '../config/api_config.dart';
-import '../exceptions/api_exceptions.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+// import '../../data/models/inspection_models.dart';
+import 'firebase_service.dart';
 
-/// Service for handling authentication with PostgreSQL backend
+/// Service for handling authentication with Firebase Auth
 class AuthService {
   static AuthService? _instance;
   static AuthService get instance => _instance ??= AuthService._();
   AuthService._();
 
-  static const String _accessTokenKey = 'access_token';
-  static const String _refreshTokenKey = 'refresh_token';
-  static const String _userDataKey = 'user_data';
-  static const String _tokenExpiryKey = 'token_expiry';
-
-  SharedPreferences? _prefs;
-  late final Dio _dio;
+  final FirebaseService _firebase = FirebaseService.instance;
+  
+  firebase_auth.FirebaseAuth get _auth => _firebase.auth;
+  FirebaseFirestore get _firestore => _firebase.firestore;
 
   /// Initialize the auth service
   Future<void> initialize() async {
-    _prefs ??= await SharedPreferences.getInstance();
+    // Firebase is initialized in FirebaseService
+    if (!_firebase.isInitialized) {
+      await _firebase.initialize();
+    }
     
-    _dio = Dio(BaseOptions(
-      baseUrl: ApiConfig.baseUrl,
-      connectTimeout: Duration(milliseconds: ApiConfig.connectTimeout),
-      receiveTimeout: Duration(milliseconds: ApiConfig.receiveTimeout),
-      headers: ApiConfig.defaultHeaders,
-    ));
+    // Listen to auth state changes
+    _auth.authStateChanges().listen((firebase_auth.User? user) {
+      if (kDebugMode) {
+        print('Auth state changed: ${user?.uid}');
+      }
+    });
   }
 
-  /// Login with username and password
-  Future<AuthResult> login(String username, String password) async {
+  /// Login with email and password
+  Future<AuthResult> login(String email, String password) async {
     try {
-      final response = await _dio.post(
-        ApiConfig.loginEndpoint,
-        data: {
-          'username': username,
-          'password': password,
-        },
+      final userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
 
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
+      final user = userCredential.user;
+      if (user != null) {
+        // Fetch user data from Firestore
+        final userData = await _fetchUserData(user.uid);
+        return AuthResult.success(userData ?? {'id': user.uid, 'email': user.email});
+      } else {
+        return AuthResult.failure('Login failed: No user returned');
+      }
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      return AuthResult.failure(_handleAuthError(e));
+    } catch (e) {
+      return AuthResult.failure('Unexpected error: $e');
+    }
+  }
+  
+  /// Sign up with email and password
+  Future<AuthResult> signUp({
+    required String email,
+    required String password,
+    required String name,
+    required String role,
+    required String cdlNumber,
+  }) async {
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final user = userCredential.user;
+      if (user != null) {
+        // Create user document in Firestore
+        final userData = {
+          'id': user.uid,
+          'name': name,
+          'email': email,
+          'role': role,
+          'cdl_number': cdlNumber,
+          'is_active': true,
+          'created_at': DateTime.now().toIso8601String(),
+          'updated_at': DateTime.now().toIso8601String(),
+        };
         
-        final accessToken = data['access_token'] as String;
-        final refreshToken = data['refresh_token'] as String;
-        final userData = data['user'] as Map<String, dynamic>;
-        final expiresIn = data['expires_in'] as int; // seconds
-
-        // Calculate expiry time
-        final expiryTime = DateTime.now().add(Duration(seconds: expiresIn));
-
-        // Store tokens and user data
-        await _storeTokens(accessToken, refreshToken, expiryTime);
-        await _storeUserData(userData);
-
+        await _firestore.collection('users').doc(user.uid).set(userData);
+        
         return AuthResult.success(userData);
       } else {
-        throw ApiException('Login failed', ApiErrorType.unauthorized);
+        return AuthResult.failure('Sign up failed: No user returned');
       }
-    } on DioException catch (e) {
-      // Add specific handling for intermittent network issues
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.connectionError) {
-        throw ApiException(
-          'Connection timeout. Please check your internet connection and try again.',
-          ApiErrorType.network,
-        );
-      }
-      throw _handleAuthError(e);
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      return AuthResult.failure(_handleAuthError(e));
     } catch (e) {
-      throw ApiException(
-        'Unexpected error during login: ${e.toString()}',
-        ApiErrorType.unknown,
-      );
+      return AuthResult.failure('Unexpected error: $e');
     }
   }
 
-  /// Refresh access token using refresh token
-  Future<bool> refreshToken() async {
-    try {
-      final refreshToken = await getRefreshToken();
-      if (refreshToken == null) {
-        throw ApiException('No refresh token available', ApiErrorType.unauthorized);
-      }
-
-      final response = await _dio.post(
-        ApiConfig.refreshTokenEndpoint,
-        data: {
-          'refresh_token': refreshToken,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-        
-        final newAccessToken = data['access_token'] as String;
-        final newRefreshToken = data['refresh_token'] as String?;
-        final expiresIn = data['expires_in'] as int;
-
-        final expiryTime = DateTime.now().add(Duration(seconds: expiresIn));
-
-        // Store new tokens
-        await _storeTokens(
-          newAccessToken, 
-          newRefreshToken ?? refreshToken, 
-          expiryTime,
-        );
-
-        return true;
-      } else {
-        await logout();
-        return false;
-      }
-    } on DioException catch (e) {
-      await logout();
-      throw _handleAuthError(e);
-    }
-  }
-
-  /// Logout user and clear stored data
+  /// Logout
   Future<void> logout() async {
-    try {
-      final accessToken = await getAccessToken();
-      if (accessToken != null) {
-        // Notify server about logout
-        await _dio.post(
-          ApiConfig.logoutEndpoint,
-          options: Options(
-            headers: ApiConfig.getAuthHeaders(accessToken),
-          ),
-        );
-      }
-    } catch (e) {
-      // Ignore logout errors, still clear local data
-    } finally {
-      await _clearStoredData();
-    }
+    await _auth.signOut();
   }
 
-  /// Get stored access token
-  Future<String?> getAccessToken() async {
-    await _ensureInitialized();
-    return _prefs!.getString(_accessTokenKey);
-  }
-
-  /// Get stored refresh token
-  Future<String?> getRefreshToken() async {
-    await _ensureInitialized();
-    return _prefs!.getString(_refreshTokenKey);
-  }
-
-  /// Get stored user data
+  /// Get current user data
   Future<Map<String, dynamic>?> getUserData() async {
-    await _ensureInitialized();
-    final userDataString = _prefs!.getString(_userDataKey);
-    if (userDataString != null) {
-      return jsonDecode(userDataString) as Map<String, dynamic>;
+    final user = _auth.currentUser;
+    if (user != null) {
+      return await _fetchUserData(user.uid);
     }
     return null;
   }
 
   /// Check if user is authenticated
   Future<bool> isAuthenticated() async {
-    final accessToken = await getAccessToken();
-    if (accessToken == null) return false;
+    return _auth.currentUser != null;
+  }
 
-    // Check if token is expired
-    if (await _isTokenExpired()) {
-      // Try to refresh token
-      try {
-        return await refreshToken();
-      } catch (e) {
-        return false;
+  /// Fetch user data from Firestore
+  Future<Map<String, dynamic>?> _fetchUserData(String uid) async {
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      if (doc.exists) {
+        return doc.data();
       }
+      return null;
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching user data: $e');
+      }
+      return null;
     }
-
-    return true;
   }
-
-  /// Check if access token is expired
-  Future<bool> _isTokenExpired() async {
-    await _ensureInitialized();
-    final expiryString = _prefs!.getString(_tokenExpiryKey);
-    if (expiryString == null) return true;
-
-    final expiryTime = DateTime.parse(expiryString);
-    final now = DateTime.now();
-    
-    // Consider token expired if it expires within 5 minutes
-    return now.isAfter(expiryTime.subtract(const Duration(minutes: 5)));
-  }
-
-  /// Store tokens securely
-  Future<void> _storeTokens(String accessToken, String refreshToken, DateTime expiryTime) async {
-    await _ensureInitialized();
-    await Future.wait([
-      _prefs!.setString(_accessTokenKey, accessToken),
-      _prefs!.setString(_refreshTokenKey, refreshToken),
-      _prefs!.setString(_tokenExpiryKey, expiryTime.toIso8601String()),
-    ]);
-  }
-
-  /// Store user data
-  Future<void> _storeUserData(Map<String, dynamic> userData) async {
-    await _ensureInitialized();
-    await _prefs!.setString(_userDataKey, jsonEncode(userData));
-  }
-
-  /// Clear all stored authentication data
-  Future<void> _clearStoredData() async {
-    await _ensureInitialized();
-    await Future.wait([
-      _prefs!.remove(_accessTokenKey),
-      _prefs!.remove(_refreshTokenKey),
-      _prefs!.remove(_userDataKey),
-      _prefs!.remove(_tokenExpiryKey),
-    ]);
-  }
-
-  /// Ensure SharedPreferences is initialized
-  Future<void> _ensureInitialized() async {
-    _prefs ??= await SharedPreferences.getInstance();
-  }
-
-  /// Handle authentication errors
-  ApiException _handleAuthError(DioException error) {
-    switch (error.response?.statusCode) {
-      case 400:
-        return ApiException(
-          error.response?.data?['message'] ?? 'Invalid request',
-          ApiErrorType.badRequest,
-        );
-      case 401:
-        return ApiException(
-          'Invalid username or password',
-          ApiErrorType.unauthorized,
-        );
-      case 403:
-        return ApiException(
-          'Account is disabled or suspended',
-          ApiErrorType.forbidden,
-        );
-      case 422:
-        return ValidationException(
-          'Validation failed',
-          error.response?.data?['errors'] ?? {},
-        );
-      case 500:
-        return ApiException(
-          'Server error occurred during authentication',
-          ApiErrorType.server,
-        );
+  
+  /// Handle Firebase Auth errors
+  String _handleAuthError(firebase_auth.FirebaseAuthException e) {
+    switch (e.code) {
+      case 'user-not-found':
+        return 'No user found for that email.';
+      case 'wrong-password':
+        return 'Wrong password provided.';
+      case 'email-already-in-use':
+        return 'The account already exists for that email.';
+      case 'invalid-email':
+        return 'The email address is not valid.';
+      case 'user-disabled':
+        return 'This user has been disabled.';
+      case 'too-many-requests':
+        return 'Too many requests. Try again later.';
       default:
-        return ApiException(
-          'Authentication failed',
-          ApiErrorType.unknown,
-        );
+        return 'Authentication failed: ${e.message}';
     }
   }
 }

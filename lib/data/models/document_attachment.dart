@@ -1,10 +1,9 @@
-import 'package:hive/hive.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'document_attachment.g.dart';
 
 /// Document attachment types
-@HiveType(typeId: 30)
 enum DocumentType {
   @HiveField(0)
   @JsonValue('scanned_document')
@@ -40,7 +39,6 @@ enum DocumentType {
 }
 
 /// Document attachment model for inspection items
-@HiveType(typeId: 31)
 @JsonSerializable()
 class DocumentAttachment {
   @HiveField(0)

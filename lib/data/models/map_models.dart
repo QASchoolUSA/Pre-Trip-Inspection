@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'map_models.g.dart';
@@ -21,7 +21,6 @@ enum ParkingStatus {
   full,
 }
 
-@HiveType(typeId: 10)
 @JsonSerializable()
 class TruckLocation {
   @HiveField(0)
@@ -123,7 +122,6 @@ class TruckLocation {
   }
 }
 
-@HiveType(typeId: 11)
 @JsonSerializable()
 class LocationReview {
   @HiveField(0)
@@ -189,7 +187,6 @@ class LocationReview {
   }
 }
 
-@HiveType(typeId: 12)
 @JsonSerializable()
 class ParkingStatusUpdate {
   @HiveField(0)
@@ -249,7 +246,6 @@ class ParkingStatusUpdate {
   }
 }
 
-@HiveType(typeId: 13)
 @JsonSerializable()
 class FavoriteLocation {
   @HiveField(0)
@@ -297,7 +293,6 @@ class FavoriteLocation {
   }
 }
 
-@HiveType(typeId: 14)
 @JsonSerializable()
 class LocationStats {
   @HiveField(0)
