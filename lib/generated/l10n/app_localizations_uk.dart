@@ -247,6 +247,9 @@ class AppLocalizationsUk extends AppLocalizations {
   String get vehicle => 'Vehicle';
 
   @override
+  String get addVehicle => 'Add Vehicle';
+
+  @override
   String get report => 'Report';
 
   @override

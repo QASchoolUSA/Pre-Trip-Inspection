@@ -417,6 +417,11 @@
     "description": "Vehicle label"
   },
   
+  "addVehicle": "Add Vehicle",
+  "@addVehicle": {
+    "description": "Add vehicle button text"
+  },
+  
   "report": "Report",
   "@report": {
     "description": "Report label"

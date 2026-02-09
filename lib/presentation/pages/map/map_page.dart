@@ -13,6 +13,10 @@ import '../../widgets/map/location_details_bottom_sheet.dart';
 import '../../widgets/map/parking_status_widget.dart';
 import '../../widgets/map/map_search_bar.dart';
 import '../../widgets/map/custom_map_markers.dart';
+import '../../../core/navigation/app_router.dart';
+
+/// Mapbox access token for map tiles
+const String _mapboxAccessToken = 'pk.eyJ1Ijoia2Vkcm92IiwiYSI6ImNtbGYwenkxNDF0eTgzZnE0ZDZsbmtyOHAifQ.m8YkomCwKiidjPgN5XZpIw';
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({super.key});
@@ -317,9 +321,11 @@ class _MapPageState extends ConsumerState<MapPage> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate: 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=$_mapboxAccessToken',
                 userAgentPackageName: 'com.pti.mobile_app',
-                maxZoom: 19,
+                maxZoom: 22,
+                tileSize: 512,
+                zoomOffset: -1,
               ),
               MarkerLayer(
                 markers: _markers,
@@ -327,10 +333,24 @@ class _MapPageState extends ConsumerState<MapPage> {
             ],
           ),
 
-          // Search Bar
+          // Back Button
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
             left: 16,
+            child: FloatingActionButton(
+              mini: true,
+              backgroundColor: AppColors.white,
+              foregroundColor: AppColors.grey800,
+              heroTag: 'back_button',
+              onPressed: () => context.goToDashboard(),
+              child: const Icon(Icons.arrow_back),
+            ),
+          ),
+
+          // Search Bar
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            left: 72,
             right: 16,
             child: MapSearchBar(
               onSearchChanged: (query) {

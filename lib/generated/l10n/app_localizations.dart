@@ -570,6 +570,12 @@ abstract class AppLocalizations {
   /// **'Vehicle'**
   String get vehicle;
 
+  /// Add vehicle button text
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vehicle'**
+  String get addVehicle;
+
   /// Report label
   ///
   /// In en, this message translates to:
