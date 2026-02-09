@@ -361,15 +361,28 @@ final appInitializationProvider = FutureProvider<bool>((ref) async {
     
     // Get current user if authenticated (deferred data loading happens on dashboard)
     if (isAuthenticated) {
-      final userData = await AuthService.instance.getUserData();
-      if (userData != null) {
-        ref.read(currentUserProvider.notifier).state = User.fromJson(userData);
+      // Use instant data from FirebaseAuth first (never blocks)
+      final basicUserData = AuthService.instance.getCurrentUserBasicData();
+      if (basicUserData != null) {
+        ref.read(currentUserProvider.notifier).state = User.fromJson(basicUserData);
       }
+      
+      // Try to fetch full profile in background (fire and forget for init purposes)
+      // This prevents Splash Screen from hanging if Firestore is slow/offline
+      AuthService.instance.getUserData().then((userData) {
+        if (userData != null) {
+          ref.read(currentUserProvider.notifier).state = User.fromJson(userData);
+        }
+      }).catchError((e) {
+        print('Background profile fetch failed: $e');
+      });
     }
     
     return true;
   } catch (e) {
-    throw Exception('Failed to initialize app: $e');
+    print('Initialization error: $e');
+    // Even if init fails, try to let the user in if we have auth state
+    return true;
   }
 });
 

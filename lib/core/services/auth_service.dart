@@ -116,6 +116,21 @@ class AuthService {
     return null;
   }
 
+  /// Get basic user data from Firebase Auth (instant, no Firestore fetch)
+  Map<String, dynamic>? getCurrentUserBasicData() {
+    final user = _auth.currentUser;
+    if (user != null) {
+      return {
+        'id': user.uid,
+        'email': user.email ?? '',
+        'name': user.displayName ?? user.email?.split('@').first ?? 'User',
+        'cdlNumber': '', // Will be populated on profile fetch later
+        'isActive': true,
+      };
+    }
+    return null;
+  }
+
   /// Check if user is authenticated
   Future<bool> isAuthenticated() async {
     return _auth.currentUser != null;
