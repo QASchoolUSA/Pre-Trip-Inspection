@@ -1,48 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/themes/app_theme.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/navigation/app_router.dart';
 import '../../../generated/l10n/app_localizations.dart';
 import '../../providers/app_providers.dart';
-import '../vehicle/vehicle_selection_page.dart';
 import '../../providers/loadboard_providers.dart';
 import '../../../data/models/load_models.dart';
 
-/// Provider for inspection stats - loads asynchronously without blocking UI
-final inspectionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
-  final notifier = ref.watch(enhancedInspectionsProvider.notifier);
-  return notifier.getStats();
-});
-
-/// Main dashboard page
-class DashboardPage extends ConsumerWidget {
+/// Main dashboard page - renders immediately, loads data in background
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  int _totalInspections = 0;
+  int _deliveredLoads = 0;
+  bool _statsLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Defer ALL data loading to after first frame - instant render first
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadStatsInBackground();
+    });
+  }
+
+  Future<void> _loadStatsInBackground() async {
+    try {
+      // Load stats in background - doesn't block UI
+      final stats = await ref.read(enhancedInspectionsProvider.notifier).getStats();
+      final loadsAsync = await ref.read(driverLoadsProvider.future);
+      final delivered = loadsAsync.where((l) => l.status == LoadStatus.delivered).length;
+      
+      if (mounted) {
+        setState(() {
+          _totalInspections = stats['total'] ?? 0;
+          _deliveredLoads = delivered;
+          _statsLoaded = true;
+        });
+      }
+    } catch (e) {
+      // Silently fail - just show 0s
+      if (mounted) {
+        setState(() => _statsLoaded = true);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Only read currentUser - no Firestore calls!
     final currentUser = ref.watch(currentUserProvider);
-    // Use .maybeWhen to show 0 immediately instead of blocking
-    final driverLoadsAsync = ref.watch(driverLoadsProvider);
-    final deliveredLoadsCount = driverLoadsAsync.maybeWhen(
-      data: (loads) => loads.where((l) => l.status == LoadStatus.delivered).length,
-      orElse: () => 0,
-    );
-    
-    // Use provider for stats - non-blocking, shows default then updates
-    final statsAsync = ref.watch(inspectionStatsProvider);
-    final inspectionStats = statsAsync.maybeWhen(
-      data: (stats) => stats,
-      orElse: () => <String, dynamic>{
-        'total': 0,
-        'completed': 0,
-        'in_progress': 0,
-        'pending': 0,
-        'completion_rate': 0.0,
-      },
-    );
     
     return Scaffold(
       appBar: AppBar(
@@ -79,8 +93,10 @@ class DashboardPage extends ConsumerWidget {
             
             const SizedBox(height: 24),
             
-            // Statistics Section - now non-blocking
-            _buildStatsSection(context, inspectionStats, deliveredLoadsCount),
+            // Statistics Section - uses local state, updated async
+            _buildStatsSection(context, {
+              'total': _totalInspections,
+            }, _deliveredLoads),
             
             const SizedBox(height: 24),
             
