@@ -11,6 +11,12 @@ import '../vehicle/vehicle_selection_page.dart';
 import '../../providers/loadboard_providers.dart';
 import '../../../data/models/load_models.dart';
 
+/// Provider for inspection stats - loads asynchronously without blocking UI
+final inspectionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final notifier = ref.watch(enhancedInspectionsProvider.notifier);
+  return notifier.getStats();
+});
+
 /// Main dashboard page
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
@@ -18,10 +24,24 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
+    // Use .maybeWhen to show 0 immediately instead of blocking
     final driverLoadsAsync = ref.watch(driverLoadsProvider);
     final deliveredLoadsCount = driverLoadsAsync.maybeWhen(
       data: (loads) => loads.where((l) => l.status == LoadStatus.delivered).length,
       orElse: () => 0,
+    );
+    
+    // Use provider for stats - non-blocking, shows default then updates
+    final statsAsync = ref.watch(inspectionStatsProvider);
+    final inspectionStats = statsAsync.maybeWhen(
+      data: (stats) => stats,
+      orElse: () => <String, dynamic>{
+        'total': 0,
+        'completed': 0,
+        'in_progress': 0,
+        'pending': 0,
+        'completion_rate': 0.0,
+      },
     );
     
     return Scaffold(
@@ -59,20 +79,8 @@ class DashboardPage extends ConsumerWidget {
             
             const SizedBox(height: 24),
             
-            // Statistics Section
-            FutureBuilder<Map<String, dynamic>>(
-              future: ref.read(enhancedInspectionsProvider.notifier).getStats(),
-              builder: (context, snapshot) {
-                final inspectionStats = snapshot.data ?? {
-                  'total': 0,
-                  'completed': 0,
-                  'in_progress': 0,
-                  'pending': 0,
-                  'completion_rate': 0.0,
-                };
-                return _buildStatsSection(context, inspectionStats, deliveredLoadsCount);
-              },
-            ),
+            // Statistics Section - now non-blocking
+            _buildStatsSection(context, inspectionStats, deliveredLoadsCount),
             
             const SizedBox(height: 24),
             
