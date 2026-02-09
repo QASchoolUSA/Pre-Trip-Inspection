@@ -1,11 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/foundation.dart';
 import '../../core/services/simple_notification_service.dart';
-// import '../../core/services/api_service.dart';
 import '../../core/services/auth_service.dart';
 import '../../core/services/firebase_service.dart';
-// import '../../core/constants/localized_inspection_data.dart';
 import '../../data/repositories/inspection_repository.dart';
 import '../../data/repositories/vehicle_repository.dart';
 import '../../data/repositories/user_repository.dart';
@@ -17,13 +14,9 @@ final firebaseServiceProvider = Provider<FirebaseService>((ref) {
   return FirebaseService.instance;
 });
 
-// Removed: apiServiceProvider
-
 final authServiceProvider = Provider<AuthService>((ref) {
   return AuthService.instance;
 });
-
-// Removed: databaseServiceProvider, syncServiceProvider, conflictResolutionServiceProvider, supabaseServiceProvider
 
 /// Repository providers
 final inspectionRepositoryProvider = Provider<InspectionRepository>((ref) {

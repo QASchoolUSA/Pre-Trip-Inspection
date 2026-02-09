@@ -14,7 +14,6 @@ import '../../presentation/pages/report/report_preview_page.dart';
 import '../../presentation/pages/reports/reports_page.dart';
 import '../../presentation/pages/settings/settings_page.dart';
 import '../../presentation/pages/help/help_page.dart';
-import '../../presentation/pages/sync/offline_sync_page.dart';
 import '../../presentation/pages/map/map_page.dart';
 import '../../presentation/pages/loadboard/loadboard_page.dart';
 
@@ -163,11 +162,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const HelpPage(),
       ),
       
-      GoRoute(
-        path: RouteNames.offlineSync,
-        name: 'offline-sync',
-        builder: (context, state) => const OfflineSyncPage(),
-      ),
+
       
       GoRoute(
         path: RouteNames.map,

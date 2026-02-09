@@ -87,30 +87,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     }
   }
 
-  Future<void> _createTestUsers() async {
-    try {
-      final userRepository = UserRepository();
-      await userRepository.addSampleUsers();
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Test users created and synced to Supabase!'),
-            backgroundColor: AppColors.successGreen,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error creating test users: $e'),
-            backgroundColor: AppColors.errorRed,
-          ),
-        );
-      }
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -224,21 +201,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             
-            const SizedBox(height: AppConstants.defaultPadding),
-            
-            // Test Users Button (for Supabase testing)
-            ElevatedButton.icon(
-              onPressed: _createTestUsers,
-              icon: const Icon(Icons.person_add),
-              label: const Text('Create Test Users (Supabase)'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 48),
-                backgroundColor: AppColors.primaryBlue,
-                foregroundColor: AppColors.white,
-              ),
-            ),
-            
-            const SizedBox(height: AppConstants.largePadding),
+
             
             // Notification Preview
             if (_notificationsEnabled)
