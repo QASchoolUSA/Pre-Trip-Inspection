@@ -9,6 +9,7 @@ import '../../../data/models/inspection_models.dart';
 import '../../../generated/l10n/app_localizations.dart';
 import '../../providers/app_providers.dart';
 import '../inspection/inspection_page.dart';
+import 'add_vehicle_page.dart';
 
 /// Vehicle selection page with QR scanning capability
 class VehicleSelectionPage extends ConsumerStatefulWidget {
@@ -136,167 +137,10 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
     }
   }
 
-  void _showAddVehicleDialog(BuildContext context) {
-    final unitNumberController = TextEditingController();
-    final makeController = TextEditingController();
-    final modelController = TextEditingController();
-    final yearController = TextEditingController(text: DateTime.now().year.toString());
-    final vinController = TextEditingController();
-    final plateController = TextEditingController();
-    final trailerController = TextEditingController();
-    final mileageController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.addVehicle),
-        content: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: unitNumberController,
-                  decoration: const InputDecoration(
-                    labelText: 'Unit Number *',
-                    hintText: 'e.g., T001',
-                    prefixIcon: Icon(Icons.tag),
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: makeController,
-                  decoration: const InputDecoration(
-                    labelText: 'Make *',
-                    hintText: 'e.g., Freightliner',
-                    prefixIcon: Icon(Icons.local_shipping),
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: modelController,
-                  decoration: const InputDecoration(
-                    labelText: 'Model *',
-                    hintText: 'e.g., Cascadia',
-                    prefixIcon: Icon(Icons.directions_car),
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: yearController,
-                  decoration: const InputDecoration(
-                    labelText: 'Year *',
-                    hintText: 'e.g., 2023',
-                    prefixIcon: Icon(Icons.calendar_today),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (v) {
-                    if (v?.isEmpty ?? true) return 'Required';
-                    final year = int.tryParse(v!);
-                    if (year == null || year < 1900 || year > DateTime.now().year + 1) {
-                      return 'Invalid year';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: vinController,
-                  decoration: const InputDecoration(
-                    labelText: 'VIN *',
-                    hintText: '17-character VIN',
-                    prefixIcon: Icon(Icons.fingerprint),
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: plateController,
-                  decoration: const InputDecoration(
-                    labelText: 'Plate Number *',
-                    hintText: 'e.g., ABC123',
-                    prefixIcon: Icon(Icons.credit_card),
-                  ),
-                  validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: trailerController,
-                  decoration: const InputDecoration(
-                    labelText: 'Trailer Number (optional)',
-                    hintText: 'e.g., TR001',
-                    prefixIcon: Icon(Icons.rv_hookup),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: mileageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Mileage (optional)',
-                    hintText: 'e.g., 125000',
-                    prefixIcon: Icon(Icons.speed),
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-              ],
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            style: TextButton.styleFrom(
-              backgroundColor: AppColors.grey200,
-              foregroundColor: AppColors.grey800,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            ),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (formKey.currentState?.validate() ?? false) {
-                try {
-                  await ref.read(enhancedVehiclesProvider.notifier).createVehicle(
-                    unitNumber: unitNumberController.text.trim(),
-                    make: makeController.text.trim(),
-                    model: modelController.text.trim(),
-                    year: int.parse(yearController.text.trim()),
-                    vinNumber: vinController.text.trim(),
-                    plateNumber: plateController.text.trim(),
-                    trailerNumber: trailerController.text.trim().isEmpty 
-                        ? null 
-                        : trailerController.text.trim(),
-                    mileage: double.tryParse(mileageController.text.trim()),
-                  );
-                  
-                  Navigator.of(dialogContext).pop();
-                  
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Vehicle ${unitNumberController.text} added!'),
-                        backgroundColor: AppColors.successGreen,
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Failed to add vehicle: $e'),
-                      backgroundColor: AppColors.errorRed,
-                    ),
-                  );
-                }
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.save),
-          ),
-        ],
+  void _navigateToAddVehicle() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const AddVehiclePage(),
       ),
     );
   }
@@ -446,7 +290,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddVehicleDialog(context),
+        onPressed: _navigateToAddVehicle,
         icon: const Icon(Icons.add),
         label: Text(AppLocalizations.of(context)!.addVehicle),
         backgroundColor: AppColors.successGreen,
@@ -756,7 +600,7 @@ class _VehicleSelectionPageState extends ConsumerState<VehicleSelectionPage> {
           const SizedBox(height: 24),
           // Add Vehicle button - primary action
           ElevatedButton.icon(
-            onPressed: () => _showAddVehicleDialog(context),
+            onPressed: _navigateToAddVehicle,
             icon: const Icon(Icons.add),
             label: Text(AppLocalizations.of(context)!.addVehicle),
             style: ElevatedButton.styleFrom(
